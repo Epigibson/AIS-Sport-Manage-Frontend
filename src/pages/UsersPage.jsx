@@ -1,6 +1,6 @@
 import { MainContainerLayout } from "../components/layout/MainContainerLayout.jsx";
 import { SideBarLayout } from "../components/layout/SideBarLayout.jsx";
-import { UserLogic } from "../logic/UserLogic.jsx";
+import { UserLogic } from "../logic/user/UserLogic.jsx";
 
 export const UsersPage = () => {
   return (

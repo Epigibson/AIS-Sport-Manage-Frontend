@@ -1,8 +1,8 @@
-import { TablesComponent } from "../components/TablesComponent.jsx";
-import { UserColumns } from "./UserColumns.jsx";
+import { TablesComponent } from "../../components/TablesComponent.jsx";
+import { UserColumns } from "../user/UserColumns.jsx";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCouches } from "../api/UserService.jsx";
-import { getAllGroups } from "../api/GroupService.jsx";
+import { getAllCouches } from "../../api/UserService.jsx";
+import { getAllGroups } from "../../api/GroupService.jsx";
 
 export const CouchLogic = () => {
   const {

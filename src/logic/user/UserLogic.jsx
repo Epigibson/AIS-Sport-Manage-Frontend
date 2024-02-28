@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllUsers } from "../api/UserService.jsx";
+import { getAllUsers } from "../../api/UserService.jsx";
 import { UserColumns } from "./UserColumns.jsx";
-import { TablesComponent } from "../components/TablesComponent.jsx";
-import { getAllGroups } from "../api/GroupService.jsx";
+import { TablesComponent } from "../../components/TablesComponent.jsx";
+import { getAllGroups } from "../../api/GroupService.jsx";
 
 export const UserLogic = () => {
   const {

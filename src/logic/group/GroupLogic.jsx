@@ -1,8 +1,8 @@
-import { TablesComponent } from "../components/TablesComponent.jsx";
+import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { useQuery } from "@tanstack/react-query";
-import { getAllGroups } from "../api/GroupService.jsx";
+import { getAllGroups } from "../../api/GroupService.jsx";
 import { GroupColumns } from "./GroupColumns.jsx";
-import { getAllCouches } from "../api/UserService.jsx";
+import { getAllCouches } from "../../api/UserService.jsx";
 
 export const GroupLogic = () => {
   const {

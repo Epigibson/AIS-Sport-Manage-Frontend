@@ -43,6 +43,7 @@ export const PackagesColumns = [
         <Button type={"primary"} danger>
           Delete
         </Button>
+        .
       </Space>
     ),
   },

@@ -1,6 +1,6 @@
 import { MainContainerLayout } from "../components/layout/MainContainerLayout.jsx";
 import { SideBarLayout } from "../components/layout/SideBarLayout.jsx";
-import { GroupLogic } from "../logic/GroupLogic.jsx";
+import { GroupLogic } from "../logic/group/GroupLogic.jsx";
 
 export const GroupsPage = () => {
   return (
