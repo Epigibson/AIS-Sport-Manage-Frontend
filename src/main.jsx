@@ -9,12 +9,12 @@ import { BrowserRouter as Router } from "react-router-dom";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <Router>
+  <Router>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <App />
-      </Router>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </AuthProvider>
-  </QueryClientProvider>,
+      </AuthProvider>
+      <ReactQueryDevtools initialIsOpen={true} />
+    </QueryClientProvider>
+  </Router>,
 );

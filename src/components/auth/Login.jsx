@@ -1,15 +1,13 @@
 import { Button, Checkbox, Form, Input } from "antd";
 import { useAuth } from "../../hooks/AuthContext.jsx";
-import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const { loginHandler } = useAuth();
   const [form] = Form.useForm();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    loginHandler(values.username, values.password);
-    navigate("/home");
+  const onFinish = async (values) => {
+    await loginHandler(values.username, values.password);
   };
 
   return (

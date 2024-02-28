@@ -1,13 +1,13 @@
 import { SideBarLayout } from "../components/layout/SideBarLayout.jsx";
 import { MainContainerLayout } from "../components/layout/MainContainerLayout.jsx";
-import { TabsComponent } from "../components/TabsComponent.jsx";
+import { InscriptionLayout } from "../components/layout/InscriptionLayout.jsx";
 
-export const HomePage = () => {
+export const InscriptionPage = () => {
   return (
     <>
       <SideBarLayout>
-        <MainContainerLayout title={"Dashboard"}>
-          <TabsComponent />
+        <MainContainerLayout title={"Inscripciones"}>
+          <InscriptionLayout />
         </MainContainerLayout>
       </SideBarLayout>
     </>
