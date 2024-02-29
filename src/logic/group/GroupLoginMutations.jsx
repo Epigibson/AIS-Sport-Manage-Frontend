@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  createPackage,
-  deletePackage,
-  updatePackage,
-} from "../../api/ProductService.jsx";
+  createGroup,
+  deleteGroup,
+  updateGroup,
+} from "../../api/GroupService.jsx";
 
-export const useCreatePackage = () => {
+export const useCreateGroup = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateCreate,
@@ -14,7 +14,7 @@ export const useCreatePackage = () => {
     error,
     reset,
   } = useMutation({
-    mutationFn: createPackage,
+    mutationFn: createGroup,
     onSuccess: () => {
       console.log("Mutación exitosa");
       queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
@@ -29,7 +29,7 @@ export const useCreatePackage = () => {
   return { mutateCreate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useUpdatePackage = () => {
+export const useUpdateGroup = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateUpdate,
@@ -38,7 +38,7 @@ export const useUpdatePackage = () => {
     error,
     reset,
   } = useMutation({
-    mutationFn: updatePackage,
+    mutationFn: updateGroup,
     onSuccess: () => {
       console.log("Mutación exitosa");
       queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
@@ -53,7 +53,7 @@ export const useUpdatePackage = () => {
   return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useDeletePackage = () => {
+export const useDeleteGroup = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateDelete,
@@ -62,7 +62,7 @@ export const useDeletePackage = () => {
     error,
     reset,
   } = useMutation({
-    mutationFn: deletePackage,
+    mutationFn: deleteGroup,
     onSuccess: () => {
       console.log("Mutación exitosa");
       queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"

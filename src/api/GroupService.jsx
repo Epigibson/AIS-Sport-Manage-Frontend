@@ -17,3 +17,31 @@ export const getGroupById = async (group_id) => {
     console.error("No se pudo obtener el grupo.", error);
   }
 };
+
+export const createGroup = async (data) => {
+  try {
+    const response = await apiClient.post("/groups/", data);
+    return response.data; // Devuelve el objeto creado.
+  } catch (error) {
+    console.error("No se pudo crear el grupo.", error);
+  }
+};
+
+export const updateGroup = async (data) => {
+  const { group_id, ...restData } = data;
+  try {
+    const response = await apiClient.put(`/groups/${group_id}`, restData);
+    return response.data; // Devuelve el objeto actualizado.
+  } catch (error) {
+    console.error("No se pudo actualizar el grupo.", error);
+  }
+};
+
+export const deleteGroup = async (group_id) => {
+  try {
+    const response = await apiClient.delete(`/groups/${group_id}`);
+    return response.data; // Devuelve el objeto eliminado.
+  } catch (error) {
+    console.error("No se pudo eliminar el grupo.", error);
+  }
+};

@@ -17,14 +17,15 @@ export const packageFormFields = [
   },
   {
     name: "price",
-    label: "Precio del producto",
+    label: "Precio",
     rules: [{ required: true }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
     name: "category",
-    label: "Categoria del producto",
+    label: "Categoria",
     rules: [{ required: true }],
-    inputType: "input", // Indica el tipo de control de entrada
+    inputType: "select",
+    optionsSource: "categories", // Utiliza un identificador para las opciones
   },
 ];

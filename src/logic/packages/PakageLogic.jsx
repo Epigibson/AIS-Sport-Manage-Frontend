@@ -1,18 +1,26 @@
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPackages } from "../../api/ProductService.jsx";
-import { PackagesColumns } from "../product/ProductColumns.jsx";
-import { useCreatePackage } from "./PackageLogicMutations.jsx";
-import { Button, Form } from "antd";
+import {
+  useCreatePackage,
+  useDeletePackage,
+  useUpdatePackage,
+} from "./PackageLogicMutations.jsx";
+import { Button, Form, message } from "antd";
 import { useState } from "react";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { packageFormFields } from "./PackageFormFields.jsx";
+import { PackagesColumns } from "./PackageColumns.jsx";
 
 export const PackageLogic = () => {
-  const { mutate } = useCreatePackage();
+  const { mutateCreate } = useCreatePackage();
+  const { mutateUpdate } = useUpdatePackage();
+  const { mutateDelete } = useDeletePackage();
   const [form] = Form.useForm();
-  const title = "Crear nuevo paquete";
+  const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
+
   const {
     data: packagesData,
     isLoading,
@@ -21,24 +29,57 @@ export const PackageLogic = () => {
 
   const showModal = () => {
     setIsModalVisible(true);
+    setModalContext("create");
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const values = form.getFieldsValue();
-    console.log({ "VALORES DEL FORMULARIO": values });
-
-    // await mutate(newPackage);
+    setModalContext("");
     form.resetFields();
     setIsModalVisible(false);
   };
 
+  const handleSubmit = async () => {
+    const values = await form.validateFields();
+    if (modalContext === "edit") {
+      console.log("SE EDITA");
+      await mutateUpdate({ ...values, product_id: selectedRecord.product_id });
+    }
+    if (modalContext === "create") {
+      console.log("SE CREA");
+      await mutateCreate(values);
+    }
+    form.resetFields();
+    setModalContext("");
+    setSelectedRecord(null);
+    setIsModalVisible(false);
+  };
+
+  const handleEdit = (record) => {
+    setModalContext("edit");
+    form.setFieldsValue(record);
+    setSelectedRecord(record);
+    setIsModalVisible(true);
+  };
+
+  const handleDelete = async (record) => {
+    setModalContext("delete");
+    setSelectedRecord(record);
+    await mutateDelete(selectedRecord?.product_id);
+  };
+
+  const cancel = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
+
+  const columns = PackagesColumns({
+    onEdit: handleEdit,
+    onDelete: handleDelete,
+    onCancel: cancel,
+  });
 
   return (
     <>
@@ -55,12 +96,12 @@ export const PackageLogic = () => {
       <ModalComponent
         form={form}
         formFields={packageFormFields}
-        title={title}
+        title={modalContext === "edit" ? "Editar Registro" : "Crear Registro"}
         onOk={handleSubmit}
         onOpen={isModalVisible}
         onClose={handleCancel}
       />
-      <TablesComponent data={packagesData} columns={PackagesColumns} />
+      <TablesComponent data={packagesData} columns={columns} />
     </>
   );
 };

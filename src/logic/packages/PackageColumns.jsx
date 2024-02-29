@@ -1,6 +1,6 @@
-import { Button, Space, Tag } from "antd";
+import { Button, Popconfirm, Space, Tag } from "antd";
 
-export const PackagesColumns = [
+export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
   {
     title: "Nombre",
     dataIndex: "product_name",
@@ -35,15 +35,30 @@ export const PackagesColumns = [
     },
   },
   {
-    title: "Action",
+    title: "Acciones",
     key: "action",
-    render: () => (
+    render: (_, record) => (
       <Space size="middle">
-        <Button className="bg-amber-500 text-white">Edit</Button>
-        <Button type={"primary"} danger>
-          Delete
+        <Button
+          style={{ backgroundColor: "#fcba03" }}
+          type="primary"
+          onClick={() => onEdit(record)}
+        >
+          Editar
         </Button>
-        .
+        <Popconfirm
+          title="Eliminar paquete"
+          description="Estas seguro de eliminar el registro?"
+          onConfirm={() => onDelete(record)}
+          onCancel={onCancel}
+          okText="Si"
+          cancelText="No"
+          okType={"default"}
+        >
+          <Button type={"primary"} danger>
+            Borrar
+          </Button>
+        </Popconfirm>
       </Space>
     ),
   },
