@@ -9,7 +9,7 @@ import {
   useCreateGroup,
   useDeleteGroup,
   useUpdateGroup,
-} from "./GroupLoginMutations.jsx";
+} from "./GroupLogicMutations.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { groupFormFields } from "./GroupFormFields.jsx";
 

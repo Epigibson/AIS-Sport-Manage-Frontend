@@ -1,33 +1,33 @@
-import { Button, Space, Tag } from "antd";
+import { Button, Popconfirm, Space, Tag } from "antd";
 
-export const CouchColumns = [
+export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
   {
     title: "Nombre",
-    dataIndex: "group_name",
-    key: "group_name",
+    dataIndex: "name",
+    key: "name",
     render: (text) => <a>{text}</a>,
   },
   {
-    title: "Descripcion",
-    dataIndex: "group_description",
-    key: "group_description",
+    title: "Usuario",
+    dataIndex: "username",
+    key: "username",
+    render: (text) => <a>{text}</a>,
   },
   {
-    title: "Couch",
-    dataIndex: "couch",
-    key: "couch",
-    render: (couch) =>
-      couch ? <Tag color={"blue"}>{couch.name}</Tag> : <span>No Couch</span>, // Ajusta "group_name" según tu modelo de datos
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    render: (text) => <a>{text}</a>,
   },
   {
-    title: "Miembros",
-    dataIndex: "group_members",
-    key: "group_members",
+    title: "Genero",
+    dataIndex: "gender",
+    key: "gender",
   },
   {
     title: "Estatus",
-    key: "group_status",
-    dataIndex: "group_status",
+    key: "status",
+    dataIndex: "status",
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -37,24 +37,41 @@ export const CouchColumns = [
     },
   },
   {
-    title: "Capacidad",
-    dataIndex: "group_capacity",
-    key: "group_capacity",
+    title: "Grupo",
+    key: "group_id",
+    dataIndex: "group_id",
+    render: (_, record) =>
+      record.group ? (
+        <Tag color={"blue"}>{record.group.name}</Tag>
+      ) : (
+        <span>No Group</span>
+      ), // Ajusta "group_name" según tu modelo de datos
   },
   {
-    title: "Horarios",
-    dataIndex: "group_schedule",
-    key: "group_schedule",
-  },
-  {
-    title: "Action",
+    title: "Acciones",
     key: "action",
-    render: () => (
+    render: (_, record) => (
       <Space size="middle">
-        <Button className="bg-amber-500 text-white">Edit</Button>
-        <Button type={"primary"} danger>
-          Delete
+        <Button
+          style={{ backgroundColor: "#fcba03" }}
+          type="primary"
+          onClick={() => onEdit(record)}
+        >
+          Editar
         </Button>
+        <Popconfirm
+          title="Eliminar grupo"
+          description="Estas seguro de eliminar el registro?"
+          onConfirm={() => onDelete(record)}
+          onCancel={onCancel}
+          okText="Si"
+          cancelText="No"
+          okType={"default"}
+        >
+          <Button type={"primary"} danger>
+            Borrar
+          </Button>
+        </Popconfirm>
       </Space>
     ),
   },

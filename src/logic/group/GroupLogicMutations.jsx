@@ -17,7 +17,7 @@ export const useCreateGroup = () => {
     mutationFn: createGroup,
     onSuccess: () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
+      queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -41,7 +41,7 @@ export const useUpdateGroup = () => {
     mutationFn: updateGroup,
     onSuccess: () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
+      queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -65,7 +65,7 @@ export const useDeleteGroup = () => {
     mutationFn: deleteGroup,
     onSuccess: () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
+      queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);

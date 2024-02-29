@@ -2,6 +2,8 @@ import { Button, Checkbox, Form, Input, Select, Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useCategories } from "../hooks/CategoriesContext.jsx";
+import { useCouches } from "../hooks/CouchesContext.jsx";
+import { useGroups } from "../hooks/GroupContext.jsx";
 
 const { Option } = Select;
 
@@ -12,33 +14,54 @@ export const FormComponent = ({
   handleClose,
 }) => {
   const { categories } = useCategories(); // Obtiene categorías del contexto
+  const { couches } = useCouches(); // Obtiene couches del contexto
+  const { groups } = useGroups(); // Obtiene groups del contexto
   const [selectOptions, setSelectOptions] = useState({});
 
   useEffect(() => {
     // Prepara opciones para campos select basados en optionsSource
     const newSelectOptions = {};
     formFields.forEach((field) => {
-      if (field.inputType === "select" && field.optionsSource) {
-        // Aquí es donde asignas las opciones basadas en el identificador
+      if (field.inputType === "select") {
         if (field.optionsSource === "categories") {
           newSelectOptions[field.name] = categories.map((c) => ({
             label: c.name,
             value: c._id,
           }));
+        } else if (field.optionsSource === "couches") {
+          newSelectOptions[field.name] = couches.map((c) => ({
+            label: c.name,
+            value: c._id,
+          }));
+        } else if (field.optionsSource === "groups") {
+          newSelectOptions[field.name] = groups.map((c) => ({
+            label: c.name,
+            value: c._id,
+          }));
+        } else if (Array.isArray(field.optionsSource)) {
+          // Nuevo caso para opciones estáticas
+          newSelectOptions[field.name] = field.optionsSource.map((option) => ({
+            label: option, // Usar el valor como etiqueta
+            value: option, // Y como valor
+          }));
+        } else if (field.options) {
+          // Directamente usar opciones estáticas definidas en formFields
+          newSelectOptions[field.name] = field.options;
         }
-        // Añadir más condicionales si hay más fuentes de opciones
       }
     });
     setSelectOptions(newSelectOptions);
-  }, [formFields, categories]); // Dependencias del efecto
+  }, [formFields, categories, couches]); // Dependencias del efecto
 
   return (
     <Form
       className="overflow-y-auto max-h-[600px]"
       form={form}
       onFinish={() => handleSubmit("create")}
-      layout="vertical"
+      layout="horizontal"
       autoComplete="off"
+      labelCol={{ span: 8 }} // Ajusta este valor según necesites
+      wrapperCol={{ span: 16 }} // Ajusta este valor según necesites
     >
       {formFields.map((field) => (
         <Form.Item
@@ -50,6 +73,9 @@ export const FormComponent = ({
         >
           {field.inputType === "input" && (
             <Input className="rounded-md py-0.5 my-0 border-gray-300" />
+          )}
+          {field.inputType === "password" && (
+            <Input.Password className="rounded-md py-0.5 my-0 border-gray-300" />
           )}
           {field.inputType === "checkbox" && (
             <>
@@ -72,7 +98,10 @@ export const FormComponent = ({
           )}
         </Form.Item>
       ))}
-      <Form.Item className="flex  justify-end mt-2 mb-0.5">
+      <Form.Item
+        wrapperCol={{ span: 24 }} // Esto hace que el Form.Item ignore la configuración de columnas y utilice el ancho completo
+        className="flex justify-end mt-2 mb-0.5"
+      >
         <Button
           type={"primary"}
           className="bg-primary-700"

@@ -3,14 +3,14 @@ import { Button, Popconfirm, Space, Tag } from "antd";
 export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
   {
     title: "Nombre",
-    dataIndex: "group_name",
-    key: "group_name",
+    dataIndex: "name",
+    key: "name",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Descripcion",
-    dataIndex: "group_description",
-    key: "group_description",
+    dataIndex: "description",
+    key: "description",
   },
   {
     title: "Couch",
@@ -21,13 +21,13 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
   },
   {
     title: "Miembros",
-    dataIndex: "group_members",
-    key: "group_members",
+    dataIndex: "members",
+    key: "members",
   },
   {
     title: "Estatus",
-    key: "group_status",
-    dataIndex: "group_status",
+    key: "status",
+    dataIndex: "status",
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -38,13 +38,13 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
   },
   {
     title: "Capacidad",
-    dataIndex: "group_capacity",
-    key: "group_capacity",
+    dataIndex: "capacity",
+    key: "capacity",
   },
   {
     title: "Horarios",
-    dataIndex: "group_schedule",
-    key: "group_schedule",
+    dataIndex: "schedule",
+    key: "schedule",
   },
   {
     title: "Acciones",

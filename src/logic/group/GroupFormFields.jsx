@@ -1,12 +1,12 @@
 export const groupFormFields = [
   {
-    name: "group_name",
+    name: "name",
     label: "Nombre del grupo",
     rules: [{ required: true }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
-    name: "group_description",
+    name: "description",
     label: "Descripcion del grupo",
     rules: [{ required: true }],
     inputType: "input",
@@ -19,10 +19,25 @@ export const groupFormFields = [
     optionsSource: "couches", // Utiliza un identificador para las opciones
   },
   {
-    name: "group_status",
+    name: "status",
     label: "Estatus",
     rules: [{ required: true }],
     inputType: "select",
-    optionsSource: { is_active: true, is_inactive: false }, // Utiliza un identificador para las opciones
+    options: [
+      { label: "Activo", value: "Activo" },
+      { label: "Deshabilitado", value: "Deshabilitado" },
+    ],
+  },
+  {
+    name: "capacity",
+    label: "Capacidad",
+    rules: [{ required: true }],
+    inputType: "input", // Indica el tipo de control de entrada
+  },
+  {
+    name: "schedule",
+    label: "Horarios",
+    rules: [{ required: true }],
+    inputType: "input", // Indica el tipo de control de entrada
   },
 ];

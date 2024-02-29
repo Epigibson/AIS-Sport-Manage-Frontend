@@ -1,6 +1,6 @@
-import { Button, Space, Tag } from "antd";
+import { Button, Popconfirm, Space, Tag } from "antd";
 
-export const UserColumns = [
+export const UserColumns = ({ onEdit, onDelete, onCancel }) => [
   {
     title: "Nombre",
     dataIndex: "name",
@@ -11,6 +11,21 @@ export const UserColumns = [
     title: "Tutor",
     dataIndex: "tutors_name",
     key: "tutors_name",
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+  },
+  {
+    title: "Edad",
+    dataIndex: "age",
+    key: "age",
+  },
+  {
+    title: "Celular",
+    dataIndex: "mobile",
+    key: "mobile",
   },
   {
     title: "Genero",
@@ -34,21 +49,33 @@ export const UserColumns = [
     key: "group",
     dataIndex: "group",
     render: (group) =>
-      group ? (
-        <Tag color={"blue"}>{group.group_name}</Tag>
-      ) : (
-        <span>No Group</span>
-      ), // Ajusta "group_name" según tu modelo de datos
+      group ? <Tag color={"blue"}>{group.name}</Tag> : <span>No Group</span>, // Ajusta "group_name" según tu modelo de datos
   },
   {
-    title: "Action",
+    title: "Acciones",
     key: "action",
-    render: () => (
+    render: (_, record) => (
       <Space size="middle">
-        <Button className="bg-amber-500 text-white">Edit</Button>
-        <Button type={"primary"} danger>
-          Delete
+        <Button
+          style={{ backgroundColor: "#fcba03" }}
+          type="primary"
+          onClick={() => onEdit(record)}
+        >
+          Editar
         </Button>
+        <Popconfirm
+          title="Eliminar grupo"
+          description="Estas seguro de eliminar el registro?"
+          onConfirm={() => onDelete(record)}
+          onCancel={onCancel}
+          okText="Si"
+          cancelText="No"
+          okType={"default"}
+        >
+          <Button type={"primary"} danger>
+            Borrar
+          </Button>
+        </Popconfirm>
       </Space>
     ),
   },
