@@ -54,6 +54,7 @@ export const InscriptionLayout = () => {
         email: values.email,
         username: values.email.split("@")[0], // Suponiendo que quieres usar el correo como username, ajusta según necesites
         password: values.password,
+        tutors_name: values.tutors_name,
         name: values.name,
         gender: values.gender,
         age: parseInt(values.age, 10), // Convertir la edad a número
