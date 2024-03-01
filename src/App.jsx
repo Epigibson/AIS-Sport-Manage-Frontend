@@ -12,13 +12,15 @@ import { AnalyticsPage } from "./pages/AnalyticsPage.jsx";
 import { PaymentFailedPage } from "./pages/PaymentPages/PaymentFailedPage.jsx";
 import { PaymentPendingPage } from "./pages/PaymentPages/PaymentPendingPage.jsx";
 import { PaymentSuccessPage } from "./pages/PaymentPages/PaymentSuccessPage.jsx";
+import { PaymentsPage } from "./pages/PaymentsPage.jsx";
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<HomePage />} />
-      <Route path="/inscriptions" element={<InscriptionPage />} />
+      <Route path="/inscripciones" element={<InscriptionPage />} />
+      <Route path="/pagos" element={<PaymentsPage />} />
       <Route path="/users" element={<UsersPage />} />
       <Route path="/couches" element={<CouchesPage />} />
       <Route path="/grupos" element={<GroupsPage />} />

@@ -1,8 +1,9 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Divider, Layout, Menu, theme } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItems } from "./MenuItems.jsx";
+import logoImage from "../../assets/logo.png";
 
 const { Header, Sider, Content } = Layout;
 
@@ -16,7 +17,11 @@ export const SideBarLayout = ({ children }) => {
   return (
     <Layout className="min-h-lvh">
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
+        <div className="demo-logo-vertical px-4 m-0 pt-6 flex justify-around items-center">
+          <img src={logoImage} alt="Logo" style={{ maxHeight: "32px" }} />
+          <p className="text-amber-50">Sport Management</p>
+        </div>
+        <Divider className="bg-blue-950" />
         <Menu
           theme="dark"
           mode="inline"

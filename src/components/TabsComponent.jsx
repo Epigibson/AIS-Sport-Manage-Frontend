@@ -1,7 +1,7 @@
 import { Tabs } from "antd";
-import { TablesComponent } from "./TablesComponent.jsx";
 import { InscriptionLayout } from "./layout/InscriptionLayout.jsx";
 import { GroupAssignLayout } from "./layout/GroupAssignLayout.jsx";
+import { UsersInscribedLayout } from "./layout/UsersInscribedLayout/UsersInscribedLayout.jsx";
 
 export const TabsComponent = () => {
   const onChange = (key) => {
@@ -10,13 +10,13 @@ export const TabsComponent = () => {
   const items = [
     {
       key: "1",
-      label: "Resumen",
-      children: <TablesComponent />,
+      label: "Inscripciones",
+      children: <InscriptionLayout />,
     },
     {
       key: "2",
-      label: "Inscripciones",
-      children: <InscriptionLayout />,
+      label: "Resumen",
+      children: <UsersInscribedLayout />,
     },
     {
       key: "3",
