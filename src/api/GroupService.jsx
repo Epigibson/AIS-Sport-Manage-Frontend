@@ -2,7 +2,7 @@ import { apiClient } from "./index.jsx";
 
 export const getAllGroups = async () => {
   try {
-    const response = await apiClient.get("/groups");
+    const response = await apiClient.get("/groups/");
     return response.data; // Devuelve un array de objetos con los datos de los grupos.
   } catch (error) {
     console.error("No se pudo obtener la lista de grupos.", error);

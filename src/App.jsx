@@ -9,6 +9,9 @@ import { GroupsPage } from "./pages/GroupsPage.jsx";
 import { PackagesPage } from "./pages/PackagesPage.jsx";
 import { DebtorsPage } from "./pages/DebtorsPage.jsx";
 import { AnalyticsPage } from "./pages/AnalyticsPage.jsx";
+import { PaymentFailedPage } from "./pages/PaymentPages/PaymentFailedPage.jsx";
+import { PaymentPendingPage } from "./pages/PaymentPages/PaymentPendingPage.jsx";
+import { PaymentSuccessPage } from "./pages/PaymentPages/PaymentSuccessPage.jsx";
 
 const App = () => {
   return (
@@ -22,6 +25,9 @@ const App = () => {
       <Route path="/paquetes" element={<PackagesPage />} />
       <Route path="/adeudos" element={<DebtorsPage />} />
       <Route path="/analiticas" element={<AnalyticsPage />} />
+      <Route path="/pago/fallo" element={<PaymentFailedPage />} />
+      <Route path="/pago/pendiente" element={<PaymentPendingPage />} />
+      <Route path="/pago/exito" element={<PaymentSuccessPage />} />
     </Routes>
   );
 };
