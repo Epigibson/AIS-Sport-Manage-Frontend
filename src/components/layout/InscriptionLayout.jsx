@@ -2,6 +2,7 @@ import { Button, Card, Checkbox, Col, Form, Input, Row, Select } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPackages } from "../../api/ProductService.jsx";
 import { useInscription } from "../../logic/inscription/InscriptionLogicMutations.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 const { Option } = Select;
 const formItemLayout = {
@@ -36,7 +37,7 @@ const tailFormItemLayout = {
 };
 export const InscriptionLayout = () => {
   const [form] = Form.useForm();
-  const { mutateCreate } = useInscription();
+  const { mutateCreate, isPending } = useInscription();
   const {
     data: packagesData,
     isLoading,
@@ -68,7 +69,7 @@ export const InscriptionLayout = () => {
     mutateCreate(transformedData);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || isPending) return <LoaderIconUtils />;
   if (isError) return <div>Error: {error.message} </div>;
 
   return (

@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "../api/CategoryService.jsx";
+import { LoaderIconUtils } from "../utils/LoaderIconUtils.jsx";
 
 const CategoriesContext = createContext();
 
@@ -15,7 +16,7 @@ export const CategoriesProvider = ({ children }) => {
     queryFn: getAllCategories,
   });
 
-  if (isLoading) return <div>Loading categories...</div>;
+  if (isLoading) return <LoaderIconUtils />;
   if (isError) return <div>Error loading categories: {error.message}</div>;
 
   return (

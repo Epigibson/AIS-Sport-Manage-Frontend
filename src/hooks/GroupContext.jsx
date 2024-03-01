@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { getAllGroups } from "../api/GroupService.jsx";
+import { LoaderIconUtils } from "../utils/LoaderIconUtils.jsx";
 
 const GroupsContext = createContext();
 
@@ -15,7 +16,7 @@ export const GroupsProvider = ({ children }) => {
     queryFn: getAllGroups,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoaderIconUtils />;
   if (isError) return <div>Error: {error.message}</div>;
 
   return (

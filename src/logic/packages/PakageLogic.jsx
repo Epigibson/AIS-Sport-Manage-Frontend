@@ -11,6 +11,7 @@ import { useState } from "react";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { packageFormFields } from "./PackageFormFields.jsx";
 import { PackagesColumns } from "./PackageColumns.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 export const PackageLogic = () => {
   const { mutateCreate } = useCreatePackage();
@@ -72,7 +73,7 @@ export const PackageLogic = () => {
     message.error("Click on No");
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoaderIconUtils />;
   if (isError) return <div>Error</div>;
 
   const columns = PackagesColumns({

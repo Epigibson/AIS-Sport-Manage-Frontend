@@ -12,6 +12,7 @@ import {
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { userFormFields } from "./UserFormFields.jsx";
 import { UserColumns } from "./UserColumns.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 export const UserLogic = () => {
   const queryClient = useQueryClient();
@@ -92,7 +93,7 @@ export const UserLogic = () => {
     onCancel: cancel,
   });
 
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading) return <LoaderIconUtils />;
   if (isError) return <h1>Error...</h1>;
 
   return (

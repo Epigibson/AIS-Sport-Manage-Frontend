@@ -11,6 +11,7 @@ import {
 } from "./CouchLoginMutations.jsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCouches } from "../../api/UserService.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 export const CouchLogic = () => {
   const queryClient = useQueryClient();
@@ -92,7 +93,7 @@ export const CouchLogic = () => {
     onCancel: cancel,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoaderIconUtils />;
   if (isError) return <div>Error: {error.message} </div>;
 
   return (

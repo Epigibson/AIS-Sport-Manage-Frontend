@@ -12,6 +12,7 @@ import {
 } from "./GroupLogicMutations.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { groupFormFields } from "./GroupFormFields.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 export const GroupLogic = () => {
   const { mutateCreate } = useCreateGroup();
@@ -82,7 +83,7 @@ export const GroupLogic = () => {
     message.error("Click on No");
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoaderIconUtils />;
   if (isError) return <div>Error</div>;
 
   const columns = GroupColumns({
