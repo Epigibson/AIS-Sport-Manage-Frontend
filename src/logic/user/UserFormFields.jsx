@@ -6,6 +6,12 @@ export const userFormFields = [
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
+    name: "tutors_name",
+    label: "Tutor",
+    rules: [{ required: true }],
+    inputType: "input", // Indica el tipo de control de entrada
+  },
+  {
     name: "username",
     label: "Usuario",
     rules: [{ required: true }],

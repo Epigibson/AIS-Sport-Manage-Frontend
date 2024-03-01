@@ -34,7 +34,7 @@ export const GroupLogic = () => {
   });
 
   const enrichedGroupsData = groupData?.map((group) => {
-    const couch = couchData?.find((couch) => couch._id === group.group_couch); // Ajusta según la estructura de tus datos
+    const couch = couchData?.find((couch) => couch._id === group.couch); // Ajusta según la estructura de tus datos
     return { ...group, couch }; // Añade la información del grupo al objeto de usuario
   });
 
@@ -53,7 +53,7 @@ export const GroupLogic = () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
       console.log("SE EDITA");
-      await mutateUpdate({ ...values, product_id: selectedRecord.product_id });
+      await mutateUpdate({ ...values, group_id: selectedRecord.group_id });
     }
     if (modalContext === "create") {
       console.log("SE CREA");

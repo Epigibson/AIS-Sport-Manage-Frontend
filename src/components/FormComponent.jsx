@@ -2,8 +2,9 @@ import { Button, Checkbox, Form, Input, Select, Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useCategories } from "../hooks/CategoriesContext.jsx";
-import { useCouches } from "../hooks/CouchesContext.jsx";
 import { useGroups } from "../hooks/GroupContext.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCouches } from "../api/UserService.jsx";
 
 const { Option } = Select;
 
@@ -14,7 +15,10 @@ export const FormComponent = ({
   handleClose,
 }) => {
   const { categories } = useCategories(); // Obtiene categorías del contexto
-  const { couches } = useCouches(); // Obtiene couches del contexto
+  const { data: couches } = useQuery({
+    queryKey: ["couchList"],
+    queryFn: getAllCouches,
+  });
   const { groups } = useGroups(); // Obtiene groups del contexto
   const [selectOptions, setSelectOptions] = useState({});
 
