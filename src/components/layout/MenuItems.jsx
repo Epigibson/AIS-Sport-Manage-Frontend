@@ -14,7 +14,7 @@ export const MenuItems = [
     key: "1",
     icon: <HomeFilled />,
     label: "Inicio",
-    path: "/",
+    path: "/home",
   },
   {
     key: "2",
