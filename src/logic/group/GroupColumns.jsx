@@ -12,17 +12,17 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
     dataIndex: "description",
     key: "description",
   },
-  {
-    title: "Couch",
-    dataIndex: "couch",
-    key: "couch",
-    render: (_, record) =>
-      record.couch ? (
-        <Tag color={"blue"}>{record.couch.name}</Tag>
-      ) : (
-        <span>No Couch</span>
-      ), // Ajusta "group_name" según tu modelo de datos
-  },
+  // {
+  //   title: "Couch",
+  //   dataIndex: "couch",
+  //   key: "couch",
+  //   render: (_, record) =>
+  //     record.couch ? (
+  //       <Tag color={"blue"}>{record.couch.name}</Tag>
+  //     ) : (
+  //       <span>No Couch</span>
+  //     ), // Ajusta "group_name" según tu modelo de datos
+  // },
   {
     title: "Miembros",
     dataIndex: "members",

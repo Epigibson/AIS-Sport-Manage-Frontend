@@ -26,7 +26,10 @@ export const FormComponent = ({
     // Prepara opciones para campos select basados en optionsSource
     const newSelectOptions = {};
     formFields.forEach((field) => {
-      if (field.inputType === "select") {
+      if (
+        field.inputType === "select" ||
+        field.inputType === "multipleSelect"
+      ) {
         if (field.optionsSource === "categories") {
           newSelectOptions[field.name] = categories.map((c) => ({
             label: c.name,
@@ -55,7 +58,7 @@ export const FormComponent = ({
       }
     });
     setSelectOptions(newSelectOptions);
-  }, [formFields, categories, couches]); // Dependencias del efecto
+  }, [formFields, categories, couches, groups]); // Dependencias del efecto
 
   return (
     <Form
@@ -93,6 +96,15 @@ export const FormComponent = ({
           )}
           {field.inputType === "select" && (
             <Select>
+              {selectOptions[field.name]?.map((option, index) => (
+                <Option key={option.value || index} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          )}
+          {field.inputType === "multipleSelect" && (
+            <Select mode="multiple">
               {selectOptions[field.name]?.map((option, index) => (
                 <Option key={option.value || index} value={option.value}>
                   {option.label}
