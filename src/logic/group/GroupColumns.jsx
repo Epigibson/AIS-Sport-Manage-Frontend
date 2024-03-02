@@ -1,6 +1,6 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 
-export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
+export const GroupColumns = ({ onEdit, onDelete, onCancel, onShowMembers }) => [
   {
     title: "Nombre",
     dataIndex: "name",
@@ -30,12 +30,12 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
     dataIndex: "members",
     key: "members",
     align: "center",
-    render: (members) => {
+    render: (_, record) => {
       return (
         <Button
           type={"primary"}
           className={"bg-primary-700"}
-          onClick={() => showModal(members)}
+          onClick={() => onShowMembers(record)}
         >
           Ver
         </Button>
