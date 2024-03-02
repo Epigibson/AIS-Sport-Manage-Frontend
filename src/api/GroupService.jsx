@@ -27,6 +27,20 @@ export const createGroup = async (data) => {
   }
 };
 
+export const assignUserToGroup = async (data) => {
+  const { group, users } = data;
+  try {
+    const response = await apiClient.post(
+      `/groups/assign?group=${encodeURIComponent(group)}`,
+      users,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo asignar el usuario al grupo.", error);
+  }
+  return null; // Devuelve null si hubo un error.
+};
+
 export const updateGroup = async (data) => {
   const { group_id, ...restData } = data;
   try {

@@ -35,9 +35,14 @@ export const CouchLogic = () => {
   const groups = queryClient.getQueryData(["groups"]);
 
   const enrichedUsersData = couchesData?.map((user) => {
-    const group = groups?.find((group) => group._id === user.group_id);
-    return { ...user, group }; // Añade la información del grupo al objeto de usuario
+    // Encuentra todos los grupos que coincidan con los IDs en user.group_id
+    const userGroups = groups?.filter((group) =>
+      user.group_id.includes(group._id),
+    );
+    return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });
+
+  console.log("DATAAAA", enrichedUsersData);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -66,7 +71,7 @@ export const CouchLogic = () => {
     setModalContext("");
     setSelectedRecord(null);
     setIsModalVisible(false);
-    queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+    await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
   };
 
   const handleEdit = (record) => {
@@ -84,7 +89,7 @@ export const CouchLogic = () => {
 
   const cancel = (e) => {
     console.log(e);
-    message.error("Click on No");
+    message.error("Click on No").then((r) => r);
   };
 
   const columns = CouchColumns({

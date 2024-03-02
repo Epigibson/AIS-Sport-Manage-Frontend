@@ -37,15 +37,19 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
     },
   },
   {
-    title: "Grupo",
+    title: "Grupos",
     key: "group_id",
     dataIndex: "group_id",
     render: (_, record) =>
-      record.group ? (
-        <Tag color={"blue"}>{record.group.name}</Tag>
+      record.groups && record.groups.length > 0 ? (
+        record.groups.map((group) => (
+          <Tag color="blue" key={group._id}>
+            {group.name}
+          </Tag>
+        ))
       ) : (
         <span>No Group</span>
-      ), // Ajusta "group_name" según tu modelo de datos
+      ),
   },
   {
     title: "Acciones",

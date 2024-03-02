@@ -2,9 +2,9 @@ import { Button, Checkbox, Form, Input, Select, Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useCategories } from "../hooks/CategoriesContext.jsx";
-import { useGroups } from "../hooks/GroupContext.jsx";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCouches } from "../api/UserService.jsx";
+import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
+import { getAllGroups } from "../api/GroupService.jsx";
 
 const { Option } = Select;
 
@@ -19,7 +19,16 @@ export const FormComponent = ({
     queryKey: ["couchList"],
     queryFn: getAllCouches,
   });
-  const { groups } = useGroups(); // Obtiene groups del contexto
+  const { data: groups } = useQuery({
+    queryKey: ["allGroups"],
+    queryFn: getAllGroups,
+  }); // Obtiene groups del contexto
+
+  const { data: users } = useQuery({
+    queryKey: ["allUsers"],
+    queryFn: getAllUsers,
+  });
+
   const [selectOptions, setSelectOptions] = useState({});
 
   useEffect(() => {
@@ -31,18 +40,23 @@ export const FormComponent = ({
         field.inputType === "multipleSelect"
       ) {
         if (field.optionsSource === "categories") {
-          newSelectOptions[field.name] = categories.map((c) => ({
+          newSelectOptions[field.name] = categories?.map((c) => ({
             label: c.name,
             value: c._id,
           }));
         } else if (field.optionsSource === "couches") {
-          newSelectOptions[field.name] = couches.map((c) => ({
+          newSelectOptions[field.name] = couches?.map((c) => ({
             label: c.name,
             value: c._id,
           }));
         } else if (field.optionsSource === "groups") {
-          newSelectOptions[field.name] = groups.map((c) => ({
+          newSelectOptions[field.name] = groups?.map((c) => ({
             label: c.name,
+            value: c._id,
+          }));
+        } else if (field.optionsSource === "users") {
+          newSelectOptions[field.name] = users?.map((c) => ({
+            label: `${c.name} : (${c.email})`,
             value: c._id,
           }));
         } else if (Array.isArray(field.optionsSource)) {
@@ -58,7 +72,7 @@ export const FormComponent = ({
       }
     });
     setSelectOptions(newSelectOptions);
-  }, [formFields, categories, couches, groups]); // Dependencias del efecto
+  }, [formFields, categories, couches, groups, users]); // Dependencias del efecto
 
   return (
     <Form

@@ -1,6 +1,6 @@
 import { Tabs } from "antd";
 import { InscriptionLayout } from "./layout/InscriptionLayout.jsx";
-import { GroupAssignLayout } from "./layout/GroupAssignLayout.jsx";
+import { GroupAssignLayout } from "./layout/GroupAssingLayout/GroupAssignLayout.jsx";
 import { UsersInscribedLayout } from "./layout/UsersInscribedLayout/UsersInscribedLayout.jsx";
 
 export const TabsComponent = () => {
