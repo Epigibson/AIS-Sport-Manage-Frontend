@@ -15,9 +15,9 @@ export const useCreateGroup = () => {
     reset,
   } = useMutation({
     mutationFn: createGroup,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -39,9 +39,9 @@ export const useUpdateGroup = () => {
     reset,
   } = useMutation({
     mutationFn: updateGroup,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -63,9 +63,9 @@ export const useDeleteGroup = () => {
     reset,
   } = useMutation({
     mutationFn: deleteGroup,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);

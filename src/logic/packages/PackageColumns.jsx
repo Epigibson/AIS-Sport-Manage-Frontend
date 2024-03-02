@@ -5,17 +5,20 @@ export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Nombre",
     dataIndex: "product_name",
     key: "product_name",
+    align: "center",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Descripcion",
     dataIndex: "product_description",
     key: "product_description",
+    align: "center",
   },
   {
     title: "Precio",
     dataIndex: "price",
     key: "price",
+    align: "center",
     render: (price) =>
       new Intl.NumberFormat("es-MX", {
         style: "currency",
@@ -26,6 +29,7 @@ export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Estatus",
     key: "is_active",
     dataIndex: "is_active",
+    align: "center",
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -37,6 +41,7 @@ export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
   {
     title: "Acciones",
     key: "action",
+    align: "center",
     render: (_, record) => (
       <Space size="middle">
         <Button

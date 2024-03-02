@@ -11,9 +11,9 @@ export const useCreateCouch = () => {
     reset,
   } = useMutation({
     mutationFn: createCouch,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -35,9 +35,9 @@ export const useUpdateCouch = () => {
     reset,
   } = useMutation({
     mutationFn: updateUser,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -59,9 +59,9 @@ export const useDeleteCouch = () => {
     reset,
   } = useMutation({
     mutationFn: deleteUser,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);

@@ -5,7 +5,7 @@ import { UsersInscribedLayout } from "./layout/UsersInscribedLayout/UsersInscrib
 
 export const TabsComponent = () => {
   const onChange = (key) => {
-    console.log(key);
+    // console.log(key);
   };
   const items = [
     {

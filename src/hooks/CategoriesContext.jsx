@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "../api/CategoryService.jsx";
 import { LoaderIconUtils } from "../utils/LoaderIconUtils.jsx";
 
-const CategoriesContext = createContext();
+const CategoriesContext = createContext(undefined);
 
 export const CategoriesProvider = ({ children }) => {
   const {

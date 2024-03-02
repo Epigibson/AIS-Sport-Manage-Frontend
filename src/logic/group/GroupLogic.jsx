@@ -80,7 +80,7 @@ export const GroupLogic = () => {
 
   const cancel = (e) => {
     console.log(e);
-    message.error("Click on No");
+    message.error("Click on No").then((e) => e);
   };
 
   if (isLoading) return <LoaderIconUtils />;

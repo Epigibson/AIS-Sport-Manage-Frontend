@@ -5,12 +5,14 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Nombre",
     dataIndex: "name",
     key: "name",
+    align: "center",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Descripcion",
     dataIndex: "description",
     key: "description",
+    align: "center",
   },
   // {
   //   title: "Couch",
@@ -27,11 +29,25 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Miembros",
     dataIndex: "members",
     key: "members",
+    align: "center",
+    render: (members) => {
+      return (
+        <Button
+          type={"primary"}
+          className={"bg-primary-700"}
+          onClick={() => showModal(members)}
+        >
+          Ver
+        </Button>
+      );
+    },
   },
   {
     title: "Estatus",
     key: "status",
     dataIndex: "status",
+    align: "center",
+
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -44,15 +60,19 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Capacidad",
     dataIndex: "capacity",
     key: "capacity",
+    align: "center",
   },
   {
     title: "Horarios",
     dataIndex: "schedule",
     key: "schedule",
+    align: "center",
   },
   {
     title: "Acciones",
     key: "action",
+    align: "center",
+
     render: (_, record) => (
       <Space size="middle">
         <Button

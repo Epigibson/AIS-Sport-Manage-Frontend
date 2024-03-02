@@ -262,11 +262,7 @@ export const InscriptionLayout = () => {
               </Form.Item>
             </Col>
           </Row>
-          <Row
-            {...tailFormItemLayout}
-            className="justify-center my-4"
-            gutter={24}
-          >
+          <Row className="justify-center my-4" gutter={24}>
             <Col span={8}>
               <Form.Item
                 className="text-center"

@@ -5,29 +5,34 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Nombre",
     dataIndex: "name",
     key: "name",
+    align: "center",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Usuario",
     dataIndex: "username",
     key: "username",
+    align: "center",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
+    align: "center",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Genero",
     dataIndex: "gender",
     key: "gender",
+    align: "center",
   },
   {
     title: "Estatus",
     key: "status",
     dataIndex: "status",
+    align: "center",
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -40,6 +45,7 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Grupos",
     key: "group_id",
     dataIndex: "group_id",
+    align: "center",
     render: (_, record) =>
       record.groups && record.groups.length > 0 ? (
         record.groups.map((group) => (
@@ -54,6 +60,7 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
   {
     title: "Acciones",
     key: "action",
+    align: "center",
     render: (_, record) => (
       <Space size="middle">
         <Button

@@ -12,9 +12,9 @@ export const useInscription = () => {
     reset,
   } = useMutation({
     mutationFn: inscribeUser,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Mutación exitosa", data);
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
       window.location.href = data?.init_point;
     },
     onError: (error) => {

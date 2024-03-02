@@ -35,8 +35,11 @@ export const UserLogic = () => {
   });
 
   const enrichedUsersData = usersData?.map((user) => {
-    const group = groupsData?.find((group) => group._id === user.group_id); // Ajusta según la estructura de tus datos
-    return { ...user, group }; // Añade la información del grupo al objeto de usuario
+    // Encuentra todos los grupos que coincidan con los IDs en user.group_id
+    const userGroups = groupsData?.filter((group) =>
+      user.group_id.includes(group._id),
+    );
+    return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });
 
   const showModal = () => {
@@ -66,7 +69,7 @@ export const UserLogic = () => {
     setModalContext("");
     setSelectedRecord(null);
     setIsModalVisible(false);
-    queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+    await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
   };
 
   const handleEdit = (record) => {
@@ -84,7 +87,7 @@ export const UserLogic = () => {
 
   const cancel = (e) => {
     console.log(e);
-    message.error("Click on No");
+    message.error("Click on No").then((e) => e);
   };
 
   const columns = UserColumns({

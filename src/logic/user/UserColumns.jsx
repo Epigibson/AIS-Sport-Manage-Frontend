@@ -5,37 +5,44 @@ export const UserColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Nombre",
     dataIndex: "name",
     key: "name",
+    align: "center",
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Tutor",
     dataIndex: "tutors_name",
     key: "tutors_name",
+    align: "center",
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
+    align: "center",
   },
   {
     title: "Edad",
     dataIndex: "age",
     key: "age",
+    align: "center",
   },
   {
     title: "Celular",
     dataIndex: "mobile",
     key: "mobile",
+    align: "center",
   },
   {
     title: "Genero",
     dataIndex: "gender",
     key: "gender",
+    align: "center",
   },
   {
     title: "Estatus",
     key: "status",
     dataIndex: "status",
+    align: "center",
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -45,15 +52,25 @@ export const UserColumns = ({ onEdit, onDelete, onCancel }) => [
     },
   },
   {
-    title: "Grupo",
-    key: "group",
-    dataIndex: "group",
-    render: (group) =>
-      group ? <Tag color={"blue"}>{group.name}</Tag> : <span>No Group</span>, // Ajusta "group_name" según tu modelo de datos
+    title: "Grupos",
+    key: "group_id",
+    dataIndex: "group_id",
+    align: "center",
+    render: (_, record) =>
+      record.groups && record.groups.length > 0 ? (
+        record.groups.map((group) => (
+          <Tag color="blue" key={group._id}>
+            {group.name}
+          </Tag>
+        ))
+      ) : (
+        <span>No Group</span>
+      ),
   },
   {
     title: "Acciones",
     key: "action",
+    align: "center",
     render: (_, record) => (
       <Space size="middle">
         <Button

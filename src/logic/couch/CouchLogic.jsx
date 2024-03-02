@@ -42,7 +42,7 @@ export const CouchLogic = () => {
     return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });
 
-  console.log("DATAAAA", enrichedUsersData);
+  // console.log("DATAAAA", enrichedUsersData);
 
   const showModal = () => {
     setIsModalVisible(true);

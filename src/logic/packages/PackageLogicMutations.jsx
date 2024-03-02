@@ -15,9 +15,9 @@ export const useCreatePackage = () => {
     reset,
   } = useMutation({
     mutationFn: createPackage,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -39,9 +39,9 @@ export const useUpdatePackage = () => {
     reset,
   } = useMutation({
     mutationFn: updatePackage,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -63,9 +63,9 @@ export const useDeletePackage = () => {
     reset,
   } = useMutation({
     mutationFn: deletePackage,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Mutación exitosa");
-      queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allPackages"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
