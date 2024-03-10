@@ -89,7 +89,7 @@ export const useChangeAvatar = () => {
     onSuccess: async (data) => {
       console.log("Mutación exitosa", data);
       await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
-      window.location.href = data?.init_point;
+      // window.location.href = data?.init_point;
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
