@@ -9,13 +9,13 @@ import {
 } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { useCategories } from "../hooks/CategoriesContext.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
 import { getAllGroups } from "../api/GroupService.jsx";
 import { AvatarComponent } from "./AvatarComponent.jsx";
 import { getAllPackages } from "../api/ProductService.jsx";
 import PropTypes from "prop-types";
+import { useCategories } from "../hooks/CategoryContext/useCategories.jsx";
 
 const { Option } = Select;
 
@@ -185,7 +185,7 @@ export const FormComponent = ({
 
 FormComponent.propTypes = {
   form: PropTypes.object,
-  formFields: PropTypes.node,
+  formFields: PropTypes.any,
   handleSubmit: PropTypes.func,
   handleClose: PropTypes.func,
   setProfileImage: PropTypes.func,

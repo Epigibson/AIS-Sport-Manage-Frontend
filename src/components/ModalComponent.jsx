@@ -40,12 +40,12 @@ export const ModalComponent = ({
 
 ModalComponent.propTypes = {
   title: PropTypes.string,
-  onOk: PropTypes.func,
-  onOpen: PropTypes.bool,
-  onClose: PropTypes.func,
-  form: PropTypes.object,
-  formFields: PropTypes.array,
-  dataTable: PropTypes.array,
-  dataTableColumns: PropTypes.array,
-  setProfileImage: PropTypes.func,
+  onOk: PropTypes.any,
+  onOpen: PropTypes.any,
+  onClose: PropTypes.any,
+  form: PropTypes.any,
+  formFields: PropTypes.any,
+  dataTable: PropTypes.any,
+  dataTableColumns: PropTypes.any,
+  setProfileImage: PropTypes.any,
 };

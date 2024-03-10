@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "../api/AuthService.jsx";
-import { saveTokens } from "../utils/tokenUtils.jsx";
-import { GetUserLoggedIn } from "../utils/getUserUtils.jsx";
-import AuthContext from "./AuthContext"; // Importa AuthContext correctamente
+import { login } from "../../api/AuthService.jsx";
+import { saveTokens } from "../../utils/tokenUtils.jsx";
+import { GetUserLoggedIn } from "../../utils/getUserUtils.jsx";
+import AuthContext from "./AuthContext.jsx"; // Importa AuthContext correctamente
 import PropTypes from "prop-types";
 
 export const AuthProvider = ({ children }) => {

@@ -1,9 +1,8 @@
-import { createContext, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCategories } from "../api/CategoryService.jsx";
-import { LoaderIconUtils } from "../utils/LoaderIconUtils.jsx";
-
-const CategoriesContext = createContext(undefined);
+import { getAllCategories } from "../../api/CategoryService.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
+import CategoriesContext from "./CategoryContext.jsx";
+import PropTypes from "prop-types";
 
 export const CategoriesProvider = ({ children }) => {
   const {
@@ -17,7 +16,7 @@ export const CategoriesProvider = ({ children }) => {
   });
 
   if (isLoading) return <LoaderIconUtils />;
-  if (isError) return <div>Error loading categories: {error.message}</div>;
+  if (isError) return <div>Error loading categories: {error?.message}</div>;
 
   return (
     <CategoriesContext.Provider value={{ categories }}>
@@ -26,4 +25,6 @@ export const CategoriesProvider = ({ children }) => {
   );
 };
 
-export const useCategories = () => useContext(CategoriesContext);
+CategoriesProvider.propTypes = {
+  children: PropTypes.node,
+};

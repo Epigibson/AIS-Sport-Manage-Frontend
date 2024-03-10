@@ -1,4 +1,4 @@
-import { useAuth } from "../../hooks/useAuth.jsx";
+import { useAuth } from "../../hooks/AuthContext/useAuth.jsx";
 import PropTypes from "prop-types";
 
 export const MainContainerLayout = ({ children, title }) => {

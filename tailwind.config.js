@@ -1,7 +1,6 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line no-undef
 module.exports = {
   darkMode: "class",
   theme: {
@@ -48,9 +47,5 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
     "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
   ],
-  plugins: [
-    // eslint-disable-next-line no-undef
-    require("flowbite/plugin"),
-    require("@tailwindcss/forms"),
-  ],
+  plugins: [require("flowbite/plugin", "@tailwindcss/forms")],
 };
