@@ -3,11 +3,11 @@ import App from "./App.jsx";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { AuthProvider } from "./hooks/AuthContext.jsx";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CategoriesProvider } from "./hooks/CategoriesContext.jsx";
 import { CouchesProvider } from "./hooks/CouchesContext.jsx";
 import { GroupsProvider } from "./hooks/GroupContext.jsx";
+import { AuthProvider } from "./hooks/AuthProvider.jsx";
 
 const queryClient = new QueryClient();
 

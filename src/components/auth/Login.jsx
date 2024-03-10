@@ -1,5 +1,5 @@
 import { Button, Checkbox, Form, Input } from "antd";
-import { useAuth } from "../../hooks/AuthContext.jsx";
+import { useAuth } from "../../hooks/useAuth.jsx";
 
 export const Login = () => {
   const { loginHandler } = useAuth();

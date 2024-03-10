@@ -37,7 +37,7 @@ export const PaymentPendingPage = () => {
             }
             subTitle="Tu pago está siendo procesado. Esto puede tomar algunos minutos. Te notificaremos una vez que el proceso haya concluido."
             extra={[
-              <Paragraph>
+              <Paragraph key={1}>
                 {" "}
                 Serás redirigido automáticamente para verificar el estado del
                 pago en 5 segundos.{" "}

@@ -4,9 +4,7 @@ import { GroupAssignLayout } from "./layout/GroupAssingLayout/GroupAssignLayout.
 import { UsersInscribedLayout } from "./layout/UsersInscribedLayout/UsersInscribedLayout.jsx";
 
 export const TabsComponent = () => {
-  const onChange = (key) => {
-    // console.log(key);
-  };
+  const onChange = () => {};
   const items = [
     {
       key: "1",

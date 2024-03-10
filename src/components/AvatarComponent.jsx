@@ -1,6 +1,7 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -10,19 +11,15 @@ const getBase64 = (img, callback) => {
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
+    message?.error("You can only upload JPG/PNG file!");
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
+    message?.error("Image must smaller than 2MB!");
   }
   return isJpgOrPng && isLt2M;
 };
-export const AvatarComponent = ({
-  onImageLoaded,
-  existingImageUrl,
-  setSelectedRecord,
-}) => {
+export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(existingImageUrl);
 
@@ -89,4 +86,9 @@ export const AvatarComponent = ({
       </Upload>
     </>
   );
+};
+
+AvatarComponent.propTypes = {
+  onImageLoaded: PropTypes.func,
+  existingImageUrl: PropTypes.string,
 };

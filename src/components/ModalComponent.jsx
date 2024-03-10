@@ -1,6 +1,7 @@
 import { Modal } from "antd";
 import { FormComponent } from "./FormComponent.jsx";
 import { TablesComponent } from "./TablesComponent.jsx";
+import PropTypes from "prop-types";
 
 export const ModalComponent = ({
   form,
@@ -35,4 +36,16 @@ export const ModalComponent = ({
       ) : null}
     </Modal>
   );
+};
+
+ModalComponent.propTypes = {
+  title: PropTypes.string,
+  onOk: PropTypes.func,
+  onOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+  form: PropTypes.object,
+  formFields: PropTypes.array,
+  dataTable: PropTypes.array,
+  dataTableColumns: PropTypes.array,
+  setProfileImage: PropTypes.func,
 };

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItems } from "./MenuItems.jsx";
 import logoImage from "../../assets/logo.png";
+import PropTypes from "prop-types";
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -83,4 +84,8 @@ export const SideBarLayout = ({ children }) => {
       </Layout>
     </Layout>
   );
+};
+
+SideBarLayout.propTypes = {
+  children: PropTypes.node, // 'node' cubre cualquier cosa que pueda ser renderizada: números, strings, elementos o fragmentos
 };

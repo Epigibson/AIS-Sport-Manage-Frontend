@@ -24,7 +24,7 @@ export const UserLogic = () => {
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
-  const [profileImage, setProfileImage] = useState(false);
+  // const [profileImage, setProfileImage] = useState(false);
   const {
     data: usersData,
     isLoading,
@@ -36,17 +36,12 @@ export const UserLogic = () => {
     queryFn: getAllGroups,
   });
 
-  const {
-    mutateUpdateAvatar,
-    isError: isErrorAvatar,
-    error: errorAvatar,
-    isPending: isPendingAvatar,
-  } = useChangeAvatarWithoutRegister();
+  const { mutateUpdateAvatar } = useChangeAvatarWithoutRegister();
 
   const enrichedUsersData = usersData?.map((user) => {
     // Encuentra todos los grupos que coincidan con los IDs en user.group_id
     const userGroups = groupsData?.filter((group) =>
-      user.groups.includes(group._id),
+      user.groups?.includes(group._id),
     );
     return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });

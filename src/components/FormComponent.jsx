@@ -15,6 +15,7 @@ import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
 import { getAllGroups } from "../api/GroupService.jsx";
 import { AvatarComponent } from "./AvatarComponent.jsx";
 import { getAllPackages } from "../api/ProductService.jsx";
+import PropTypes from "prop-types";
 
 const { Option } = Select;
 
@@ -108,7 +109,7 @@ export const FormComponent = ({
       labelCol={{ span: 5 }} // Ajusta este valor según necesites
       wrapperCol={{ span: 16 }} // Ajusta este valor según necesites
     >
-      {formFields.map((field, index) => (
+      {formFields.map((field) => (
         <Form.Item
           key={field.name}
           name={field.name}
@@ -180,4 +181,12 @@ export const FormComponent = ({
       </Form.Item>
     </Form>
   );
+};
+
+FormComponent.propTypes = {
+  form: PropTypes.object,
+  formFields: PropTypes.node,
+  handleSubmit: PropTypes.func,
+  handleClose: PropTypes.func,
+  setProfileImage: PropTypes.func,
 };

@@ -1,4 +1,5 @@
-import { useAuth } from "../../hooks/AuthContext.jsx";
+import { useAuth } from "../../hooks/useAuth.jsx";
+import PropTypes from "prop-types";
 
 export const MainContainerLayout = ({ children, title }) => {
   const { user } = useAuth();
@@ -15,4 +16,10 @@ export const MainContainerLayout = ({ children, title }) => {
       {children}
     </>
   );
+};
+
+// Aquí es donde defines las validaciones para tus props
+MainContainerLayout.propTypes = {
+  children: PropTypes.node, // 'node' cubre cualquier cosa que pueda ser renderizada: números, strings, elementos o fragmentos
+  title: PropTypes.string, // Definiendo que 'title' debería ser una string
 };

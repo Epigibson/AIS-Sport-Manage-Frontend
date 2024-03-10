@@ -16,17 +16,11 @@ export const InscriptionLayout = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let {
     mutateCreate,
-    isSuccess: isSuccessCreate,
     isError: isErrorCreate,
     error: errorCreate,
     isPending: isPendingCreate,
   } = useInscription();
-  const {
-    mutateUpdateAvatar,
-    isError: isErrorAvatar,
-    error: errorAvatar,
-    isPending: isPendingAvatar,
-  } = useChangeAvatar();
+  const { mutateUpdateAvatar } = useChangeAvatar();
 
   const openModal = () => {
     setModalVisible(true);

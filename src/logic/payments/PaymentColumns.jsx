@@ -45,6 +45,13 @@ export const PaymentColumns = ({ showReceipts }) => [
     dataIndex: "amount",
     key: "amount",
     align: "center",
+    render: (amount) => {
+      const formattedAmount = new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN",
+      }).format(amount);
+      return <Text>{formattedAmount}</Text>;
+    },
   },
   {
     title: "Estatus",

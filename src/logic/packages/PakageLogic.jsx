@@ -70,7 +70,7 @@ export const PackageLogic = () => {
 
   const cancel = (e) => {
     console.log(e);
-    message.error("Click on No");
+    message?.error("Click on No");
   };
 
   if (isLoading) return <LoaderIconUtils />;

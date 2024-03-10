@@ -58,7 +58,7 @@ export const UsersInscribedColumns = [
     align: "center",
     render: (_, record) =>
       record.groups && record.groups.length > 0 ? (
-        record.groups.map((group) => (
+        record.groups?.map((group) => (
           <Tag color="blue" key={group._id}>
             {group.name}
           </Tag>

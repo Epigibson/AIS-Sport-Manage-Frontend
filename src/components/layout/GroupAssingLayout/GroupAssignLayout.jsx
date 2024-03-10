@@ -2,6 +2,7 @@ import { Form } from "antd";
 import { FormComponent } from "../../FormComponent.jsx";
 import { GroupAssignFields } from "./GroupAssignFields.jsx";
 import { useAssignUserToGroup } from "./GroupAssignMutations.jsx";
+import PropTypes from "prop-types";
 
 export const GroupAssignLayout = ({ children }) => {
   const [form] = Form.useForm();
@@ -24,4 +25,8 @@ export const GroupAssignLayout = ({ children }) => {
       </FormComponent>
     </div>
   );
+};
+
+GroupAssignLayout.propTypes = {
+  children: PropTypes.node,
 };
