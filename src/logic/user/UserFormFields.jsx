@@ -46,11 +46,11 @@ export const userFormFields = [
       { label: "Otro", value: "Otro" },
     ],
   },
-  {
-    name: "group_id",
-    label: "Grupo",
-    rules: [{ required: true }],
-    inputType: "select", // Indica el tipo de control de entrada
-    optionsSource: "groups", // Utiliza un identificador para las opciones
-  },
+  // {
+  //   name: "group_id",
+  //   label: "Grupo",
+  //   rules: [{ required: true }],
+  //   inputType: "select", // Indica el tipo de control de entrada
+  //   optionsSource: "groups", // Utiliza un identificador para las opciones
+  // },
 ];

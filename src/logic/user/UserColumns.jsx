@@ -1,6 +1,45 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
+import { AvatarComponent } from "../../components/AvatarComponent.jsx";
 
-export const UserColumns = ({ onEdit, onDelete, onCancel }) => [
+export const UserColumns = ({
+  onEdit,
+  onDelete,
+  onCancel,
+  handleImageLoaded,
+}) => [
+  {
+    title: "Avatar",
+    dataIndex: "avatar",
+    key: "avatar",
+    align: "center",
+    inputType: "avatar",
+    render: (_, record) => {
+      if (record) {
+        // console.log("SOLO VER", record.avatar);
+        return (
+          <AvatarComponent
+            onImageLoaded={(file) => handleImageLoaded(file, record)}
+            existingImageUrl={record.avatar}
+          />
+        );
+      } else {
+        return <AvatarComponent />;
+      }
+    },
+  },
+  {
+    title: "Matricula",
+    dataIndex: "tuition",
+    key: "tuition",
+    align: "center",
+    render: (text) => {
+      if (text) {
+        return <Tag color={"cyan"}>{text}</Tag>;
+      } else {
+        return <Tag color={"default"}>Sin Matricula</Tag>;
+      }
+    },
+  },
   {
     title: "Nombre",
     dataIndex: "name",
@@ -53,18 +92,20 @@ export const UserColumns = ({ onEdit, onDelete, onCancel }) => [
   },
   {
     title: "Grupos",
-    key: "group_id",
-    dataIndex: "group_id",
+    key: "groups",
+    dataIndex: "groups",
     align: "center",
     render: (_, record) =>
       record.groups && record.groups.length > 0 ? (
-        record.groups.map((group) => (
-          <Tag color="blue" key={group._id}>
+        record.groups?.map((group) => (
+          <Tag color="blue" key={group?._id}>
             {group.name}
           </Tag>
         ))
       ) : (
-        <span>No Group</span>
+        <Tag color={"default"} key={record?._id}>
+          No Group
+        </Tag>
       ),
   },
   {

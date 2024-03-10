@@ -37,7 +37,7 @@ export const CouchLogic = () => {
   const enrichedUsersData = couchesData?.map((user) => {
     // Encuentra todos los grupos que coincidan con los IDs en user.group_id
     const userGroups = groups?.filter((group) =>
-      user.group_id.includes(group._id),
+      user.groups.includes(group._id),
     );
     return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });

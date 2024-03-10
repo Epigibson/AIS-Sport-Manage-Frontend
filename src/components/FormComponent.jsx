@@ -1,10 +1,20 @@
-import { Button, Checkbox, Form, Input, Select, Tooltip } from "antd";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Tooltip,
+} from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useCategories } from "../hooks/CategoriesContext.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
 import { getAllGroups } from "../api/GroupService.jsx";
+import { AvatarComponent } from "./AvatarComponent.jsx";
+import { getAllPackages } from "../api/ProductService.jsx";
 
 const { Option } = Select;
 
@@ -13,6 +23,7 @@ export const FormComponent = ({
   formFields,
   handleSubmit,
   handleClose,
+  setProfileImage,
 }) => {
   const { categories } = useCategories(); // Obtiene categorías del contexto
   const { data: couches } = useQuery({
@@ -29,7 +40,15 @@ export const FormComponent = ({
     queryFn: getAllUsers,
   });
 
+  const { data: packages } = useQuery({
+    queryKey: ["allPackages"],
+    queryFn: getAllPackages,
+  });
+
   const [selectOptions, setSelectOptions] = useState({});
+  const handleImageLoaded = (file) => {
+    setProfileImage(file);
+  };
 
   useEffect(() => {
     // Prepara opciones para campos select basados en optionsSource
@@ -54,6 +73,11 @@ export const FormComponent = ({
             label: c.name,
             value: c._id,
           }));
+        } else if (field.optionsSource === "products") {
+          newSelectOptions[field.name] = packages?.map((c) => ({
+            label: c.product_name,
+            value: c._id,
+          }));
         } else if (field.optionsSource === "users") {
           newSelectOptions[field.name] = users?.map((c) => ({
             label: `${c.name} : (${c.email})`,
@@ -72,31 +96,41 @@ export const FormComponent = ({
       }
     });
     setSelectOptions(newSelectOptions);
-  }, [formFields, categories, couches, groups, users]); // Dependencias del efecto
+  }, [formFields, categories, couches, groups, users, packages]); // Dependencias del efecto
 
   return (
     <Form
-      className="overflow-y-auto max-h-[600px]"
+      className="overflow-y-auto max-h-[800px]"
       form={form}
       onFinish={() => handleSubmit("create")}
       layout="horizontal"
       autoComplete="off"
-      labelCol={{ span: 8 }} // Ajusta este valor según necesites
+      labelCol={{ span: 5 }} // Ajusta este valor según necesites
       wrapperCol={{ span: 16 }} // Ajusta este valor según necesites
     >
-      {formFields.map((field) => (
+      {formFields.map((field, index) => (
         <Form.Item
           key={field.name}
           name={field.name}
           label={field.label}
           rules={field.rules}
           valuePropName={field.inputType === "checkbox" ? "checked" : undefined}
+          className={`flex flex-col justify-center ${field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : "pr-10"}`}
         >
           {field.inputType === "input" && (
             <Input className="rounded-md py-0.5 my-0 border-gray-300" />
           )}
+          {field.inputType === "number" && (
+            <InputNumber className="rounded-md py-0.5 my-0 border-gray-300 w-full" />
+          )}
           {field.inputType === "password" && (
             <Input.Password className="rounded-md py-0.5 my-0 border-gray-300" />
+          )}
+          {field.inputType === "avatar" && (
+            <AvatarComponent
+              onImageLoaded={handleImageLoaded}
+              existingImageUrl={field.existingImageUrl}
+            />
           )}
           {field.inputType === "checkbox" && (
             <>
@@ -130,7 +164,7 @@ export const FormComponent = ({
       ))}
       <Form.Item
         wrapperCol={{ span: 24 }} // Esto hace que el Form.Item ignore la configuración de columnas y utilice el ancho completo
-        className="flex justify-end mt-2 mb-0.5"
+        className="flex justify-center mt-10 mb-0.5"
       >
         <Button
           type={"primary"}

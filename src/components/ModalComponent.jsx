@@ -11,6 +11,7 @@ export const ModalComponent = ({
   onClose,
   dataTable,
   dataTableColumns,
+  setProfileImage,
 }) => {
   return (
     <Modal
@@ -18,7 +19,7 @@ export const ModalComponent = ({
       open={onOpen}
       onCancel={onClose}
       footer={false}
-      width={dataTable ? "50%" : "35%"}
+      width={dataTable ? "50%" : "25%"}
     >
       {dataTable == null && form != null && formFields != null ? (
         <FormComponent
@@ -26,6 +27,7 @@ export const ModalComponent = ({
           formFields={formFields}
           handleSubmit={onOk}
           handleClose={onClose}
+          setProfileImage={setProfileImage}
         />
       ) : null}
       {dataTable != null && dataTableColumns != null ? (

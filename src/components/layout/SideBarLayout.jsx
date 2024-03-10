@@ -1,21 +1,31 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Divider, Layout, Menu, theme } from "antd";
-import { useState } from "react";
+import { Button, Divider, Grid, Layout, Menu, theme } from "antd";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItems } from "./MenuItems.jsx";
 import logoImage from "../../assets/logo.png";
 
 const { Header, Sider, Content } = Layout;
+const { useBreakpoint } = Grid;
 
 export const SideBarLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const screens = useBreakpoint();
   const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  useEffect(() => {
+    if (screens.xs) {
+      setCollapsed(true);
+    } else {
+      setCollapsed(false);
+    }
+  }, [screens]);
+
   return (
-    <Layout className="min-h-lvh">
+    <Layout className="min-h-lvh ">
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical px-4 m-0 pt-6 flex justify-around items-center">
           <img src={logoImage} alt="Logo" style={{ maxHeight: "32px" }} />
@@ -23,6 +33,8 @@ export const SideBarLayout = ({ children }) => {
         </div>
         <Divider className="bg-blue-950" />
         <Menu
+          className=""
+          style={{ width: "100%" }}
           theme="dark"
           mode="inline"
           defaultSelectedKeys={["1"]}

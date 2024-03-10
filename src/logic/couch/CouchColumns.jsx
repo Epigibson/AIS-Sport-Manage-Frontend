@@ -43,8 +43,8 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
   },
   {
     title: "Grupos",
-    key: "group_id",
-    dataIndex: "group_id",
+    key: "groups",
+    dataIndex: "groups",
     align: "center",
     render: (_, record) =>
       record.groups && record.groups.length > 0 ? (

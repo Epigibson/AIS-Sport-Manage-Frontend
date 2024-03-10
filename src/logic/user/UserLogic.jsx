@@ -5,6 +5,7 @@ import { getAllGroups } from "../../api/GroupService.jsx";
 import { Button, Form, message } from "antd";
 import { useState } from "react";
 import {
+  useChangeAvatarWithoutRegister,
   useCreateUser,
   useDeleteUser,
   useUpdateUser,
@@ -23,6 +24,7 @@ export const UserLogic = () => {
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
+  const [profileImage, setProfileImage] = useState(false);
   const {
     data: usersData,
     isLoading,
@@ -34,10 +36,17 @@ export const UserLogic = () => {
     queryFn: getAllGroups,
   });
 
+  const {
+    mutateUpdateAvatar,
+    isError: isErrorAvatar,
+    error: errorAvatar,
+    isPending: isPendingAvatar,
+  } = useChangeAvatarWithoutRegister();
+
   const enrichedUsersData = usersData?.map((user) => {
     // Encuentra todos los grupos que coincidan con los IDs en user.group_id
     const userGroups = groupsData?.filter((group) =>
-      user.group_id.includes(group._id),
+      user.groups.includes(group._id),
     );
     return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });
@@ -81,8 +90,7 @@ export const UserLogic = () => {
 
   const handleDelete = async (record) => {
     setModalContext("delete");
-    setSelectedRecord(record);
-    await mutateDelete(selectedRecord?.user_id);
+    await mutateDelete(record.user_id);
   };
 
   const cancel = (e) => {
@@ -90,10 +98,31 @@ export const UserLogic = () => {
     message.error("Click on No").then((e) => e);
   };
 
+  const handleImageLoaded = async (file, record) => {
+    await handleChanceAvatar(file, record);
+  };
+
+  const handleChanceAvatar = async (file, record) => {
+    try {
+      console.log(selectedRecord);
+      const data = {};
+      const formData = new FormData();
+      formData.append("file", file);
+      data.username = record.username;
+      data.file = formData;
+      console.log("DATA", data);
+      await mutateUpdateAvatar(data);
+    } catch (error) {
+      console.error("Error al guardar la imagen:", error);
+    }
+  };
+
   const columns = UserColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,
+    handleImageLoaded: handleImageLoaded,
+    setSelectedRecord,
   });
 
   if (isLoading) return <LoaderIconUtils />;

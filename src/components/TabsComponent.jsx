@@ -1,5 +1,5 @@
 import { Tabs } from "antd";
-import { InscriptionLayout } from "./layout/InscriptionLayout.jsx";
+import { InscriptionLayout } from "../logic/inscription/InscriptionLayout.jsx";
 import { GroupAssignLayout } from "./layout/GroupAssingLayout/GroupAssignLayout.jsx";
 import { UsersInscribedLayout } from "./layout/UsersInscribedLayout/UsersInscribedLayout.jsx";
 
