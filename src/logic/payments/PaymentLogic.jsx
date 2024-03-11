@@ -42,7 +42,7 @@ export const PaymentLogic = () => {
   );
 
   const showReceipts = (record) => {
-    console.log("DATA DE EL RECIBO SELECCIONADO", record.receipt);
+    // console.log("DATA DE EL RECIBO SELECCIONADO", record.receipt);
     setSelectedReceipt([record.receipt]);
     setIsModalVisible(true);
   };
@@ -52,7 +52,7 @@ export const PaymentLogic = () => {
   };
 
   useEffect(() => {
-    console.log("DATA RECORD", selectedReceipt);
+    // console.log("DATA RECORD", selectedReceipt);
   }, [selectedReceipt]);
 
   if (isLoading) return <LoaderIconUtils />;

@@ -30,7 +30,6 @@ export const CouchLogic = () => {
     data: couchesData,
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ["couchList"],
     queryFn: getAllCouches,

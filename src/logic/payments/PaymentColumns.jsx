@@ -4,7 +4,7 @@ const { Text } = Typography;
 
 export const PaymentColumns = ({ showReceipts }) => [
   {
-    title: "Folio de Recibo",
+    title: "Recibo",
     dataIndex: "receipt_id",
     key: "receipt_id",
     align: "center",

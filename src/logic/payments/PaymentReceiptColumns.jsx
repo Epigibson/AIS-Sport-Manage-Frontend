@@ -1,4 +1,4 @@
-import { Tag, Typography } from "antd";
+import { Button, Tag, Typography } from "antd";
 
 const { Text } = Typography;
 
@@ -8,6 +8,25 @@ export const PaymentReceiptColumns = [
     dataIndex: "_id",
     key: "_id",
     align: "center",
+  },
+  {
+    title: "Pago",
+    dataIndex: "payment_link",
+    key: "payment_link",
+    align: "center",
+    render: (_, record) => {
+      console.log("LINK", record.payment_link);
+      return (
+        <Button
+          onClick={() => window.open(record.payment_link, "_blank")}
+          disabled={!record.payment_link}
+          type={"primary"}
+          className={"bg-primary-700"}
+        >
+          Pagar
+        </Button>
+      );
+    },
   },
   {
     title: "Tipo de Recibo",
