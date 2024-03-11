@@ -1,7 +1,9 @@
-import { Modal } from "antd";
+import { Grid, Modal } from "antd";
 import { FormComponent } from "./FormComponent.jsx";
 import { TablesComponent } from "./TablesComponent.jsx";
 import PropTypes from "prop-types";
+
+const { useBreakpoint } = Grid;
 
 export const ModalComponent = ({
   form,
@@ -14,13 +16,14 @@ export const ModalComponent = ({
   dataTableColumns,
   setProfileImage,
 }) => {
+  const screen = useBreakpoint();
   return (
     <Modal
       title={title}
       open={onOpen}
       onCancel={onClose}
       footer={false}
-      width={dataTable ? "50%" : "25%"}
+      width={screen.xs ? "300px" : "80%"}
     >
       {dataTable == null && form != null && formFields != null ? (
         <FormComponent

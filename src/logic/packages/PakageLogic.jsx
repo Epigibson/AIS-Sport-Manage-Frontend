@@ -6,14 +6,17 @@ import {
   useDeletePackage,
   useUpdatePackage,
 } from "./PackageLogicMutations.jsx";
-import { Button, Form, message } from "antd";
+import { Button, Form, Grid, message } from "antd";
 import { useState } from "react";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { packageFormFields } from "./PackageFormFields.jsx";
 import { PackagesColumns } from "./PackageColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
+const { useBreakpoint } = Grid;
+
 export const PackageLogic = () => {
+  const screen = useBreakpoint();
   const { mutateCreate } = useCreatePackage();
   const { mutateUpdate } = useUpdatePackage();
   const { mutateDelete } = useDeletePackage();
@@ -80,6 +83,7 @@ export const PackageLogic = () => {
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,
+    screen: screen,
   });
 
   return (

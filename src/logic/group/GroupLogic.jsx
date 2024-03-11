@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllGroups } from "../../api/GroupService.jsx";
 import { GroupColumns } from "./GroupColumns.jsx";
 import { getAllCouches, getAllUsers } from "../../api/UserService.jsx";
-import { Button, Form, message } from "antd";
+import { Button, Form, Grid, message } from "antd";
 import { useState } from "react";
 import {
   useCreateGroup,
@@ -15,7 +15,10 @@ import { groupFormFields } from "./GroupFormFields.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { MembersGroupsColumns } from "./MembersGroupsColumns.jsx";
 
+const { useBreakpoint } = Grid;
+
 export const GroupLogic = () => {
+  const screen = useBreakpoint();
   const { mutateCreate } = useCreateGroup();
   const { mutateUpdate } = useUpdateGroup();
   const { mutateDelete } = useDeleteGroup();
@@ -125,6 +128,7 @@ export const GroupLogic = () => {
     onDelete: handleDelete,
     onCancel: cancel,
     onShowMembers: showModalMembers,
+    screen: screen,
   });
 
   return (

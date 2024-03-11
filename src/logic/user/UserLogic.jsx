@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
-import { Button, Form, message } from "antd";
+import { Button, Form, Grid, message } from "antd";
 import { useState } from "react";
 import {
   useChangeAvatarWithoutRegister,
@@ -15,7 +15,10 @@ import { userFormFields } from "./UserFormFields.jsx";
 import { UserColumns } from "./UserColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
+const { useBreakpoint } = Grid;
+
 export const UserLogic = () => {
+  const screen = useBreakpoint();
   const queryClient = useQueryClient();
   const { mutateCreate } = useCreateUser();
   const { mutateUpdate } = useUpdateUser();
@@ -118,6 +121,7 @@ export const UserLogic = () => {
     onCancel: cancel,
     handleImageLoaded: handleImageLoaded,
     setSelectedRecord,
+    screen: screen,
   });
 
   if (isLoading) return <LoaderIconUtils />;

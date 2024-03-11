@@ -1,6 +1,6 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 
-export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
+export const PackagesColumns = ({ onEdit, onDelete, onCancel, screen }) => [
   {
     title: "Nombre",
     dataIndex: "product_name",
@@ -42,8 +42,10 @@ export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Acciones",
     key: "action",
     align: "center",
+    width: 200,
+    fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
-      <Space size="middle">
+      <Space>
         <Button
           style={{ backgroundColor: "#fcba03" }}
           type="primary"

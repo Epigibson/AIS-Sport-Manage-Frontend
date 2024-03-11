@@ -1,6 +1,6 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 
-export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
+export const CouchColumns = ({ onEdit, onDelete, onCancel, screen }) => [
   {
     title: "Nombre",
     dataIndex: "name",
@@ -48,7 +48,7 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
     align: "center",
     render: (_, record) =>
       record.groups && record.groups.length > 0 ? (
-        record.groups.map((group) => (
+        record.groups?.map((group) => (
           <Tag color="blue" key={group._id}>
             {group.name}
           </Tag>
@@ -61,8 +61,10 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel }) => [
     title: "Acciones",
     key: "action",
     align: "center",
+    width: 200,
+    fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
-      <Space size="middle">
+      <Space direction={"horizontal"} align={"center"}>
         <Button
           style={{ backgroundColor: "#fcba03" }}
           type="primary"

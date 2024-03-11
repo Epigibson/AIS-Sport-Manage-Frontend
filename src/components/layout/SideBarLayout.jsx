@@ -1,10 +1,12 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Divider, Grid, Layout, Menu, theme } from "antd";
+import { Button, Divider, Grid, Layout, Menu, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItems } from "./MenuItems.jsx";
 import logoImage from "../../assets/logo.png";
 import PropTypes from "prop-types";
+
+const { Title } = Typography;
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -13,6 +15,7 @@ export const SideBarLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const screens = useBreakpoint();
   const navigate = useNavigate();
+  const appName = "Be Plus";
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -26,11 +29,21 @@ export const SideBarLayout = ({ children }) => {
   }, [screens]);
 
   return (
-    <Layout className="min-h-lvh ">
+    <Layout className="min-h-lvh w-full ">
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical px-4 m-0 pt-6 flex justify-around items-center">
+        <div className="demo-logo-vertical px-4 m-0 pt-6 flex justify-center ">
           <img src={logoImage} alt="Logo" style={{ maxHeight: "32px" }} />
-          <p className="text-amber-50">Sport Management</p>
+          {!collapsed && appName && (
+            <Title
+              level={5}
+              style={{
+                color: "white",
+                marginLeft: "8px",
+              }}
+            >
+              {appName}
+            </Title>
+          )}
         </div>
         <Divider className="bg-blue-950" />
         <Menu

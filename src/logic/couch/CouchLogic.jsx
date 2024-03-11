@@ -1,5 +1,5 @@
 import { TablesComponent } from "../../components/TablesComponent.jsx";
-import { Button, Form, message } from "antd";
+import { Button, Form, Grid, message } from "antd";
 import { useState } from "react";
 import { CouchColumns } from "./CouchColumns.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
@@ -13,7 +13,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCouches } from "../../api/UserService.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
+const { useBreakpoint } = Grid;
+
 export const CouchLogic = () => {
+  const screen = useBreakpoint();
   const queryClient = useQueryClient();
   const { mutateCreate } = useCreateCouch();
   const { mutateUpdate } = useUpdateCouch();
@@ -22,6 +25,7 @@ export const CouchLogic = () => {
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
+
   const {
     data: couchesData,
     isLoading,
@@ -37,7 +41,7 @@ export const CouchLogic = () => {
   const enrichedUsersData = couchesData?.map((user) => {
     // Encuentra todos los grupos que coincidan con los IDs en user.group_id
     const userGroups = groups?.filter((group) =>
-      user.groups.includes(group._id),
+      user.groups?.includes(group._id),
     );
     return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });
@@ -96,10 +100,11 @@ export const CouchLogic = () => {
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,
+    screen: screen,
   });
 
   if (isLoading) return <LoaderIconUtils />;
-  if (isError) return <div>Error: {error.message} </div>;
+  if (isError) return <div>Error...</div>;
 
   return (
     <>

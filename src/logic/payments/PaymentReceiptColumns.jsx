@@ -34,5 +34,6 @@ export const PaymentReceiptColumns = [
     dataIndex: "receipt_description",
     key: "receipt_description",
     align: "center",
+    ellipsis: true,
   },
 ];

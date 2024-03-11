@@ -6,6 +6,7 @@ export const UserColumns = ({
   onDelete,
   onCancel,
   handleImageLoaded,
+  screen,
 }) => [
   {
     title: "Avatar",
@@ -32,6 +33,7 @@ export const UserColumns = ({
     dataIndex: "tuition",
     key: "tuition",
     align: "center",
+    searchable: true, // Esta columna será buscable
     render: (text) => {
       if (text) {
         return <Tag color={"cyan"}>{text}</Tag>;
@@ -45,6 +47,7 @@ export const UserColumns = ({
     dataIndex: "name",
     key: "name",
     align: "center",
+    searchable: true, // Esta columna será buscable
     render: (text) => <a>{text}</a>,
   },
   {
@@ -52,12 +55,14 @@ export const UserColumns = ({
     dataIndex: "tutors_name",
     key: "tutors_name",
     align: "center",
+    searchable: true, // Esta columna será buscable
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
     align: "center",
+    searchable: true, // Esta columna será buscable
   },
   {
     title: "Edad",
@@ -70,6 +75,7 @@ export const UserColumns = ({
     dataIndex: "mobile",
     key: "mobile",
     align: "center",
+    searchable: true, // Esta columna será buscable
   },
   {
     title: "Genero",
@@ -112,9 +118,12 @@ export const UserColumns = ({
     title: "Acciones",
     key: "action",
     align: "center",
+    width: 200,
+    fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
-      <Space size="middle">
+      <Space>
         <Button
+          size={"middle"}
           style={{ backgroundColor: "#fcba03" }}
           type="primary"
           onClick={() => onEdit(record)}
@@ -130,7 +139,7 @@ export const UserColumns = ({
           cancelText="No"
           okType={"default"}
         >
-          <Button type={"primary"} danger>
+          <Button size={"middle"} type={"primary"} danger>
             Borrar
           </Button>
         </Popconfirm>

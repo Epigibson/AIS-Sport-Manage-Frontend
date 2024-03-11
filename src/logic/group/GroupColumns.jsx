@@ -1,6 +1,12 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 
-export const GroupColumns = ({ onEdit, onDelete, onCancel, onShowMembers }) => [
+export const GroupColumns = ({
+  onEdit,
+  onDelete,
+  onCancel,
+  onShowMembers,
+  screen,
+}) => [
   {
     title: "Nombre",
     dataIndex: "name",
@@ -72,9 +78,10 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel, onShowMembers }) => [
     title: "Acciones",
     key: "action",
     align: "center",
-
+    width: 200,
+    fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
-      <Space size="middle">
+      <Space direction={"horizontal"} align={"center"}>
         <Button
           style={{ backgroundColor: "#fcba03" }}
           type="primary"
