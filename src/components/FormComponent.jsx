@@ -46,6 +46,30 @@ export const FormComponent = ({
     queryFn: getAllPackages,
   });
 
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 16 },
+    },
+  };
+
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0,
+      },
+      sm: {
+        span: 16,
+        offset: 8,
+      },
+    },
+  };
+
   const [selectOptions, setSelectOptions] = useState({});
   const handleImageLoaded = (file) => {
     setProfileImage(file);
@@ -101,13 +125,12 @@ export const FormComponent = ({
 
   return (
     <Form
-      className="overflow-y-auto max-h-[800px]"
+      {...formItemLayout}
       form={form}
       onFinish={() => handleSubmit("create")}
-      layout="horizontal"
+      layout="vertical"
+      className="flex flex-col justify-center "
       autoComplete="off"
-      labelCol={{ span: 5 }} // Ajusta este valor según necesites
-      wrapperCol={{ span: 16 }} // Ajusta este valor según necesites
     >
       {formFields.map((field) => (
         <Form.Item
@@ -116,7 +139,7 @@ export const FormComponent = ({
           label={field.label}
           rules={field.rules}
           valuePropName={field.inputType === "checkbox" ? "checked" : undefined}
-          className={`flex flex-col justify-center ${field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : "pr-10"}`}
+          className={`flex flex-col justify-center ${field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : ""}`}
         >
           {field.inputType === "input" && (
             <Input className="rounded-md py-0.5 my-0 border-gray-300" />
@@ -164,18 +187,13 @@ export const FormComponent = ({
         </Form.Item>
       ))}
       <Form.Item
-        wrapperCol={{ span: 24 }} // Esto hace que el Form.Item ignore la configuración de columnas y utilice el ancho completo
-        className="flex justify-center mt-10 mb-0.5"
+        {...tailFormItemLayout}
+        className="flex flex-col justify-between "
       >
-        <Button
-          type={"primary"}
-          className="bg-primary-700"
-          // onClick={handleSubmit}
-          htmlType="submit"
-        >
+        <Button type={"primary"} className="bg-primary-700" htmlType="submit">
           Guardar
         </Button>
-        <Button type={"primary"} className="ml-2" danger onClick={handleClose}>
+        <Button type={"primary"} danger onClick={handleClose}>
           Cancelar
         </Button>
       </Form.Item>

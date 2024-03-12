@@ -3,7 +3,7 @@ import { Button, Divider, Grid, Layout, Menu, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItems } from "./MenuItems.jsx";
-import logoImage from "../../assets/logo.png";
+import logoImage from "../../assets/logo-be.jpg";
 import PropTypes from "prop-types";
 
 const { Title } = Typography;
@@ -15,7 +15,7 @@ export const SideBarLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const screens = useBreakpoint();
   const navigate = useNavigate();
-  const appName = "Be Plus";
+  const appName = "Be +";
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -30,7 +30,13 @@ export const SideBarLayout = ({ children }) => {
 
   return (
     <Layout className="min-h-lvh w-full ">
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        collapsedWidth="0"
+        breakpoint={"lg"}
+      >
         <div className="demo-logo-vertical px-4 m-0 pt-6 flex justify-center ">
           <img src={logoImage} alt="Logo" style={{ maxHeight: "32px" }} />
           {!collapsed && appName && (
@@ -86,8 +92,8 @@ export const SideBarLayout = ({ children }) => {
         <Content
           style={{
             margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
+            // padding: 24,
+            // maxHeight: "100%",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}

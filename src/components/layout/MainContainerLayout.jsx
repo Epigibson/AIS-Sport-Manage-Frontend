@@ -12,7 +12,9 @@ export const MainContainerLayout = ({ children, title }) => {
 
   return (
     <>
-      <div className="text-center text-2xl font-bold mb-4">{title}</div>
+      <div className="text-center text-2xl font-bold mb-4 max-w-fit">
+        {title}
+      </div>
       {children}
     </>
   );

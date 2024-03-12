@@ -4,7 +4,7 @@ const { Text } = Typography;
 
 export const PaymentColumns = ({ showReceipts }) => [
   {
-    title: "Recibo",
+    title: "Pago",
     dataIndex: "receipt_id",
     key: "receipt_id",
     align: "center",
@@ -15,7 +15,7 @@ export const PaymentColumns = ({ showReceipts }) => [
           className={"bg-primary-700 px-8"}
           onClick={() => showReceipts(record)}
         >
-          Ver
+          Registrar Pago
         </Button>
       );
     },
