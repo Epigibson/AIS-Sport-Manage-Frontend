@@ -12,6 +12,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCouches } from "../../api/UserService.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
+import { getAllGroups } from "../../api/GroupService.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -35,11 +36,14 @@ export const CouchLogic = () => {
     queryFn: getAllCouches,
   });
 
-  const groups = queryClient.getQueryData(["groups"]);
+  const { data: groupsData } = useQuery({
+    queryKey: ["groupsList"],
+    queryFn: getAllGroups,
+  });
 
   const enrichedUsersData = couchesData?.map((user) => {
     // Encuentra todos los grupos que coincidan con los IDs en user.group_id
-    const userGroups = groups?.filter((group) =>
+    const userGroups = groupsData?.filter((group) =>
       user.groups?.includes(group._id),
     );
     return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario

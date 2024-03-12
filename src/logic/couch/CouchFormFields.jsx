@@ -29,7 +29,7 @@ export const couchFormFields = [
     ],
   },
   {
-    name: "group_id",
+    name: "groups",
     label: "Grupo",
     rules: [{ required: true }],
     inputType: "multipleSelect", // Indica el tipo de control de entrada
