@@ -6,19 +6,39 @@ import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllReceipts } from "../../api/ReceiptsService.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
+import { Select, Space } from "antd";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState({});
+  const [userFilter, setUserFilter] = useState("");
+  const [userId, setUserId] = useState("");
+  const [statusPayFilter, setStatusPayFilter] = useState("");
+  const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
+  const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
   const {
     data: historyPaymentData,
     isLoading,
     isError,
+    refetch,
   } = useQuery({
-    queryKey: ["allHistoryPayments"],
-    queryFn: getAllHistoryPayments,
+    queryKey: [
+      "allHistoryPayments",
+      userFilter,
+      statusPayFilter,
+      paymentTypeFilter,
+      paymentMethodFilter,
+    ],
+    queryFn: () =>
+      getAllHistoryPayments({
+        user: userFilter,
+        status_pay: statusPayFilter,
+        payment_type: paymentTypeFilter,
+        payment_method: paymentMethodFilter,
+      }),
+    enabled: false, // no ejecutar la consulta automáticamente
   });
 
   const { data: usersData } = useQuery({
@@ -51,10 +71,6 @@ export const PaymentLogic = () => {
     setIsModalVisible(false);
   };
 
-  useEffect(() => {
-    // console.log("DATA RECORD", selectedReceipt);
-  }, [selectedReceipt]);
-
   if (isLoading) return <LoaderIconUtils />;
   if (isError) return <h1>Error...</h1>;
 
@@ -62,8 +78,92 @@ export const PaymentLogic = () => {
     showReceipts: showReceipts,
   });
 
+  // Función para manejar la búsqueda cuando se presiona el botón
+  const handleSearch = () => {
+    refetch();
+  };
+
+  // Asegúrate de incluir esta parte dentro de tu componente
+  const handleUserChange = (value, option) => {
+    // Aquí actualizamos el estado userId basado en la selección
+    setUserId(value); // Aquí asumimos que el valor de la opción es el _id del usuario
+    setUserFilter(option.key); // Opcional, si quieres guardar también el nombre del usuario seleccionado
+    handleSearch();
+  };
+
+  const handleChangeStatus = (value) => {
+    setStatusPayFilter(value);
+    console.log(`selected ${value}`);
+    handleSearch();
+  };
+
+  const handleChangePaymentType = (value) => {
+    setPaymentTypeFilter(value);
+    console.log(`selected ${value}`);
+    handleSearch();
+  };
+
+  const handleChangePaymentMethod = (value) => {
+    setPaymentMethodFilter(value);
+    console.log(`selected ${value}`);
+    handleSearch();
+  };
+
   return (
     <>
+      <Space wrap className={"flex justify-end mb-5"}>
+        <Select
+          showSearch
+          style={{ width: 200 }}
+          placeholder="-- Seleccionar Usuario --"
+          optionFilterProp="children"
+          onChange={handleUserChange}
+          loading={isLoading}
+        >
+          {usersData?.map((user, index) => (
+            <Option key={user._id || index} value={user._id}>
+              {user.name}
+            </Option>
+          ))}
+        </Select>
+        <Select
+          showSearch
+          style={{ width: 200 }}
+          placeholder="-- Seleccionar Estatus --"
+          onChange={handleChangeStatus}
+          options={[
+            { value: "Creado", label: "Creado" },
+            { value: "Pendiente", label: "Pendiente" },
+            { value: "Pagado", label: "Pagado" },
+            { value: "Vencido", label: "Vencido" },
+          ]}
+        />
+        <Select
+          showSearch
+          style={{ width: 200 }}
+          placeholder="-- Seleccionar Tipo de Pago --"
+          onChange={handleChangePaymentType}
+          options={[
+            { value: "inscription", label: "Inscripcion" },
+            { value: "paquete", label: "Paquete" },
+          ]}
+        />
+        <Select
+          showSearch
+          style={{ width: 200 }}
+          placeholder="-- Seleccionar Metodo de Pago --"
+          onChange={handleChangePaymentMethod}
+          options={[
+            { value: "Efectivo", label: "Efectivo" },
+            { value: "Tarjeta", label: "Tarjeta" },
+            { value: "Transferencia", label: "Transferencia" },
+            {
+              value: "Tienda de Conveniencia",
+              label: "Tienda de Conveniencia",
+            },
+          ]}
+        />
+      </Space>
       <ModalComponent
         dataTable={selectedReceipt}
         dataTableColumns={PaymentReceiptColumns}
