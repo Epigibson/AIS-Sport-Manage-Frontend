@@ -1,6 +1,34 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
+import { AvatarComponent } from "../../components/AvatarComponent.jsx";
 
-export const CouchColumns = ({ onEdit, onDelete, onCancel, screen }) => [
+export const CouchColumns = ({
+  onEdit,
+  onDelete,
+  onCancel,
+  handleImageLoaded,
+  screen,
+}) => [
+  {
+    title: "Avatar",
+    dataIndex: "avatar",
+    key: "avatar",
+    align: "center",
+    inputType: "avatar",
+    width: 150,
+    render: (_, record) => {
+      if (record) {
+        // console.log("SOLO VER", record.avatar);
+        return (
+          <AvatarComponent
+            onImageLoaded={(file) => handleImageLoaded(file, record)}
+            existingImageUrl={record.avatar}
+          />
+        );
+      } else {
+        return <AvatarComponent />;
+      }
+    },
+  },
   {
     title: "Nombre",
     dataIndex: "name",
@@ -26,6 +54,12 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel, screen }) => [
     title: "Genero",
     dataIndex: "gender",
     key: "gender",
+    align: "center",
+  },
+  {
+    title: "Edad",
+    dataIndex: "age",
+    key: "age",
     align: "center",
   },
   {
@@ -63,7 +97,6 @@ export const CouchColumns = ({ onEdit, onDelete, onCancel, screen }) => [
     key: "action",
     align: "center",
     width: 200,
-    fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
       <Space direction={"horizontal"} align={"center"}>
         <Button

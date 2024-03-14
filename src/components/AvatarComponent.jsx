@@ -9,13 +9,16 @@ const getBase64 = (img, callback) => {
   reader.readAsDataURL(img);
 };
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  const isJpgOrPng =
+    file.type === "image/jpeg" ||
+    file.type === "image/jpg" ||
+    file.type === "image/png";
   if (!isJpgOrPng) {
     message?.error("You can only upload JPG/PNG file!");
   }
-  const isLt2M = file.size / 1024 / 1024 < 2;
+  const isLt2M = file.size / 1024 / 1024 < 6;
   if (!isLt2M) {
-    message?.error("Image must smaller than 2MB!");
+    message?.error("Image must smaller than 6MB!");
   }
   return isJpgOrPng && isLt2M;
 };
@@ -68,7 +71,7 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
         listType="picture-circle"
         className="avatar-uploader"
         showUploadList={false}
-        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+        action="https://run.mocky.io/v3/b4f1dde6-a2ea-4a72-bd38-be5b8898ec31"
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >

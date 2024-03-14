@@ -1,4 +1,11 @@
-import { Button, Popconfirm, Space, Tag } from "antd";
+import { Button, DatePicker, Popconfirm, Space, Tag } from "antd";
+import moment from "moment";
+
+const { RangePicker } = DatePicker;
+
+const onChange = (time, timeString) => {
+  console.log(time, timeString);
+};
 
 export const GroupColumns = ({
   onEdit,
@@ -73,13 +80,36 @@ export const GroupColumns = ({
     dataIndex: "schedule",
     key: "schedule",
     align: "center",
+    render: (schedule) => {
+      // Asume que `schedule` es un array con dos elementos: inicio y fin.
+      if (schedule && schedule.length === 2) {
+        const startTime = moment(schedule[0]).format("HH:mm a");
+        const endTime = moment(schedule[1]).format("HH:mm a");
+        return `${startTime} - ${endTime}`;
+      }
+      return "No definido"; // Manejo para cuando no hay horarios definidos o el formato es incorrecto
+    },
+  },
+  {
+    title: "Dias",
+    dataIndex: "schedule_initial_final",
+    key: "schedule_initial_final",
+    align: "center",
+    render: (schedule_initial_final) => {
+      if (schedule_initial_final) {
+        return schedule_initial_final.map((day) => (
+          <Tag color={"blue"} key={day} className={"m-0 text-xs "}>
+            {day}
+          </Tag>
+        ));
+      }
+    },
   },
   {
     title: "Acciones",
     key: "action",
     align: "center",
     width: 200,
-    fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
       <Space direction={"horizontal"} align={"center"}>
         <Button

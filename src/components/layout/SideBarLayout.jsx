@@ -3,7 +3,7 @@ import { Button, Divider, Grid, Layout, Menu, theme, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItems } from "./MenuItems.jsx";
-import logoImage from "../../assets/logo-be.jpg";
+import logoImage from "../../assets/logo-be.png";
 import PropTypes from "prop-types";
 
 const { Title } = Typography;
@@ -37,23 +37,22 @@ export const SideBarLayout = ({ children }) => {
         collapsedWidth="0"
         breakpoint={"lg"}
       >
-        <div className="demo-logo-vertical px-4 m-0 pt-6 flex justify-center ">
-          <img src={logoImage} alt="Logo" style={{ maxHeight: "32px" }} />
-          {!collapsed && appName && (
-            <Title
-              level={5}
-              style={{
-                color: "white",
-                marginLeft: "8px",
-              }}
-            >
-              {appName}
-            </Title>
-          )}
+        <div className="pt-0 flex flex-col items-center justify-center ">
+          <img src={logoImage} alt="Logo" style={{ maxHeight: "120px" }} />
+          {/*{!collapsed && appName && (*/}
+          {/*  <Title*/}
+          {/*    level={5}*/}
+          {/*    style={{*/}
+          {/*      color: "white",*/}
+          {/*      marginLeft: "8px",*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    {appName}*/}
+          {/*  </Title>*/}
+          {/*)}*/}
         </div>
         <Divider className="bg-blue-950" />
         <Menu
-          className=""
           style={{ width: "100%" }}
           theme="dark"
           mode="inline"
@@ -91,7 +90,8 @@ export const SideBarLayout = ({ children }) => {
         </Header>
         <Content
           style={{
-            margin: "24px 16px",
+            margin: "16px 16px",
+            padding: 24,
             // padding: 24,
             // maxHeight: "100%",
             background: colorBgContainer,

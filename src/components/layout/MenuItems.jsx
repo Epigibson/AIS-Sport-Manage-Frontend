@@ -38,8 +38,8 @@ export const MenuItems = [
   {
     key: "5",
     icon: <CopyrightOutlined />,
-    label: "Couches",
-    path: "/couches",
+    label: "Coaches",
+    path: "/coaches",
   },
   {
     key: "6",

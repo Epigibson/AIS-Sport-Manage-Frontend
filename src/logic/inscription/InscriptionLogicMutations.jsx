@@ -12,16 +12,16 @@ export const useInscription = () => {
     reset,
   } = useMutation({
     mutationFn: inscribeUser,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Mutación exitosa", data);
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
       // Verificar si data.init_point existe y no es undefined antes de redireccionar
-      if (data.init_point) {
-        window.location.href = data.init_point;
-      } else {
-        // Manejar el caso donde data.init_point no está disponible
-        console.error("URL de redirección no disponible.");
-      }
+      // if (data.init_point) {
+      //   window.location.href = data.init_point;
+      // } else {
+      //   // Manejar el caso donde data.init_point no está disponible
+      //   console.error("URL de redirección no disponible.");
+      // }
     },
     onError: (error) => {
       console.error("Error en la mutación", error);

@@ -1,13 +1,13 @@
 import { SideBarLayout } from "../components/layout/SideBarLayout.jsx";
 import { MainContainerLayout } from "../components/layout/MainContainerLayout.jsx";
-import { TabsComponent } from "../components/TabsComponent.jsx";
+import { HomeLogic } from "../logic/home/HomeLogic.jsx";
 
 export const HomePage = () => {
   return (
     <>
       <SideBarLayout>
         <MainContainerLayout title={"Dashboard"}>
-          <TabsComponent />
+          <HomeLogic />
         </MainContainerLayout>
       </SideBarLayout>
     </>

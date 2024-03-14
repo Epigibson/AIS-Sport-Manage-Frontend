@@ -1,8 +1,9 @@
 import { Button, Tag, Typography } from "antd";
+import "./PaymentsStyle.css";
 
 const { Text } = Typography;
 
-export const PaymentColumns = ({ showReceipts }) => [
+export const PaymentColumns = ({ showReceipts, payMethod }) => [
   {
     title: "Pago",
     dataIndex: "receipt_id",
@@ -10,15 +11,46 @@ export const PaymentColumns = ({ showReceipts }) => [
     align: "center",
     render: (_, record) => {
       return (
-        <Button
-          type={"primary"}
-          className={"bg-primary-700 px-8"}
-          onClick={() => showReceipts(record)}
-        >
-          Registrar Pago
-        </Button>
+        <div className={"flex flex-row items-center justify-center"}>
+          <Button
+            disabled={record.status !== "Pagado"}
+            type={"primary"}
+            size={"middle"}
+            className={"bg-primary-700 px-2 mr-2"}
+            onClick={() => showReceipts(record)}
+          >
+            Ver Recibo
+          </Button>
+          <Button
+            // type={"primary"}
+            className="ant-btn-custom px-2"
+            style={{ backgroundColor: "#48bb78", color: "#fff" }}
+            ghost={true}
+            // size={"middle"}
+            onClick={() => payMethod(record)}
+          >
+            Pagar
+          </Button>
+        </div>
       );
     },
+  },
+  {
+    title: "Matricula",
+    dataIndex: "user",
+    key: "user",
+    align: "center",
+    searchable: true, // Esta columna será buscable
+    render: (user) =>
+      user ? (
+        <>
+          <Tag color={"blue"} className={"mb-2"}>
+            <Text>{user.tuition}</Text>
+          </Tag>
+        </>
+      ) : (
+        <span>Sin Usuario</span>
+      ), // Ajusta "group_name" según tu modelo de datos
   },
   {
     title: "Usuario",
@@ -58,6 +90,7 @@ export const PaymentColumns = ({ showReceipts }) => [
     dataIndex: "status",
     key: "status",
     align: "center",
+    searchable: true, // Esta columna será buscable
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>{status}</Tag>;

@@ -5,7 +5,7 @@ import { CouchLogic } from "../logic/couch/CouchLogic.jsx";
 export const CouchesPage = () => {
   return (
     <SideBarLayout>
-      <MainContainerLayout title={"Couches"}>
+      <MainContainerLayout title={"Coaches"}>
         <CouchLogic />
       </MainContainerLayout>
     </SideBarLayout>

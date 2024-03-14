@@ -14,6 +14,7 @@ export const UserColumns = ({
     key: "avatar",
     align: "center",
     inputType: "avatar",
+    width: 150,
     render: (_, record) => {
       if (record) {
         // console.log("SOLO VER", record.avatar);
@@ -33,35 +34,61 @@ export const UserColumns = ({
     dataIndex: "tuition",
     key: "tuition",
     align: "center",
+    width: 100,
     searchable: true, // Esta columna será buscable
-    render: (text) => {
-      if (text) {
-        return <Tag color={"cyan"}>{text}</Tag>;
+    render: (_, record) => {
+      if (record?.tuition) {
+        return <Tag color={"cyan"}>{record?.tuition}</Tag>;
       } else {
         return <Tag color={"default"}>Sin Matricula</Tag>;
       }
     },
   },
   {
-    title: "Nombre",
+    title: "Nombre del Atleta",
     dataIndex: "name",
     key: "name",
     align: "center",
+    width: 150,
     searchable: true, // Esta columna será buscable
     render: (text) => <a>{text}</a>,
   },
   {
-    title: "Tutor",
-    dataIndex: "tutors_name",
-    key: "tutors_name",
+    title: "Nombre del Tutor 1",
+    dataIndex: "tutors_name_one",
+    key: "tutors_name_one",
     align: "center",
+    width: 200,
     searchable: true, // Esta columna será buscable
+    render: (text) => {
+      if (text) {
+        return <Tag color={"blue"}>{text}</Tag>;
+      } else {
+        return <Tag color={"default"}>Sin Tutor</Tag>;
+      }
+    },
   },
   {
-    title: "Email",
+    title: "Nombre del Tutor 2",
+    dataIndex: "tutors_name_two",
+    key: "tutors_name_two",
+    align: "center",
+    width: 200,
+    searchable: true, // Esta columna será buscable
+    render: (text) => {
+      if (text) {
+        return <Tag color={"blue"}>{text}</Tag>;
+      } else {
+        return <Tag color={"default"}>Sin Tutor</Tag>;
+      }
+    },
+  },
+  {
+    title: "Email de Contacto",
     dataIndex: "email",
     key: "email",
     align: "center",
+    width: 200,
     searchable: true, // Esta columna será buscable
   },
   {
@@ -69,12 +96,22 @@ export const UserColumns = ({
     dataIndex: "age",
     key: "age",
     align: "center",
+    width: 100,
   },
   {
-    title: "Celular",
+    title: "Celular 1",
     dataIndex: "mobile",
     key: "mobile",
     align: "center",
+    width: 150,
+    searchable: true, // Esta columna será buscable
+  },
+  {
+    title: "Celular 2",
+    dataIndex: "phone",
+    key: "phone",
+    align: "center",
+    width: 150,
     searchable: true, // Esta columna será buscable
   },
   {
@@ -82,12 +119,14 @@ export const UserColumns = ({
     dataIndex: "gender",
     key: "gender",
     align: "center",
+    width: 100,
   },
   {
     title: "Estatus",
     key: "status",
     dataIndex: "status",
     align: "center",
+    width: 100,
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -101,6 +140,7 @@ export const UserColumns = ({
     key: "groups",
     dataIndex: "groups",
     align: "center",
+    width: 100,
     render: (_, record) =>
       record.groups && record.groups.length > 0 ? (
         record.groups?.map((group) => (
@@ -119,7 +159,7 @@ export const UserColumns = ({
     key: "action",
     align: "center",
     width: 200,
-    fixed: screen.xs ? undefined : "right",
+    // fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
       <Space>
         <Button

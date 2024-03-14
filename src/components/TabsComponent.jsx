@@ -1,27 +1,37 @@
 import { Tabs } from "antd";
-import { InscriptionLayout } from "../logic/inscription/InscriptionLayout.jsx";
-import { GroupAssignLayout } from "./layout/GroupAssingLayout/GroupAssignLayout.jsx";
-import { UsersInscribedLayout } from "./layout/UsersInscribedLayout/UsersInscribedLayout.jsx";
+import PropTypes from "prop-types";
 
-export const TabsComponent = () => {
-  const onChange = () => {};
-  const items = [
-    {
-      key: "1",
-      label: "Inscripciones",
-      children: <InscriptionLayout />,
-    },
-    {
-      key: "2",
-      label: "Resumen",
-      children: <UsersInscribedLayout />,
-    },
-    {
-      key: "3",
-      label: "Asignacion de Grupos",
-      children: <GroupAssignLayout />,
-    },
-  ];
+export const TabsComponent = ({ items }) => {
+  const onChange = (key) => {
+    console.log("Tab cambiada a: ", key);
+  };
 
-  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+  // Convertir la estructura de datos a lo que espera el componente Tabs de Ant Design
+  const tabsItems = items?.map((item) => ({
+    key: item.key,
+    label: item.label,
+    children: <item.component />, // Corregido para utilizar item.component
+  }));
+
+  return (
+    <Tabs
+      size={"small"}
+      type="card"
+      centered={true}
+      addIcon={true}
+      defaultActiveKey="1"
+      items={tabsItems}
+      onChange={onChange}
+    />
+  );
+};
+
+TabsComponent.propTypes = {
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      component: PropTypes.any.isRequired, // Usar elementType para componentes
+    }),
+  ).isRequired,
 };

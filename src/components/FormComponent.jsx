@@ -2,9 +2,11 @@ import {
   Button,
   Checkbox,
   Form,
+  Grid,
   Input,
   InputNumber,
   Select,
+  TimePicker,
   Tooltip,
 } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
@@ -14,10 +16,12 @@ import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
 import { getAllGroups } from "../api/GroupService.jsx";
 import { AvatarComponent } from "./AvatarComponent.jsx";
 import { getAllPackages } from "../api/ProductService.jsx";
+import { getAllCategories } from "../api/CategoryService.jsx";
 import PropTypes from "prop-types";
-import { useCategories } from "../hooks/CategoryContext/useCategories.jsx";
 
 const { Option } = Select;
+const { useBreakpoint } = Grid;
+const { RangePicker } = TimePicker;
 
 export const FormComponent = ({
   form,
@@ -26,7 +30,11 @@ export const FormComponent = ({
   handleClose,
   setProfileImage,
 }) => {
-  const { categories } = useCategories(); // Obtiene categorías del contexto
+  const screen = useBreakpoint();
+  const { data: categories } = useQuery({
+    queryKey: ["callCategories"],
+    queryFn: getAllCategories,
+  });
   const { data: couches } = useQuery({
     queryKey: ["couchList"],
     queryFn: getAllCouches,
@@ -45,30 +53,6 @@ export const FormComponent = ({
     queryKey: ["allPackages"],
     queryFn: getAllPackages,
   });
-
-  const formItemLayout = {
-    labelCol: {
-      xs: { span: 24 },
-      sm: { span: 8 },
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 16 },
-    },
-  };
-
-  const tailFormItemLayout = {
-    wrapperCol: {
-      xs: {
-        span: 24,
-        offset: 0,
-      },
-      sm: {
-        span: 16,
-        offset: 8,
-      },
-    },
-  };
 
   const [selectOptions, setSelectOptions] = useState({});
   const handleImageLoaded = (file) => {
@@ -125,27 +109,34 @@ export const FormComponent = ({
 
   return (
     <Form
-      {...formItemLayout}
       form={form}
+      layout={"horizontal"}
       onFinish={() => handleSubmit("create")}
-      layout="vertical"
-      className="flex flex-col justify-center "
-      autoComplete="off"
+      size={"small"}
+      autoComplete={"on"}
     >
       {formFields.map((field) => (
         <Form.Item
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
           key={field.name}
           name={field.name}
-          label={field.label}
+          label={!screen.xs ? field.label : ""}
           rules={field.rules}
           valuePropName={field.inputType === "checkbox" ? "checked" : undefined}
-          className={`flex flex-col justify-center ${field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : ""}`}
+          className={`${field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : ""}`}
         >
           {field.inputType === "input" && (
-            <Input className="rounded-md py-0.5 my-0 border-gray-300" />
+            <Input
+              placeholder={screen.xs ? field.label : undefined}
+              className="rounded-md py-0.5 my-0 border-gray-300"
+            />
           )}
           {field.inputType === "number" && (
-            <InputNumber className="rounded-md py-0.5 my-0 border-gray-300 w-full" />
+            <InputNumber
+              placeholder={screen.xs ? field.label : undefined}
+              className="rounded-md py-0.5 my-0 border-gray-300 w-full"
+            />
           )}
           {field.inputType === "password" && (
             <Input.Password className="rounded-md py-0.5 my-0 border-gray-300" />
@@ -167,7 +158,7 @@ export const FormComponent = ({
             </>
           )}
           {field.inputType === "select" && (
-            <Select>
+            <Select placeholder={`-- Seleccionar ${field.label} --`}>
               {selectOptions[field.name]?.map((option, index) => (
                 <Option key={option.value || index} value={option.value}>
                   {option.label}
@@ -176,7 +167,10 @@ export const FormComponent = ({
             </Select>
           )}
           {field.inputType === "multipleSelect" && (
-            <Select mode="multiple">
+            <Select
+              placeholder={` --Seleccionar ${field.label} --`}
+              mode="multiple"
+            >
               {selectOptions[field.name]?.map((option, index) => (
                 <Option key={option.value || index} value={option.value}>
                   {option.label}
@@ -184,16 +178,30 @@ export const FormComponent = ({
               ))}
             </Select>
           )}
+          {field.inputType === "schedule" && (
+            <RangePicker
+              format="HH:mm a"
+              placeholder={["Inicio", "Fin"]}
+              className="rounded-md py-0.5 my-0 border-gray-300"
+              use24Hours
+              onChange={(dates, dateStrings) => {
+                // Aquí puedes manejar el cambio, por ahora solo lo imprimiré
+                console.log(dates, dateStrings);
+              }}
+            />
+          )}
         </Form.Item>
       ))}
-      <Form.Item
-        {...tailFormItemLayout}
-        className="flex flex-col justify-between "
-      >
-        <Button type={"primary"} className="bg-primary-700" htmlType="submit">
+      <Form.Item wrapperCol={{ span: 24 }} className={"text-center"}>
+        <Button
+          type={"primary"}
+          size={"middle"}
+          className="bg-primary-700 mx-3"
+          htmlType="submit"
+        >
           Guardar
         </Button>
-        <Button type={"primary"} danger onClick={handleClose}>
+        <Button size={"middle"} type={"primary"} onClick={handleClose} danger>
           Cancelar
         </Button>
       </Form.Item>

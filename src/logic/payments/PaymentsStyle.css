@@ -1,0 +1,11 @@
+/* En tu archivo CSS o SCSS */
+.ant-btn-custom:hover {
+    background-color: #b6fad1; /* bg-green-600 */
+    border-color: #84ffb4; /* Asegúrate de que el borde también coincida si es necesario */
+}
+
+/* O para dark mode específicamente */
+.dark .ant-btn-custom:hover {
+    background-color: #48bb78; /* bg-green-600 */
+    border-color: #48bb78;
+}

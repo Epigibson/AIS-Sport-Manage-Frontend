@@ -1,13 +1,19 @@
 export const userFormFields = [
   {
     name: "name",
-    label: "Nombre",
+    label: "Nombre del Atleta",
     rules: [{ required: true }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
-    name: "tutors_name",
-    label: "Tutor",
+    name: "tutors_name_one",
+    label: "Nombre del Tutor 1",
+    rules: [{ required: true }],
+    inputType: "input", // Indica el tipo de control de entrada
+  },
+  {
+    name: "tutors_name_two",
+    label: "Nombre del Tutor 2",
     rules: [{ required: true }],
     inputType: "input", // Indica el tipo de control de entrada
   },
@@ -19,7 +25,7 @@ export const userFormFields = [
   },
   {
     name: "email",
-    label: "Email",
+    label: "Email de Contacto",
     rules: [{ required: true }],
     inputType: "input",
   },
@@ -30,8 +36,14 @@ export const userFormFields = [
     inputType: "input",
   },
   {
+    name: "phone",
+    label: "Celular 1",
+    rules: [{ required: true }],
+    inputType: "input",
+  },
+  {
     name: "mobile",
-    label: "Celular",
+    label: "Celular 2",
     rules: [{ required: true }],
     inputType: "input",
   },

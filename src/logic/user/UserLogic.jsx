@@ -131,9 +131,9 @@ export const UserLogic = () => {
     <>
       <div className="flex justify-end mb-3">
         <Button
-          className={"bg-primary-700 text-white hover:bg-primary-800"}
-          title={"Registrar Usuario"}
+          className={"bg-primary-700"}
           type={"primary"}
+          size={"small"}
           onClick={showModal}
         >
           Registrar Usuario

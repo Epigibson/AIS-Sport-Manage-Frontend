@@ -6,7 +6,7 @@ export const InscriptionPage = () => {
   return (
     <>
       <SideBarLayout>
-        <MainContainerLayout title={"Inscripciones"}>
+        <MainContainerLayout title={"Registro"}>
           <InscriptionLayout />
         </MainContainerLayout>
       </SideBarLayout>

@@ -14,6 +14,7 @@ import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { groupFormFields } from "./GroupFormFields.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { MembersGroupsColumns } from "./MembersGroupsColumns.jsx";
+import moment from "moment";
 
 const { useBreakpoint } = Grid;
 
@@ -88,6 +89,22 @@ export const GroupLogic = () => {
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
+
+    // Verifica si `schedule` está presente y es válido antes de convertir
+    if (values.schedule && values.schedule[0] && values.schedule[1]) {
+      const [start, end] = values.schedule;
+      values.schedule = [
+        start.toISOString(), // Convertir de Moment.js a string ISO
+        end.toISOString(),
+      ];
+    } else {
+      // Maneja el caso donde `schedule` no esté definido o incompleto
+      delete values.schedule; // O establece un valor predeterminado si es necesario
+    }
+
+    // Ahora `values.schedule` está listo para ser enviado
+    console.log(values);
+
     if (modalContext === "edit") {
       console.log("SE EDITA");
       await mutateUpdate({ ...values, group_id: selectedRecord.group_id });
@@ -104,7 +121,26 @@ export const GroupLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
-    form.setFieldsValue(record);
+
+    // Convertir fechas ISO a objetos de Moment.js antes de establecer los valores
+    if (record.schedule && record.schedule.length === 2) {
+      const startISO = record.schedule[0];
+      const endISO = record.schedule[1];
+      const startMoment = moment(startISO);
+      const endMoment = moment(endISO);
+
+      // Prepara el registro con los valores convertidos para el RangePicker
+      const recordWithMoment = {
+        ...record,
+        schedule: [startMoment, endMoment], // Asegúrate de que 'schedule' en tu formulario espera un arreglo
+      };
+
+      form.setFieldsValue(recordWithMoment);
+    } else {
+      // Si no hay valores de 'schedule', o no están completos, maneja ese caso aquí.
+      form.setFieldsValue(record);
+    }
+
     setSelectedRecord(record);
     setIsModalVisible(true);
   };

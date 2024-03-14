@@ -13,6 +13,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCouches } from "../../api/UserService.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
+import { useChangeAvatarWithoutRegister } from "../user/UserLogicMutations.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -40,6 +41,8 @@ export const CouchLogic = () => {
     queryKey: ["groupsList"],
     queryFn: getAllGroups,
   });
+
+  const { mutateUpdateAvatar } = useChangeAvatarWithoutRegister();
 
   const enrichedUsersData = couchesData?.map((user) => {
     // Encuentra todos los grupos que coincidan con los IDs en user.group_id
@@ -99,10 +102,31 @@ export const CouchLogic = () => {
     message.error("Click on No").then((r) => r);
   };
 
+  const handleImageLoaded = async (file, record) => {
+    await handleChanceAvatar(file, record);
+  };
+
+  const handleChanceAvatar = async (file, record) => {
+    try {
+      console.log(selectedRecord);
+      const data = {};
+      const formData = new FormData();
+      formData.append("file", file);
+      data.username = record.username;
+      data.file = formData;
+      console.log("DATA", data);
+      await mutateUpdateAvatar(data);
+    } catch (error) {
+      console.error("Error al guardar la imagen:", error);
+    }
+  };
+
   const columns = CouchColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,
+    handleImageLoaded: handleImageLoaded,
+    setSelectedRecord,
     screen: screen,
   });
 
@@ -114,11 +138,11 @@ export const CouchLogic = () => {
       <div className="flex justify-end mb-3">
         <Button
           className={"bg-primary-700 text-white hover:bg-primary-800"}
-          title={"Registrar Couch"}
+          title={"Registrar Coach"}
           type={"primary"}
           onClick={showModal}
         >
-          Registrar Couch
+          Registrar Coach
         </Button>
       </div>
       <ModalComponent

@@ -9,12 +9,11 @@ export const MainContainerLayout = ({ children, title }) => {
   }
 
   // console.log("DATA DE USUARIO EN EL MAIN", user);
+  // console.log("DATA DE USUARIO EN EL MAIN", user);
 
   return (
     <>
-      <div className="text-center text-2xl font-bold mb-4 max-w-fit">
-        {title}
-      </div>
+      <div className="text-center text-xl font-bold mb-5 ">{title}</div>
       {children}
     </>
   );

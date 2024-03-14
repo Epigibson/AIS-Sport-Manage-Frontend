@@ -38,6 +38,21 @@ export const groupFormFields = [
     name: "schedule",
     label: "Horarios",
     rules: [{ required: true }],
-    inputType: "input", // Indica el tipo de control de entrada
+    inputType: "schedule", // Indica el tipo de control de entrada
+  },
+  {
+    name: "schedule_initial_final",
+    label: "Dias",
+    rules: [{ required: true }],
+    inputType: "multipleSelect", // Indica el tipo de control de entrada
+    options: [
+      { label: "Lunes", value: "Lunes" },
+      { label: "Martes", value: "Martes" },
+      { label: "Miercoles", value: "Miercoles" },
+      { label: "Jueves", value: "Jueves" },
+      { label: "Viernes", value: "Viernes" },
+      { label: "Sabado", value: "Sabado" },
+      { label: "Domingo", value: "Domingo" },
+    ],
   },
 ];
