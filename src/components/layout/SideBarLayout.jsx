@@ -1,21 +1,18 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Divider, Grid, Layout, Menu, theme, Typography } from "antd";
+import { Button, Divider, Grid, Layout, Menu, theme } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItems } from "./MenuItems.jsx";
 import logoImage from "../../assets/logo-be.png";
 import PropTypes from "prop-types";
 
-const { Title } = Typography;
-
-const { Header, Sider, Content } = Layout;
+const { Header, Sider, Footer, Content } = Layout;
 const { useBreakpoint } = Grid;
 
 export const SideBarLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const screens = useBreakpoint();
   const navigate = useNavigate();
-  const appName = "Be +";
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -100,6 +97,9 @@ export const SideBarLayout = ({ children }) => {
         >
           {children}
         </Content>
+        <Footer style={{ textAlign: "center" }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
       </Layout>
     </Layout>
   );

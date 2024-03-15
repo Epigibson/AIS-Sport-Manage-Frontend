@@ -144,19 +144,22 @@ export const TablesComponent = ({ data, columns }) => {
   });
 
   return (
-    <Table
-      columns={modifiedColumns}
-      dataSource={data}
-      size={"small"}
-      pagination={{
-        pageSize: 10,
-      }}
-      scroll={{
-        x: 1400,
-        y: 500,
-      }}
-      rowKey="_id"
-    />
+    <div className={"w-full"}>
+      <Table
+        columns={modifiedColumns}
+        dataSource={data}
+        size={"small"}
+        className={"w-350"}
+        pagination={{
+          pageSize: 10,
+        }}
+        scroll={{
+          x: 1200,
+          y: 500,
+        }}
+        rowKey="_id"
+      />
+    </div>
   );
 };
 

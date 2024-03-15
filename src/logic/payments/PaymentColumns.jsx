@@ -15,7 +15,7 @@ export const PaymentColumns = ({ showReceipts, payMethod }) => [
           <Button
             disabled={record.status !== "Pagado"}
             type={"primary"}
-            size={"middle"}
+            size={"small"}
             className={"bg-primary-700 px-2 mr-2"}
             onClick={() => showReceipts(record)}
           >
@@ -25,8 +25,7 @@ export const PaymentColumns = ({ showReceipts, payMethod }) => [
             // type={"primary"}
             className="ant-btn-custom px-2"
             style={{ backgroundColor: "#48bb78", color: "#fff" }}
-            ghost={true}
-            // size={"middle"}
+            size={"small"}
             onClick={() => payMethod(record)}
           >
             Pagar
@@ -40,7 +39,6 @@ export const PaymentColumns = ({ showReceipts, payMethod }) => [
     dataIndex: "user",
     key: "user",
     align: "center",
-    searchable: true, // Esta columna será buscable
     render: (user) =>
       user ? (
         <>
@@ -57,6 +55,7 @@ export const PaymentColumns = ({ showReceipts, payMethod }) => [
     dataIndex: "user",
     key: "user",
     align: "center",
+    ellipsis: true,
     render: (user) =>
       user ? (
         <>
