@@ -1,5 +1,5 @@
 import { TablesComponent } from "../../components/TablesComponent.jsx";
-import { Button, Form, Grid, message } from "antd";
+import { Button, Form, Grid, message, Row } from "antd";
 import { useState } from "react";
 import { CouchColumns } from "./CouchColumns.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
@@ -135,16 +135,15 @@ export const CouchLogic = () => {
 
   return (
     <>
-      <div className="flex justify-end mb-3">
+      <Row justify={"end"} className={"overflow-hidden"}>
         <Button
-          className={"bg-primary-700 text-white hover:bg-primary-800"}
-          title={"Registrar Coach"}
+          className={"bg-primary-700 mb-3"}
           type={"primary"}
           onClick={showModal}
         >
           Registrar Coach
         </Button>
-      </div>
+      </Row>
       <ModalComponent
         form={form}
         formFields={couchFormFields}

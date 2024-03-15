@@ -146,6 +146,7 @@ export const TablesComponent = ({ data, columns }) => {
   return (
     <div className={"w-full"}>
       <Table
+        key={"_id"}
         columns={modifiedColumns}
         dataSource={data}
         size={"small"}

@@ -1,19 +1,7 @@
-import { Button, DatePicker, Popconfirm, Space, Tag } from "antd";
+import { Button, Popconfirm, Space, Tag, Tooltip } from "antd";
 import moment from "moment";
 
-const { RangePicker } = DatePicker;
-
-const onChange = (time, timeString) => {
-  console.log(time, timeString);
-};
-
-export const GroupColumns = ({
-  onEdit,
-  onDelete,
-  onCancel,
-  onShowMembers,
-  screen,
-}) => [
+export const GroupColumns = ({ onEdit, onDelete, onCancel, onShowMembers }) => [
   {
     title: "Nombre",
     dataIndex: "name",
@@ -26,6 +14,12 @@ export const GroupColumns = ({
     dataIndex: "description",
     key: "description",
     align: "center",
+    ellipsis: true,
+    render: (description) => (
+      <Tooltip placement="topLeft" title={description}>
+        {description}
+      </Tooltip>
+    ),
   },
   // {
   //   title: "Couch",
@@ -95,14 +89,26 @@ export const GroupColumns = ({
     dataIndex: "schedule_initial_final",
     key: "schedule_initial_final",
     align: "center",
+    ellipsis: true,
     render: (schedule_initial_final) => {
       if (schedule_initial_final) {
-        return schedule_initial_final.map((day) => (
-          <Tag color={"blue"} key={day} className={"m-0 text-xs "}>
-            {day}
-          </Tag>
-        ));
+        // Convertir el array de días a un string para el Tooltip
+        const daysString = schedule_initial_final.join(", ");
+
+        // Retornar las etiquetas (tags) y el Tooltip
+        return (
+          <Tooltip placement="topLeft" title={daysString}>
+            <div>
+              {schedule_initial_final.map((day) => (
+                <Tag color="blue" key={day} className="mr-2 text-xs">
+                  {day}
+                </Tag>
+              ))}
+            </div>
+          </Tooltip>
+        );
       }
+      return null;
     },
   },
   {

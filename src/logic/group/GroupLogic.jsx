@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllGroups } from "../../api/GroupService.jsx";
 import { GroupColumns } from "./GroupColumns.jsx";
 import { getAllCouches, getAllUsers } from "../../api/UserService.jsx";
-import { Button, Form, Grid, message } from "antd";
+import { Button, Form, message, Row } from "antd";
 import { useState } from "react";
 import {
   useCreateGroup,
@@ -16,10 +16,7 @@ import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { MembersGroupsColumns } from "./MembersGroupsColumns.jsx";
 import moment from "moment";
 
-const { useBreakpoint } = Grid;
-
 export const GroupLogic = () => {
-  const screen = useBreakpoint();
   const { mutateCreate } = useCreateGroup();
   const { mutateUpdate } = useUpdateGroup();
   const { mutateDelete } = useDeleteGroup();
@@ -164,21 +161,19 @@ export const GroupLogic = () => {
     onDelete: handleDelete,
     onCancel: cancel,
     onShowMembers: showModalMembers,
-    screen: screen,
   });
 
   return (
     <>
-      <div className="flex justify-end mb-3">
+      <Row justify={"end"} className={"overflow-hidden"}>
         <Button
-          className={"bg-primary-700 text-white hover:bg-primary-800"}
-          title={"Crear nuevo paquete"}
+          className={"bg-primary-700 mb-3"}
           type={"primary"}
           onClick={showModal}
         >
           Crear nuevo grupo
         </Button>
-      </div>
+      </Row>
       <ModalComponent
         dataTable={selectedRecord}
         dataTableColumns={MembersGroupsColumns}
