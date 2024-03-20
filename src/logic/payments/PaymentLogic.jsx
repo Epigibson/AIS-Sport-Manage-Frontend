@@ -10,6 +10,7 @@ import { useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import "./PaymentsStyle.css";
 import { PaymentFilters } from "./PaymentFilters.jsx";
+import { usePayReceipt } from "./PaymentLogicMutations.jsx";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -19,6 +20,7 @@ export const PaymentLogic = () => {
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const { mutateUpdate } = usePayReceipt();
   const {
     data: historyPaymentData,
     isLoading,
@@ -42,12 +44,12 @@ export const PaymentLogic = () => {
     enabled: false, // no ejecutar la consulta automáticamente
   });
 
-  const { data: usersData } = useQuery({
+  const { data: usersData, refetch: refetchUsersData } = useQuery({
     queryKey: ["allUsers"],
     queryFn: getAllUsers,
   });
 
-  const { data: receiptsData } = useQuery({
+  const { data: receiptsData, refetch: refetchReceiptsData } = useQuery({
     queryKey: ["allReceipts"],
     queryFn: getAllReceipts,
   });
@@ -75,12 +77,18 @@ export const PaymentLogic = () => {
   if (isLoading) return <LoaderIconUtils />;
   if (isError) return <h1>Error...</h1>;
 
-  const columns = PaymentColumns({
-    showReceipts: showReceipts,
-  });
+  const handlePayReceipt = async (record) => {
+    console.log("PAGAR", record.receipt_id);
+    await mutateUpdate(record.receipt_id);
+    await handleSearch();
+    console.log("Pago realizado correctamente");
+    // alert("Pago realizado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
+  };
 
-  const handleSearch = () => {
-    refetch();
+  const handleSearch = async () => {
+    await refetchReceiptsData();
+    await refetchUsersData();
+    await refetch();
   };
 
   const filterOption = (input, option) =>
@@ -105,6 +113,11 @@ export const PaymentLogic = () => {
     setPaymentMethodFilter(value);
     console.log(`selected ${value}`);
   };
+
+  const columns = PaymentColumns({
+    showReceipts: showReceipts,
+    handlePayReceipt: handlePayReceipt,
+  });
 
   return (
     <>

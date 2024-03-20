@@ -5,12 +5,12 @@ export const couchFormFields = [
     rules: [{ required: true, message: "El nombre es obligatorio" }],
     inputType: "input", // Indica el tipo de control de entrada
   },
-  {
-    name: "username",
-    label: "Usuario",
-    rules: [{ required: true, message: "El usuario es obligatorio" }],
-    inputType: "input",
-  },
+  // {
+  //   name: "username",
+  //   label: "Usuario",
+  //   rules: [{ required: true, message: "El usuario es obligatorio" }],
+  //   inputType: "input",
+  // },
   {
     name: "email",
     label: "Email",
@@ -31,7 +31,6 @@ export const couchFormFields = [
     options: [
       { label: "Masculino", value: "Masculino" },
       { label: "Femenino", value: "Femenino" },
-      { label: "Otro", value: "Otro" },
     ],
   },
   {

@@ -13,24 +13,30 @@ import { PaymentFailedPage } from "./pages/PaymentPages/PaymentFailedPage.jsx";
 import { PaymentPendingPage } from "./pages/PaymentPages/PaymentPendingPage.jsx";
 import { PaymentSuccessPage } from "./pages/PaymentPages/PaymentSuccessPage.jsx";
 import { PaymentsPage } from "./pages/PaymentsPage.jsx";
+import { ProtectedRoute } from "./utils/ProtectedRoute.jsx";
+import { AuthProvider } from "./hooks/AuthContext/AuthProvider.jsx";
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/inscripciones" element={<InscriptionPage />} />
-      <Route path="/pagos" element={<PaymentsPage />} />
-      <Route path="/users" element={<UsersPage />} />
-      <Route path="/coaches" element={<CouchesPage />} />
-      <Route path="/grupos" element={<GroupsPage />} />
-      <Route path="/paquetes" element={<PackagesPage />} />
-      <Route path="/adeudos" element={<DebtorsPage />} />
-      <Route path="/analiticas" element={<AnalyticsPage />} />
-      <Route path="/pago/fallo" element={<PaymentFailedPage />} />
-      <Route path="/pago/pendiente" element={<PaymentPendingPage />} />
-      <Route path="/pago/exito" element={<PaymentSuccessPage />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/inscripciones" element={<InscriptionPage />} />
+          <Route path="/pagos" element={<PaymentsPage />} />
+          <Route path="/users" element={<UsersPage />} />
+          <Route path="/coaches" element={<CouchesPage />} />
+          <Route path="/grupos" element={<GroupsPage />} />
+          <Route path="/paquetes" element={<PackagesPage />} />
+          <Route path="/adeudos" element={<DebtorsPage />} />
+          <Route path="/analiticas" element={<AnalyticsPage />} />
+          <Route path="/pago/fallo" element={<PaymentFailedPage />} />
+          <Route path="/pago/pendiente" element={<PaymentPendingPage />} />
+          <Route path="/pago/exito" element={<PaymentSuccessPage />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 };
 

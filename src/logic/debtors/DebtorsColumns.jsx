@@ -1,30 +1,70 @@
-import { Tag } from "antd";
+import { Tag, Tooltip } from "antd";
 
-export const UsersInscribedColumns = [
+export const debtorsColumns = [
+  {
+    title: "Matricula",
+    dataIndex: "tuition",
+    key: "tuition",
+    align: "center",
+    width: 100,
+    fontSize: 5,
+
+    searchable: true, // Esta columna será buscable
+    render: (_, record) => {
+      if (record?.tuition) {
+        return <Tag color={"cyan"}>{record?.tuition}</Tag>;
+      } else {
+        return <Tag color={"default"}>Sin Matricula</Tag>;
+      }
+    },
+  },
   {
     title: "Nombre",
     dataIndex: "name",
     key: "name",
     align: "center",
-    render: (text) => <a>{text}</a>,
+    ellipsis: true,
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        <a>{text}</a>,{" "}
+      </Tooltip>
+    ),
   },
   {
     title: "Nombre del Tutor 1",
     dataIndex: "tutors_name_one",
     key: "tutors_name_one",
     align: "center",
+    ellipsis: true,
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        <a>{text}</a>,{" "}
+      </Tooltip>
+    ),
   },
   {
     title: "Nombre del Tutor 2",
     dataIndex: "tutors_name_two",
     key: "tutors_name_two",
     align: "center",
+    ellipsis: true,
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        <a>{text}</a>,{" "}
+      </Tooltip>
+    ),
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
     align: "center",
+    ellipsis: true,
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        <a>{text}</a>,{" "}
+      </Tooltip>
+    ),
   },
   {
     title: "Edad",

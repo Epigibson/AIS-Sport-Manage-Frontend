@@ -11,3 +11,12 @@ export const getAllReceipts = async () => {
     );
   }
 };
+
+export const payReceipt = async (receipt_id) => {
+  try {
+    const response = await apiClient.put(`/receipts/pay_receipt/${receipt_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo pagar el recibo.", error);
+  }
+};

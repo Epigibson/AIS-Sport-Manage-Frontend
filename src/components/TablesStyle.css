@@ -1,0 +1,22 @@
+.mi-tabla-delgada .ant-table-tbody > tr > td,
+.mi-tabla-delgada .ant-table-thead > tr > th {
+    padding: 4px 8px; /* Reduce el padding para hacer los renglones más delgados */
+}
+
+.mi-tabla-delgada .ant-table-tbody > tr > td {
+    font-size: 10px; /* Opcional: Ajusta el tamaño del texto si es necesario */
+}
+
+.mi-tabla-delgada .ant-table-thead > tr > th {
+    font-size: 10px; /* Opcional: Ajusta el tamaño del texto si es necesario */
+}
+
+
+
+
+
+
+
+
+
+

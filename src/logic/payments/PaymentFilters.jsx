@@ -78,7 +78,7 @@ export const PaymentFilters = ({
               onChange={handleChangePaymentType}
               options={[
                 { value: "inscription", label: "Inscripcion" },
-                { value: "paquete", label: "Paquete" },
+                { value: "payment", label: "Paquete" },
               ]}
             />
           </Col>

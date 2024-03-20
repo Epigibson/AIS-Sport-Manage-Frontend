@@ -98,7 +98,7 @@ export const SideBarLayout = ({ children }) => {
           {children}
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          Be+©{new Date().getFullYear()} Created by AIS Consulting Services
         </Footer>
       </Layout>
     </Layout>

@@ -55,7 +55,6 @@ export const userFormFields = [
     options: [
       { label: "Masculino", value: "Masculino" },
       { label: "Femenino", value: "Femenino" },
-      { label: "Otro", value: "Otro" },
     ],
   },
   // {

@@ -57,9 +57,10 @@ export const InscriptionLayout = () => {
       data.products = values.products;
       delete data.new_user.products;
       await mutateCreate(data, openModal);
-      if (values) {
-        openModal();
-      }
+      form.resetFields();
+      // if (values) {
+      //   openModal();
+      // }
     } catch (error) {
       console.error("Error al validar los campos del formulario:", error);
     }

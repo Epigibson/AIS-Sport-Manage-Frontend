@@ -18,9 +18,15 @@ export const InscriptionFormFields = [
     inputType: "number",
   },
   {
-    name: "tutors_name",
-    label: "Nombre del Tutor",
-    rules: [{ required: true, message: "El nombre del tutor es requerido" }],
+    name: "tutors_name_one",
+    label: "Nombre del Tutor 1",
+    rules: [{ required: true, message: "El nombre del tutor 1 es requerido" }],
+    inputType: "input", // Indica el tipo de control de entrada
+  },
+  {
+    name: "tutors_name_two",
+    label: "Nombre del Tutor 2",
+    rules: [{ required: true, message: "El nombre del tutor 2 es requerido" }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {

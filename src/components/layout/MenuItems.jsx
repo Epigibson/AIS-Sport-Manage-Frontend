@@ -4,8 +4,8 @@ import {
   ExpandAltOutlined,
   GroupOutlined,
   HomeFilled,
+  LogoutOutlined,
   ProductFilled,
-  ReadOutlined,
   UsergroupAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -17,12 +17,12 @@ export const MenuItems = [
     label: "Inicio",
     path: "/home",
   },
-  {
-    key: "2",
-    icon: <ReadOutlined />,
-    label: "Inscripciones",
-    path: "/inscripciones",
-  },
+  // {
+  //   key: "2",
+  //   icon: <ReadOutlined />,
+  //   label: "Inscripciones",
+  //   path: "/inscripciones",
+  // },
   {
     key: "3",
     icon: <DollarCircleOutlined />,
@@ -64,5 +64,11 @@ export const MenuItems = [
     icon: <ExpandAltOutlined />,
     label: "Panel de Analiticas",
     path: "/analiticas",
+  },
+  {
+    key: "10",
+    icon: <LogoutOutlined />,
+    label: "Cerrar Sesion",
+    path: "/",
   },
 ];

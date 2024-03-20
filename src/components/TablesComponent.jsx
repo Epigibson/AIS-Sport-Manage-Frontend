@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import "./TablesStyle.css";
 
-export const TablesComponent = ({ data, columns }) => {
+export const TablesComponent = ({ data, columns, modifiedTable }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -150,7 +151,7 @@ export const TablesComponent = ({ data, columns }) => {
         columns={modifiedColumns}
         dataSource={data}
         size={"small"}
-        className={"w-350"}
+        className={modifiedTable ? "w-350 text-sm mi-tabla-delgada" : ""}
         pagination={{
           pageSize: 10,
         }}
