@@ -14,10 +14,12 @@ import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { userFormFields } from "./UserFormFields.jsx";
 import { UserColumns } from "./UserColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
+import { useNavigate } from "react-router-dom";
 
 const { useBreakpoint } = Grid;
 
 export const UserLogic = () => {
+  const navigate = useNavigate();
   const screen = useBreakpoint();
   const queryClient = useQueryClient();
   const { mutateCreate } = useCreateUser();
@@ -122,6 +124,7 @@ export const UserLogic = () => {
     handleImageLoaded: handleImageLoaded,
     setSelectedRecord,
     screen: screen,
+    navigate,
   });
 
   if (isLoading) return <LoaderIconUtils />;

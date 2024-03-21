@@ -1,7 +1,7 @@
 import { SideBarLayout } from "../components/layout/SideBarLayout.jsx";
 import { MainContainerLayout } from "../components/layout/MainContainerLayout.jsx";
-import { HomeLogic } from "../logic/home/HomeLogic.jsx";
 import { useAuth } from "../hooks/AuthContext/useAuth.jsx";
+import { ResumePaymentsLogic } from "../logic/resume_payments/ResumePaymentsLogic.jsx";
 
 export const HomePage = () => {
   const usuario = useAuth();
@@ -10,7 +10,7 @@ export const HomePage = () => {
     <>
       <SideBarLayout>
         <MainContainerLayout title={"Dashboard"}>
-          <HomeLogic />
+          <ResumePaymentsLogic />
         </MainContainerLayout>
       </SideBarLayout>
     </>

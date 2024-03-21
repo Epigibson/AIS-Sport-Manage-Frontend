@@ -29,6 +29,7 @@ export const FormComponent = ({
   handleSubmit,
   handleClose,
   setProfileImage,
+  isLogin,
 }) => {
   const screen = useBreakpoint();
   const { data: categories } = useQuery({
@@ -110,7 +111,7 @@ export const FormComponent = ({
   return (
     <Form
       form={form}
-      layout={"horizontal"}
+      layout={isLogin ? "vertical" : "horizontal"}
       onFinish={() => handleSubmit("create")}
       size={"small"}
       autoComplete={"on"}
@@ -199,9 +200,15 @@ export const FormComponent = ({
           className="bg-primary-700 mx-3"
           htmlType="submit"
         >
-          Guardar
+          {isLogin ? "Ingresar" : "Guardar"}
         </Button>
-        <Button size={"middle"} type={"primary"} onClick={handleClose} danger>
+        <Button
+          size={"middle"}
+          type={"primary"}
+          onClick={handleClose}
+          hidden={isLogin}
+          danger
+        >
           Cancelar
         </Button>
       </Form.Item>
@@ -215,4 +222,5 @@ FormComponent.propTypes = {
   handleSubmit: PropTypes.func,
   handleClose: PropTypes.func,
   setProfileImage: PropTypes.func,
+  isLogin: PropTypes.any,
 };

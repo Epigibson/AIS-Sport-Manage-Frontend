@@ -14,7 +14,9 @@ export const InscriptionFormFields = [
   {
     name: "mobile",
     label: "Celular 2",
-    rules: [{ required: true, message: "El número de celular 2 es requerido" }],
+    rules: [
+      { required: false, message: "El número de celular 2 es requerido" },
+    ],
     inputType: "number",
   },
   {
@@ -26,7 +28,7 @@ export const InscriptionFormFields = [
   {
     name: "tutors_name_two",
     label: "Nombre del Tutor 2",
-    rules: [{ required: true, message: "El nombre del tutor 2 es requerido" }],
+    rules: [{ required: false, message: "El nombre del tutor 2 es requerido" }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {

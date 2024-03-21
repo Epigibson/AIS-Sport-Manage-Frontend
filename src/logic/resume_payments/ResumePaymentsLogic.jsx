@@ -1,34 +1,138 @@
-import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { getResume } from "../../api/ResumeService.jsx";
+import { Card, Col, Row, Statistic } from "antd";
+import {
+  FileTextOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
-export const ResumePayments = () => {
-  const { data: resume } = useQuery({
+export const ResumePaymentsLogic = () => {
+  const {
+    data: data,
+    isSuccess,
+    isPending,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["getResume"],
     queryFn: getResume,
   });
 
+  if (isError) {
+    console.log(error);
+    return <div>Error: {error.message}</div>;
+  }
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+  if (isSuccess) {
+    console.log(data);
+  }
+
   return (
-    <TablesComponent
-      data={resume}
-      title="Deudores"
-      type="debtors"
-      columns={["Nombre", "Apellido", "Correo electrónico"]}
-      tableColumns={["name", "lastname", "email"]}
-      tableTitle="Deudores"
-      tableSubtitle="Lista de deudores"
-      tableDescription="Esta tabla muestra una lista de deudores registrados en el sistema."
-      tableFooter="Esta tabla muestra una lista de deudores registrados en el sistema."
-      tableFooterLink="/debtors"
-      tableFooterLinkText="Ver todos los deudores"
-      tableFooterLinkIcon="arrow-right"
-      tableFooterLinkIconColor="primary"
-      tableFooterLinkIconSize="sm"
-      tableFooterLinkIconPosition="right"
-      tableFooterLinkIconRounded="rounded-full"
-      tableFooterLinkIconRoundedSize="md"
-      tableFooterLinkIconRoundedPosition="right"
-      tableFooterLinkIconRoundedRounded="rounded-full"
-    />
+    <div style={{ padding: "20px" }}>
+      <Row gutter={16}>
+        {/* Usuarios */}
+        <Col span={8}>
+          <Card
+            className={"shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"}
+          >
+            <Statistic
+              title="Usuarios"
+              value={data?.user_count}
+              prefix={<UserOutlined />}
+            />
+          </Card>
+        </Col>
+
+        {/* Coaches */}
+        <Col span={8}>
+          <Card
+            className={"shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"}
+          >
+            <Statistic
+              title="Coaches"
+              value={data?.couch_count}
+              prefix={<TeamOutlined />}
+            />
+          </Card>
+        </Col>
+
+        {/* Inscripciones */}
+        <Col span={8}>
+          <Card
+            className={"shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"}
+          >
+            <Statistic
+              title="Inscripciones"
+              value={data.inscription_count}
+              prefix={<FileTextOutlined />}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={16} style={{ marginTop: "20px" }}>
+        {/* Recibos Pagados */}
+        <Col span={8}>
+          <Card
+            className={
+              "shadow-md bg-gradient-to-r from-indigo-50 to-purple-200"
+            }
+          >
+            <Statistic
+              title="Recibos Pagados"
+              value={`Elementos: ${data.count_receipts_payed}`}
+            />
+            <Statistic value={`Monto: $${data.amount_payed} MXN`} />
+          </Card>
+        </Col>
+
+        {/* Recibos Pendientes */}
+        <Col span={8}>
+          <Card
+            className={
+              "shadow-md bg-gradient-to-r from-indigo-50 to-purple-200"
+            }
+          >
+            <Statistic
+              title="Recibos Pendientes"
+              value={`Elementos: ${data.count_receipts_pending}`}
+            />
+            <Statistic value={`Monto: $${data.amount_pending} MXN`} />
+          </Card>
+        </Col>
+
+        {/* Recibos Vencidos */}
+        <Col span={8}>
+          <Card
+            className={
+              "shadow-md bg-gradient-to-r from-indigo-50 to-purple-200"
+            }
+          >
+            <Statistic
+              title="Recibos Vencidos"
+              value={`Elementos: ${data.count_receipts_expired}`}
+            />
+            <Statistic value={`Monto: $${data.amount_expired} MXN`} />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Monto Total */}
+      <Row style={{ marginTop: "20px" }}>
+        <Col span={24}>
+          <Card
+            className={"shadow-md bg-gradient-to-r from-red-100 to-orange-200"}
+          >
+            <Statistic
+              title="Monto Total"
+              value={`$${data.total_amount} MXN`}
+            />
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 };

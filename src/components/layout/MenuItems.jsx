@@ -6,6 +6,7 @@ import {
   HomeFilled,
   LogoutOutlined,
   ProductFilled,
+  ReadOutlined,
   UsergroupAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -17,12 +18,12 @@ export const MenuItems = [
     label: "Inicio",
     path: "/home",
   },
-  // {
-  //   key: "2",
-  //   icon: <ReadOutlined />,
-  //   label: "Inscripciones",
-  //   path: "/inscripciones",
-  // },
+  {
+    key: "2",
+    icon: <ReadOutlined />,
+    label: "Inscripciones",
+    path: "/inscripciones",
+  },
   {
     key: "3",
     icon: <DollarCircleOutlined />,

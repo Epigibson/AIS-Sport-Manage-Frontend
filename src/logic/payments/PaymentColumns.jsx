@@ -1,4 +1,4 @@
-import { Button, Tag, Typography } from "antd";
+import { Button, Popconfirm, Tag, Typography } from "antd";
 import "./PaymentsStyle.css";
 
 const { Text } = Typography;
@@ -110,18 +110,26 @@ export const PaymentColumns = ({ showReceipts, handlePayReceipt }) => [
     render: (_, record) => {
       return (
         <div className={"flex flex-row items-center justify-center"}>
-          <Button
-            disabled={record.status === "Pagado"}
-            type={"primary"}
-            className="ant-btn-custom px-2 mr-2"
-            style={
-              record.status !== "Pagado" ? { backgroundColor: "#48bb78" } : {}
-            }
-            size={"small"}
-            onClick={() => handlePayReceipt(record)}
+          <Popconfirm
+            title="Confirmar Pago"
+            description={`Estas seguro de pagar $${record?.amount}?`}
+            onConfirm={() => handlePayReceipt(record)}
+            okText="Si"
+            cancelText="No"
           >
-            Confirmar Pago
-          </Button>
+            <Button
+              disabled={record.status === "Pagado"}
+              type={"primary"}
+              className="ant-btn-custom px-2 mr-2"
+              style={
+                record.status !== "Pagado" ? { backgroundColor: "#48bb78" } : {}
+              }
+              size={"small"}
+              // onClick={() => handlePayReceipt(record)}
+            >
+              Confirmar Pago
+            </Button>
+          </Popconfirm>
           <Button
             disabled={record.status !== "Pagado"}
             type={"primary"}

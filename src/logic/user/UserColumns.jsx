@@ -1,12 +1,13 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
+import { EyeFilled } from "@ant-design/icons";
 
 export const UserColumns = ({
   onEdit,
   onDelete,
   onCancel,
   handleImageLoaded,
-  screen,
+  navigate,
 }) => [
   {
     title: "Avatar",
@@ -140,18 +141,41 @@ export const UserColumns = ({
     key: "groups",
     dataIndex: "groups",
     align: "center",
-    width: 100,
+    width: 200,
     render: (_, record) =>
       record.groups && record.groups.length > 0 ? (
         record.groups?.map((group) => (
-          <Tag color="blue" key={group?._id}>
-            {group.name}
-          </Tag>
+          <div
+            key={group?._id}
+            className={"flex flex-col justify-center items-center gap-1"}
+          >
+            <Button
+              onClick={() => navigate("/asignacion_de_grupos")}
+              icon={<EyeFilled />}
+              type="primary"
+              shape="circle"
+              size={"middle"}
+              title={"Editar"}
+              style={{ backgroundColor: "#fcba03" }}
+              key={group?._id}
+            />
+            <Tag color="blue" key={group?._id}>
+              {group.name}
+            </Tag>
+          </div>
         ))
       ) : (
-        <Tag color={"default"} key={record?._id}>
-          No Group
-        </Tag>
+        <div color={"default"} key={record?._id}>
+          <Button
+            onClick={() => navigate("/asignacion_de_grupos")}
+            icon={<EyeFilled />}
+            type="primary"
+            shape="circle"
+            size={"middle"}
+            title={"Editar"}
+            style={{ backgroundColor: "#fcba03" }}
+          />
+        </div>
       ),
   },
   {
