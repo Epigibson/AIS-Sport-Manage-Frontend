@@ -2,9 +2,10 @@ import { useAuth } from "../../hooks/AuthContext/useAuth.jsx";
 import { useEffect } from "react";
 import { getToken } from "../../utils/tokenUtils.jsx";
 import logo from "/src/assets/logo-be.png";
+import { Button, Input } from "antd";
 
 export const Login = () => {
-  const { loginHandler } = useAuth();
+  const { loginHandler, isLoading } = useAuth();
   const onFinish = async (event) => {
     event.preventDefault(); // Evita el comportamiento predeterminado de envío del formulario
     const formData = new FormData(event.target);
@@ -44,6 +45,7 @@ export const Login = () => {
                   type="username"
                   name="username"
                   id="username"
+                  disabled={isLoading}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="example@mail.com"
                   required=""
@@ -56,13 +58,12 @@ export const Login = () => {
                 >
                   Contraseña
                 </label>
-                <input
-                  type="password"
+                <Input.Password
                   name="password"
                   id="password"
+                  disabled={isLoading}
                   placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
+                  className="px-2 py-2"
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -92,12 +93,15 @@ export const Login = () => {
                   Olvide mi contraseña?
                 </a>
               </div>
-              <button
-                type="submit"
-                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              <Button
+                type="primary"
+                loading={isLoading}
+                disabled={isLoading}
+                htmlType="submit"
+                className="w-full text-white bg-primary-700 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 Ingresar
-              </button>
+              </Button>
             </form>
           </div>
         </div>

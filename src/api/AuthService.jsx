@@ -5,6 +5,7 @@ export const login = async (credentials) => {
     const response = await apiClient.post("/auth/login", credentials);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message || "Error al inciar sesion.");
+    // console.log(error.response.data.detail);
+    throw new Error(error.response.data.detail || "Error al inciar sesion.");
   }
 };
