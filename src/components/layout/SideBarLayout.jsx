@@ -2,9 +2,10 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Divider, Grid, Layout, Menu, theme } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MenuItems } from "./MenuItems.jsx";
 import logoImage from "../../assets/logo-be.png";
 import PropTypes from "prop-types";
+import { clearTokens, getToken } from "../../utils/tokenUtils.jsx";
+import { MenuItems } from "./MenuItems.jsx";
 
 const { Header, Sider, Footer, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -23,7 +24,15 @@ export const SideBarLayout = ({ children }) => {
     } else {
       setCollapsed(false);
     }
+    console.log(getToken());
   }, [screens]);
+
+  const logout = () => {
+    clearTokens();
+    const tokens = getToken();
+    console.log(tokens);
+    navigate("/");
+  };
 
   return (
     <Layout className="min-h-lvh w-full ">
@@ -61,8 +70,12 @@ export const SideBarLayout = ({ children }) => {
           }))}
           onClick={({ key }) => {
             const path = MenuItems.find((item) => item.key === key)?.path;
+            const func = MenuItems.find((item) => item.key === key)?.function;
             if (path) {
               navigate(path);
+            }
+            if (func && func === "logout") {
+              logout();
             }
           }}
         />

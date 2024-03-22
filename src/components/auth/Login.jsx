@@ -1,60 +1,116 @@
-import { Divider, Form } from "antd";
 import { useAuth } from "../../hooks/AuthContext/useAuth.jsx";
-import { FormComponent } from "../FormComponent.jsx";
-import { LoginFormFields } from "./LoginFormFields.jsx";
-import "./Login.css"; // Asumiendo que tienes un archivo CSS para estilos adicionales
-import logoImage from "../../assets/logo-be.png";
+import { useEffect } from "react";
+import { getToken } from "../../utils/tokenUtils.jsx";
+import logo from "/src/assets/logo-be.png";
 
 export const Login = () => {
   const { loginHandler } = useAuth();
-  const isLogin = true;
-  const appName = "Be+";
-  const logo = logoImage;
-  const [form] = Form.useForm();
-
-  const onFinish = async (values) => {
-    await loginHandler(values.username, values.password);
+  const onFinish = async (event) => {
+    event.preventDefault(); // Evita el comportamiento predeterminado de envío del formulario
+    const formData = new FormData(event.target);
+    const username = formData.get("username");
+    const password = formData.get("password");
+    console.log({ username, password });
+    await loginHandler(username, password);
   };
 
-  return (
-    <>
-      <section className="h-screen bg-slate-900">
-        <div className="container h-full p-0 m-auto sm:p-0">
-          <div className="g-6 flex h-full flex-wrap items-center justify-center text-neutral-200 dark:text-neutral-200">
-            <div
-              className="w-[calc(100%-2rem)] max-w-2xl"
-              style={{ maxHeight: "calc(100vh-1rem)" }}
-            >
-              <div className="block shadow-lg dark:bg-neutral-800 g-0 lg:flex divide-x lg:flex-wrap">
-                <div className="bg-slate-700 sm:rounded-t md:rounded-l px-4 md:px-0 lg:flex-auto lg:w-6/12">
-                  <div className="md:mx-6 md:px-12 md:py-8 text-slate-300">
-                    <div className="w-full text-center gap-3 sm:my-1 my-5  inline-flex justify-center content-center items-center sm:block">
-                      <img
-                        className="w-100 sm:mx-auto mx-2  sm:w-1/4"
-                        src={logo}
-                        alt="logo"
-                      />
-                    </div>
+  useEffect(() => {
+    console.log(getToken());
+  }, []);
 
-                    <Divider
-                      className={"text-blue-100"}
-                      style={{ color: "#d2d2d2" }}
-                    >
-                      Ingresa a tu cuenta
-                    </Divider>
-                    <FormComponent
-                      form={form}
-                      formFields={LoginFormFields}
-                      handleSubmit={onFinish}
-                      isLogin={isLogin}
+  return (
+    <section className="bg-gray-50 dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <a
+          href="#"
+          className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+        >
+          <img className="w-10 h-10 mr-2" src={logo} alt="logo" />
+        </a>
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
+              Iniciar Sesión
+            </h1>
+            <form className="space-y-4 md:space-y-6" onSubmit={onFinish}>
+              <div>
+                <label
+                  form="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Correo Electrónico
+                </label>
+                <input
+                  type="username"
+                  name="username"
+                  id="username"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="example@mail.com"
+                  required=""
+                />
+              </div>
+              <div>
+                <label
+                  form="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required=""
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="remember"
+                      aria-describedby="remember"
+                      type="checkbox"
+                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                      required=""
                     />
                   </div>
+                  <div className="ml-3 text-sm">
+                    <label
+                      form="remember"
+                      className="text-gray-500 dark:text-gray-300"
+                    >
+                      Remember me
+                    </label>
+                  </div>
                 </div>
+                <a
+                  href="#"
+                  className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                >
+                  Olvide mi contraseña?
+                </a>
               </div>
-            </div>
+              <button
+                type="submit"
+                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Ingresar
+              </button>
+              {/*<p className="text-sm font-light text-gray-500 dark:text-gray-400">*/}
+              {/*  Don’t have an account yet?{" "}*/}
+              {/*  <a*/}
+              {/*    href="#"*/}
+              {/*    className="font-medium text-primary-600 hover:underline dark:text-primary-500"*/}
+              {/*  >*/}
+              {/*    Registrarme*/}
+              {/*  </a>*/}
+              {/*</p>*/}
+            </form>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };

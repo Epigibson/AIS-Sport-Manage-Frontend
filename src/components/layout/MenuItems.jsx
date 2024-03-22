@@ -70,6 +70,6 @@ export const MenuItems = [
     key: "10",
     icon: <LogoutOutlined />,
     label: "Cerrar Sesion",
-    path: "/",
+    function: "logout",
   },
 ];
