@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCouch, deleteUser, updateUser } from "../../api/UserService.jsx";
+import { toastNotify } from "../../utils/ToastNotify.jsx";
 
 export const useCreateCouch = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
@@ -12,10 +13,20 @@ export const useCreateCouch = () => {
   } = useMutation({
     mutationFn: createCouch,
     onSuccess: async () => {
-      console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+      console.log("Mutación exitosa");
+      toastNotify({
+        type: "success",
+        message: "Registro creado",
+        description: "Se ha creado correctamente el registro.",
+      });
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Error al crear registro.",
+        description: "Se ha podido crear correctamente el registro.",
+      });
       console.error("Error en la mutación", error);
     },
     onSettled: () => {
@@ -37,9 +48,19 @@ export const useUpdateCouch = () => {
     mutationFn: updateUser,
     onSuccess: async () => {
       console.log("Mutación exitosa");
+      toastNotify({
+        type: "success",
+        message: "Registro actualizado",
+        description: "Se ha actualizado correctamente el registro.",
+      });
       await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Error al actualizar registro.",
+        description: "Se ha podido actualizar correctamente el registro.",
+      });
       console.error("Error en la mutación", error);
     },
     onSettled: () => {
@@ -62,8 +83,18 @@ export const useDeleteCouch = () => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Registro eliminado",
+        description: "Se ha podido eliminar correctamente el registro.",
+      });
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Error al eliminar registro.",
+        description: "Se ha podido eliminar correctamente el registro.",
+      });
       console.error("Error en la mutación", error);
     },
   });

@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import { notification } from "antd";
 
-export const toastNotify = ({ type, message }) => {
+export const toastNotify = ({ type, message, description }) => {
   notification[type]({
     message: message,
-    description: "This is the content of the notification.",
+    description: description,
   });
 };
 

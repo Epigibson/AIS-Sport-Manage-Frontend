@@ -1,6 +1,5 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
-import { EyeFilled } from "@ant-design/icons";
 
 export const UserColumns = ({
   onEdit,
@@ -149,33 +148,23 @@ export const UserColumns = ({
             key={group?._id}
             className={"flex flex-col justify-center items-center gap-1"}
           >
-            <Button
-              onClick={() => navigate("/asignacion_de_grupos")}
-              icon={<EyeFilled />}
-              type="primary"
-              shape="circle"
-              size={"middle"}
-              title={"Editar"}
-              style={{ backgroundColor: "#fcba03" }}
-              key={group?._id}
-            />
+            {/*<Button*/}
+            {/*  onClick={() => navigate("/asignacion_de_grupos")}*/}
+            {/*  icon={<EyeFilled />}*/}
+            {/*  type="primary"*/}
+            {/*  shape="circle"*/}
+            {/*  size={"middle"}*/}
+            {/*  title={"Editar"}*/}
+            {/*  style={{ backgroundColor: "#fcba03" }}*/}
+            {/*  key={group?._id}*/}
+            {/*/>*/}
             <Tag color="blue" key={group?._id}>
               {group.name}
             </Tag>
           </div>
         ))
       ) : (
-        <div color={"default"} key={record?._id}>
-          <Button
-            onClick={() => navigate("/asignacion_de_grupos")}
-            icon={<EyeFilled />}
-            type="primary"
-            shape="circle"
-            size={"middle"}
-            title={"Editar"}
-            style={{ backgroundColor: "#fcba03" }}
-          />
-        </div>
+        <Tag>Sin Grupos</Tag>
       ),
   },
   {

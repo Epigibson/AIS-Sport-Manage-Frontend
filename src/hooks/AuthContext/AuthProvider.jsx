@@ -19,9 +19,7 @@ export const AuthProvider = ({ children }) => {
       navigate("/home");
     },
     onError: (error) => {
-      // const errorMessage = error.response.data.detail;
-      // toastNotify({ type: "error", message: errorMessage });
-      // console.error(error);
+      console.error(error);
     },
   });
 
@@ -40,8 +38,17 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
       console.log("Usuario autenticado:", user);
       setIsLoading(false); // Desactiva el estado de carga si el login es exitoso
+      toastNotify({
+        type: "success",
+        message: `Bienvenid@ ${user.name}.`,
+        description: "Sesión iniciada correctamente.",
+      });
     } catch (error) {
-      toastNotify({ type: "error", message: error.toString() });
+      toastNotify({
+        type: "error",
+        message: "Error al iniciar sesión.",
+        description: "Correo o contraseña incorrectos.",
+      });
       console.error(error);
       setIsLoading(false); // Desactiva el estado de carga si el login es exitoso
       // console.error("Error al iniciar sesion.", error);

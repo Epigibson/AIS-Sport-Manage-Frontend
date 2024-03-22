@@ -4,6 +4,7 @@ import {
   deleteGroup,
   updateGroup,
 } from "../../api/GroupService.jsx";
+import { toastNotify } from "../../utils/ToastNotify.jsx";
 
 export const useCreateGroup = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
@@ -18,8 +19,18 @@ export const useCreateGroup = () => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Registro creado",
+        description: "Se ha creado correctamente el registro.",
+      });
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Error al crear registro.",
+        description: "No se ha podido crear correctamente el registro.",
+      });
       console.error("Error en la mutación", error);
     },
     onSettled: () => {
@@ -42,8 +53,18 @@ export const useUpdateGroup = () => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Registro actualizado",
+        description: "Se ha actualizado correctamente el registro.",
+      });
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Error al actualizar registro.",
+        description: "No se ha podido actualizar correctamente el registro.",
+      });
       console.error("Error en la mutación", error);
     },
     onSettled: () => {
@@ -66,8 +87,18 @@ export const useDeleteGroup = () => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["allGroups"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Registro eliminado",
+        description: "Se ha eliminado correctamente el registro.",
+      });
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Error al eliminar registro.",
+        description: "No se ha podido eliminar correctamente el registro.",
+      });
       console.error("Error en la mutación", error);
     },
   });

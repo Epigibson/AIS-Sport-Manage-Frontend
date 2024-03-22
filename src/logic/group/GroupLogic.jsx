@@ -15,16 +15,21 @@ import { groupFormFields } from "./GroupFormFields.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { MembersGroupsColumns } from "./MembersGroupsColumns.jsx";
 import moment from "moment";
+import { groupMemberFields } from "./GroupMemberFields.jsx";
 
 export const GroupLogic = () => {
   const { mutateCreate } = useCreateGroup();
   const { mutateUpdate } = useUpdateGroup();
   const { mutateDelete } = useDeleteGroup();
   const [form] = Form.useForm();
+  const [formAddUsers] = Form.useForm();
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalMembersVisible, setIsModalMembersVisible] = useState(false);
+  const [isModalGroupAssignVisible, setIsModalGroupAssignVisible] =
+    useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
+  const [selectedGroup, setSelectedGroup] = useState(null); // Para guardar el registro seleccionado al editar
   const {
     data: groupData,
     isLoading,
@@ -66,11 +71,23 @@ export const GroupLogic = () => {
     const data = enrichedGroupsMembersData(value.members);
     console.log("DATA PROCESADA", data);
     setSelectedRecord(data);
+    setSelectedGroup(value);
     setIsModalMembersVisible(true);
   };
   const handleCancelMembers = () => {
     setSelectedRecord(null);
     setIsModalMembersVisible(false);
+  };
+
+  const showModalAssignGroup = () => {
+    setModalContext("addUser");
+    setIsModalGroupAssignVisible(true);
+    setIsModalMembersVisible(false);
+  };
+
+  const handleCancelGroupAssign = () => {
+    setSelectedRecord(null);
+    setIsModalGroupAssignVisible(false);
   };
 
   const showModal = () => {
@@ -85,10 +102,15 @@ export const GroupLogic = () => {
   };
 
   const handleSubmit = async () => {
-    const values = await form.validateFields();
-
+    let values = null;
+    console.log("Modales", modalContext);
+    if (modalContext === "edit" || modalContext === "create") {
+      values = await form.validateFields();
+    } else if (modalContext === "addUser") {
+      values = await formAddUsers.validateFields();
+    }
     // Verifica si `schedule` está presente y es válido antes de convertir
-    if (values.schedule && values.schedule[0] && values.schedule[1]) {
+    if (values?.schedule && values?.schedule[0] && values?.schedule[1]) {
       const [start, end] = values.schedule;
       values.schedule = [
         start.toISOString(), // Convertir de Moment.js a string ISO
@@ -96,11 +118,20 @@ export const GroupLogic = () => {
       ];
     } else {
       // Maneja el caso donde `schedule` no esté definido o incompleto
-      delete values.schedule; // O establece un valor predeterminado si es necesario
+      delete values?.schedule; // O establece un valor predeterminado si es necesario
     }
 
     // Ahora `values.schedule` está listo para ser enviado
     console.log(values);
+
+    if (modalContext === "addUser") {
+      console.log("SE AGREGA USER A GRUPO");
+      console.log("Datos", selectedRecord);
+      await mutateUpdate({
+        ...values,
+        group_id: selectedGroup.group_id,
+      });
+    }
 
     if (modalContext === "edit") {
       console.log("SE EDITA");
@@ -111,9 +142,12 @@ export const GroupLogic = () => {
       await mutateCreate(values);
     }
     form.resetFields();
+    formAddUsers.resetFields();
     setModalContext("");
-    setSelectedRecord(null);
+    setIsModalGroupAssignVisible(false);
     setIsModalVisible(false);
+    setSelectedRecord(null);
+    setSelectedGroup(null);
   };
 
   const handleEdit = (record) => {
@@ -137,15 +171,17 @@ export const GroupLogic = () => {
       // Si no hay valores de 'schedule', o no están completos, maneja ese caso aquí.
       form.setFieldsValue(record);
     }
+    formAddUsers.setFieldsValue(selectedGroup); // Asegúrate de que 'schedule' en tu formulario espera un arreglo
 
     setSelectedRecord(record);
     setIsModalVisible(true);
   };
 
   const handleDelete = async (record) => {
+    console.log("PARA ELIMINAR", record);
     setModalContext("delete");
     setSelectedRecord(record);
-    await mutateDelete(selectedRecord?.product_id);
+    await mutateDelete(selectedRecord?.group_id);
   };
 
   const cancel = (e) => {
@@ -174,12 +210,24 @@ export const GroupLogic = () => {
           Crear nuevo grupo
         </Button>
       </Row>
+
+      <ModalComponent
+        form={formAddUsers}
+        formFields={groupMemberFields}
+        title={"Adicionar Miembros al Grupo"}
+        onOpen={isModalGroupAssignVisible}
+        onClose={handleCancelGroupAssign}
+        onOk={handleSubmit}
+      />
       <ModalComponent
         dataTable={selectedRecord}
         dataTableColumns={MembersGroupsColumns}
         title={"Miembros"}
         onOpen={isModalMembersVisible}
         onClose={handleCancelMembers}
+        buttonModal={showModalAssignGroup}
+        textButtonModal={"Asignar Usuario a un Grupo"}
+        external={true}
       />
       <ModalComponent
         form={form}

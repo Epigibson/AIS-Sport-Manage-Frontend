@@ -2,13 +2,13 @@ export const groupFormFields = [
   {
     name: "name",
     label: "Nombre del grupo",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
     name: "description",
     label: "Descripcion del grupo",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "input",
   },
   // {
@@ -21,7 +21,7 @@ export const groupFormFields = [
   {
     name: "status",
     label: "Estatus",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "select",
     options: [
       { label: "Activo", value: "Activo" },
@@ -31,19 +31,19 @@ export const groupFormFields = [
   {
     name: "capacity",
     label: "Capacidad",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
     name: "schedule",
     label: "Horarios",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "schedule", // Indica el tipo de control de entrada
   },
   {
     name: "schedule_initial_final",
     label: "Dias",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "multipleSelect", // Indica el tipo de control de entrada
     options: [
       { label: "Lunes", value: "Lunes" },

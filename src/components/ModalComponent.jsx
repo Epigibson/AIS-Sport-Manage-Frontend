@@ -1,4 +1,4 @@
-import { Grid, Modal } from "antd";
+import { Button, Grid, Modal, Row } from "antd";
 import { FormComponent } from "./FormComponent.jsx";
 import { TablesComponent } from "./TablesComponent.jsx";
 import PropTypes from "prop-types";
@@ -15,7 +15,11 @@ export const ModalComponent = ({
   dataTable,
   dataTableColumns,
   setProfileImage,
+  buttonModal,
+  textButtonModal,
+  external,
 }) => {
+  console.log(buttonModal, textButtonModal); // Verifica que se reciban las props
   const screen = useBreakpoint();
   return (
     <Modal
@@ -25,6 +29,19 @@ export const ModalComponent = ({
       footer={false}
       width={screen.xs ? "300px" : "80%"}
     >
+      {external === true ? (
+        <Row justify={"end"} className={"overflow-hidden mb-5"}>
+          <Button
+            type={"primary"}
+            className={"bg-primary-700"}
+            onClick={() => buttonModal()}
+          >
+            {textButtonModal}
+          </Button>
+        </Row>
+      ) : (
+        <> </>
+      )}
       {dataTable == null && form != null && formFields != null ? (
         <FormComponent
           form={form}
@@ -51,4 +68,7 @@ ModalComponent.propTypes = {
   dataTable: PropTypes.any,
   dataTableColumns: PropTypes.any,
   setProfileImage: PropTypes.any,
+  buttonModal: PropTypes.func,
+  textButtonModal: PropTypes.string,
+  external: PropTypes.bool,
 };
