@@ -1,15 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../hooks/AuthContext/useAuth.jsx";
+import { getToken } from "./tokenUtils.jsx";
+import PropTypes from "prop-types";
 
 export const ProtectedRoute = ({ children }) => {
-  // Verifica si el token de acceso existe
-  const data = useAuth();
-
-  // Si no hay token, redirige al usuario a la página de inicio de sesión
-  if (!data.user) {
+  if (getToken() === null) {
     return <Navigate to="/" />;
   }
-
-  // Si hay token, muestra el componente solicitado
   return children ? children : <Outlet />;
+};
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node, // 'node' cubre cualquier cosa que pueda ser renderizada: números, strings, elementos o fragmentos
 };

@@ -85,7 +85,15 @@ export const ResumePaymentsLogic = () => {
               title="Recibos Pagados"
               value={`Elementos: ${data.count_receipts_payed}`}
             />
-            <Statistic value={`Monto: $${data.amount_payed} MXN`} />
+            <Statistic
+              value={`Monto: $${parseFloat(data.amount_payed).toLocaleString(
+                "es-MX",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )} MXN`}
+            />
           </Card>
         </Col>
 
@@ -100,7 +108,15 @@ export const ResumePaymentsLogic = () => {
               title="Recibos Pendientes"
               value={`Elementos: ${data.count_receipts_pending}`}
             />
-            <Statistic value={`Monto: $${data.amount_pending} MXN`} />
+            <Statistic
+              value={`Monto: $${parseFloat(data.amount_pending).toLocaleString(
+                "es-MX",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )} MXN`}
+            />
           </Card>
         </Col>
 
@@ -115,7 +131,15 @@ export const ResumePaymentsLogic = () => {
               title="Recibos Vencidos"
               value={`Elementos: ${data.count_receipts_expired}`}
             />
-            <Statistic value={`Monto: $${data.amount_expired} MXN`} />
+            <Statistic
+              value={`Monto: $${parseFloat(data.amount_expired).toLocaleString(
+                "es-MX",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )} MXN`}
+            />
           </Card>
         </Col>
       </Row>
@@ -128,7 +152,10 @@ export const ResumePaymentsLogic = () => {
           >
             <Statistic
               title="Monto Total"
-              value={`$${data.total_amount} MXN`}
+              value={`$${parseFloat(data.total_amount).toLocaleString("es-MX", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })} MXN`}
             />
           </Card>
         </Col>
