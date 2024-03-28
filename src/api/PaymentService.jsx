@@ -26,3 +26,20 @@ export const getAllHistoryPayments = async (options = {}) => {
   }
   return null;
 };
+
+export const updatePaymentMethod = async (data) => {
+  try {
+    console.log("Metodo de Pago", data);
+    // Construye los parámetros de consulta correctamente
+    const queryParams = new URLSearchParams({
+      payment_method: data.payment_method,
+    }).toString();
+    const response = await apiClient.put(
+      `/history_payment/${data.history_payment_id}?${queryParams}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo actualizar el metodo de pago..", error);
+  }
+  return null;
+};

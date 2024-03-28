@@ -1,7 +1,7 @@
 import { useAuth } from "../../hooks/AuthContext/useAuth.jsx";
 import PropTypes from "prop-types";
 
-export const MainContainerLayout = ({ children, title }) => {
+export const MainContainerLayout = ({ children, title, background }) => {
   const { user } = useAuth();
 
   if (!user) {
@@ -13,8 +13,10 @@ export const MainContainerLayout = ({ children, title }) => {
 
   return (
     <>
-      <div className="text-center text-xl font-bold mb-5 ">{title}</div>
-      {children}
+      <div className={`h-svh text-center text-xl  mb-5 ${background || ""}`}>
+        {title}
+        {children}
+      </div>
     </>
   );
 };
@@ -23,4 +25,5 @@ export const MainContainerLayout = ({ children, title }) => {
 MainContainerLayout.propTypes = {
   children: PropTypes.node, // 'node' cubre cualquier cosa que pueda ser renderizada: números, strings, elementos o fragmentos
   title: PropTypes.string, // Definiendo que 'title' debería ser una string
+  background: PropTypes.string, // Definiendo que 'background' debería ser una string
 };

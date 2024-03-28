@@ -6,7 +6,6 @@ export const UserColumns = ({
   onDelete,
   onCancel,
   handleImageLoaded,
-  navigate,
 }) => [
   {
     title: "Avatar",

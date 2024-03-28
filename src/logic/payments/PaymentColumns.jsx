@@ -1,9 +1,18 @@
-import { Button, Popconfirm, Tag, Typography } from "antd";
+import { Button, Popconfirm, Select, Tag, Typography } from "antd";
 import "./PaymentsStyle.css";
 
 const { Text } = Typography;
 
-export const PaymentColumns = ({ showReceipts, handlePayReceipt }) => [
+export const PaymentColumns = ({
+  showReceipts,
+  handlePayReceipt,
+  editingKey,
+  editingValue,
+  setEditingValue,
+  edit,
+  cancel,
+  handleSave,
+}) => [
   {
     title: "Matricula",
     dataIndex: "user",
@@ -46,6 +55,28 @@ export const PaymentColumns = ({ showReceipts, handlePayReceipt }) => [
     dataIndex: "payment_type",
     key: "payment_type",
     align: "center",
+    render: (payment_type) => {
+      if (payment_type === "inscription") {
+        return <Tag color={"blue"}>Inscripción</Tag>;
+      } else if (payment_type === "payment") {
+        return <Tag color={"purple"}>Mensualidad</Tag>;
+
+        // else if (payment_type === "Pago") {
+        //   return <Tag color={"green"}>{payment_type}</Tag>;
+        // } else if (payment_type === "Pago de Servicio") {
+        //   return <Tag color={"cyan"}>{payment_type}</Tag>;
+        // } else if (payment_type === "Pago de Material") {
+        //   return <Tag color={"magenta"}>{payment_type}</Tag>;
+        // } else if (payment_type === "Pago de Comida") {
+        //   return <Tag color={"orange"}>{payment_type}</Tag>;
+        // } else if (payment_type === "Pago de Transporte") {
+        //   return <Tag color={"red"}>{payment_type}</Tag>;
+        // } else if (payment_type === "Pago de Otros") {
+        //   return <Text>{payment_type}</Text>; // Ajusta "group_name" según tu modelo de datos
+      } else {
+        return <Tag color={"blue"}>{payment_type}</Tag>;
+      }
+    },
   },
   {
     title: "Cantidad",
@@ -79,11 +110,44 @@ export const PaymentColumns = ({ showReceipts, handlePayReceipt }) => [
     dataIndex: "payment_method",
     key: "payment_method",
     align: "center",
+    editable: true,
     render: (_, record) =>
-      record.payment_method ? (
-        <Tag color="blue">{record.payment_method}</Tag>
+      editingKey === record._id ? ( // Asumimos que usas _id como identificador único
+        <span>
+          <Select
+            value={editingValue}
+            style={{ width: 120 }} // Ajusta el ancho según tus necesidades
+            onChange={(value) => setEditingValue(value)}
+          >
+            {/* Opciones del Select. Reemplaza estas con tus métodos de pago reales */}
+            <Select.Option value="Transferencia">Transferencia</Select.Option>
+            <Select.Option value="Efectivo">Efectivo</Select.Option>
+          </Select>
+
+          <Button
+            onClick={() => handleSave(record)}
+            size="small"
+            style={{ marginRight: 8 }}
+          >
+            Guardar
+          </Button>
+          <Button onClick={cancel} size="small">
+            Cancelar
+          </Button>
+        </span>
       ) : (
-        <Tag color="blue">No especificado</Tag>
+        <div>
+          <Tag color="blue">{record.payment_method || "No especificado"}</Tag>
+          {record.status !== "Pagado" ? (
+            <Button
+              onClick={() => edit(record)}
+              size="small"
+              disabled={editingKey !== ""}
+            >
+              Editar
+            </Button>
+          ) : null}
+        </div>
       ),
   },
   {

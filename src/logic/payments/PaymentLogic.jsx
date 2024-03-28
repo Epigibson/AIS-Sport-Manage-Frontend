@@ -10,7 +10,10 @@ import { useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import "./PaymentsStyle.css";
 import { PaymentFilters } from "./PaymentFilters.jsx";
-import { usePayReceipt } from "./PaymentLogicMutations.jsx";
+import {
+  usePayReceipt,
+  useUpdatePaymentMethod,
+} from "./PaymentLogicMutations.jsx";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -20,7 +23,10 @@ export const PaymentLogic = () => {
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [editingKey, setEditingKey] = useState("");
+  const [editingValue, setEditingValue] = useState("");
   const { mutateUpdate } = usePayReceipt();
+  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod();
   const {
     data: historyPaymentData,
     isLoading,
@@ -114,9 +120,35 @@ export const PaymentLogic = () => {
     console.log(`selected ${value}`);
   };
 
+  const edit = (record) => {
+    setEditingKey(record._id); // Usamos _id como clave de edición, ajusta según tu data
+    setEditingValue(record.payment_method);
+  };
+
+  const cancel = () => {
+    setEditingKey("");
+    setEditingValue("");
+  };
+
+  const handleSave = async (record) => {
+    console.log("Guardando", record.history_payment_id, editingValue);
+    const data = {
+      history_payment_id: record.history_payment_id,
+      payment_method: editingValue,
+    };
+    await mutateUpdatePaymentMethod(data);
+    cancel(); // Restablece el estado de edición
+  };
+
   const columns = PaymentColumns({
     showReceipts: showReceipts,
     handlePayReceipt: handlePayReceipt,
+    edit: edit,
+    cancel: cancel,
+    handleSave: handleSave,
+    editingKey: editingKey,
+    editingValue: editingValue,
+    setEditingValue: setEditingValue,
   });
 
   return (
