@@ -1,5 +1,6 @@
 import { Button, Popconfirm, Select, Tag, Typography } from "antd";
 import "./PaymentsStyle.css";
+import { EditFilled } from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -139,13 +140,13 @@ export const PaymentColumns = ({
         <div>
           <Tag color="blue">{record.payment_method || "No especificado"}</Tag>
           {record.status !== "Pagado" ? (
-            <Button
+            <EditFilled
               onClick={() => edit(record)}
               size="small"
               disabled={editingKey !== ""}
             >
               Editar
-            </Button>
+            </EditFilled>
           ) : null}
         </div>
       ),
