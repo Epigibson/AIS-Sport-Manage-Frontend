@@ -111,7 +111,7 @@ export const SideBarLayout = ({ children }) => {
           {children}
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          BE+©{new Date().getFullYear()} Created by AIS Consulting Services
+          BE+©{new Date().getFullYear()} Realizado por AIS Consulting Services
         </Footer>
       </Layout>
     </Layout>
