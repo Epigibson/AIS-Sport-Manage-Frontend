@@ -24,7 +24,7 @@ export const ResumePaymentsLogic = () => {
     return <div>Error: {error.message}</div>;
   }
   if (isPending) {
-    return <div>Loading...</div>;
+    return <div>Cargando elementos...</div>;
   }
   if (isSuccess) {
     console.log(data);
