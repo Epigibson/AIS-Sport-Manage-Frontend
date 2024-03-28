@@ -187,16 +187,24 @@ export const PaymentColumns = ({
     dataIndex: "updated_at",
     key: "updated_at",
     align: "center",
-    render: (updated_at) => {
-      const date = new Date(updated_at);
-      const formattedDate = [
-        `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
-        `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
-        date.getFullYear(), // Año completo
-      ].join("/"); // Junta los componentes con guiones
-      return <Text>{formattedDate}</Text>;
+    render: (updated_at, record) => {
+      // Asegúrate de recibir el registro completo como segundo argumento
+      // Verifica si el estatus del registro es "Pagado"
+      if (record.status === "Pagado") {
+        const date = new Date(updated_at);
+        const formattedDate = [
+          `0${date.getDate()}`.slice(-2),
+          `0${date.getMonth() + 1}`.slice(-2),
+          date.getFullYear(),
+        ].join("/");
+        return <Text>{formattedDate}</Text>;
+      } else {
+        // Retorna null o un mensaje específico si el registro no está "Pagado"
+        return <Text>No pagado</Text>; // o simplemente null si no quieres mostrar nada
+      }
     },
   },
+
   {
     title: "Pago",
     dataIndex: "receipt_id",
