@@ -69,7 +69,8 @@ export const PaymentLogic = () => {
         ...historyPayment,
         user,
         receipt,
-        limit_date: receipt?.limit_date, // Incluye limit_date directamente en el objeto
+        limit_date: receipt?.limit_date,
+        updated_at: receipt?.updated_at,
       }; // Añade la información del grupo al objeto de usuario
     },
   );

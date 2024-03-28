@@ -79,10 +79,11 @@ export const GroupLogic = () => {
     setIsModalMembersVisible(false);
   };
 
-  const showModalAssignGroup = () => {
+  const showModalAssignGroup = (record) => {
     setModalContext("addUser");
     setIsModalGroupAssignVisible(true);
     setIsModalMembersVisible(false);
+    formAddUsers.setFieldsValue(record); // Ajusta esto según tu estructura de datos
   };
 
   const handleCancelGroupAssign = () => {
