@@ -37,16 +37,16 @@ export const MenuItems = [
     path: "/users",
   },
   {
-    key: "5",
-    icon: <CopyrightOutlined />,
-    label: "Coaches",
-    path: "/coaches",
-  },
-  {
     key: "6",
     icon: <GroupOutlined />,
     label: "Grupos",
     path: "/grupos",
+  },
+  {
+    key: "5",
+    icon: <CopyrightOutlined />,
+    label: "Coaches",
+    path: "/coaches",
   },
   {
     key: "7",
