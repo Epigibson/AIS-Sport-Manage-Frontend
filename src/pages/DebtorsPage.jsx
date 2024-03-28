@@ -5,7 +5,7 @@ export const DebtorsPage = () => {
   return (
     // <SideBarLayout>
     <MainContainerLayout
-      title={"Adeudos"}
+      title={"Listado de Pagos"}
       background={"bg-black text-white overflow-hidden"}
     >
       <DebtorsLogic />

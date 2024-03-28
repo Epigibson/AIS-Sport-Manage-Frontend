@@ -1,0 +1,8 @@
+.mi-popconfirm-especifico .ant-popover-buttons .ant-btn-primary {
+    background-color: #4CAF50; /* Nuevo color de fondo para el botón de confirmación */
+    border-color: #4CAF50; /* Nuevo color de borde para el botón de confirmación */
+}
+
+.mi-popconfirm-especifico .ant-popover-buttons .ant-btn {
+    color: #FF5722; /* Nuevo color para el botón de cancelar */
+}

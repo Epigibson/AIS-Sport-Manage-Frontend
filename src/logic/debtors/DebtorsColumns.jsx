@@ -32,21 +32,21 @@ export const debtorsColumns = [
       }
     },
   },
-  {
-    title: "Adeudo",
-    key: "debt",
-    dataIndex: "debt",
-    align: "center",
-    render: (debt) => {
-      // Usando Intl.NumberFormat para dar formato de moneda MXN
-      const formattedDebt = new Intl.NumberFormat("es-MX", {
-        style: "currency",
-        currency: "MXN",
-      }).format(debt);
-
-      return <Text className={"text-white"}>{formattedDebt}</Text>;
-    },
-  },
+  // {
+  //   title: "Adeudo",
+  //   key: "debt",
+  //   dataIndex: "debt",
+  //   align: "center",
+  //   render: (debt) => {
+  //     // Usando Intl.NumberFormat para dar formato de moneda MXN
+  //     const formattedDebt = new Intl.NumberFormat("es-MX", {
+  //       style: "currency",
+  //       currency: "MXN",
+  //     }).format(debt);
+  //
+  //     return <Text className={"text-white"}>{formattedDebt}</Text>;
+  //   },
+  // },
   {
     title: "Ultimo Pago",
     key: "last_payment",

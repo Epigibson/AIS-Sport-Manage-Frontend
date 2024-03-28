@@ -180,6 +180,7 @@ export const PaymentColumns = ({
             onConfirm={() => handlePayReceipt(record)}
             okText="Si"
             cancelText="No"
+            wrapClassName="mi-popconfirm-especifico"
           >
             <Button
               disabled={record.status === "Pagado"}
