@@ -65,7 +65,12 @@ export const PaymentLogic = () => {
       const receipt = receiptsData?.find(
         (receipt) => receipt._id === historyPayment.receipt_id,
       ); // Ajusta según la estructura de tus datos
-      return { ...historyPayment, user, receipt }; // Añade la información del grupo al objeto de usuario
+      return {
+        ...historyPayment,
+        user,
+        receipt,
+        limit_date: receipt?.limit_date, // Incluye limit_date directamente en el objeto
+      }; // Añade la información del grupo al objeto de usuario
     },
   );
 
@@ -111,6 +116,7 @@ export const PaymentLogic = () => {
 
   const handleChangePaymentType = (value) => {
     setPaymentTypeFilter(value);
+    handleSearch().then((r) => r);
     console.log(`selected ${value}`);
   };
 

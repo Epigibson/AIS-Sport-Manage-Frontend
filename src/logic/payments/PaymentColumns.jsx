@@ -152,12 +152,28 @@ export const PaymentColumns = ({
       ),
   },
   {
-    title: "Fecha de Pago",
+    title: "Fecha de Recibo",
     dataIndex: "created_at",
     key: "created_at",
     align: "center",
     render: (created_at) => {
       const date = new Date(created_at);
+      const formattedDate = [
+        `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
+        `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
+        date.getFullYear(), // Año completo
+      ].join("/"); // Junta los componentes con guiones
+      return <Text>{formattedDate}</Text>;
+    },
+  },
+  {
+    title: "Fecha de Pago",
+    dataIndex: "limit_date",
+    key: "limit_date",
+    align: "center",
+    render: (limit_date) => {
+      console.log(limit_date);
+      const date = new Date(limit_date);
       const formattedDate = [
         `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
         `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
