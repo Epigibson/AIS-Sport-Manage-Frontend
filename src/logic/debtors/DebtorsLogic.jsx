@@ -77,7 +77,7 @@ export const DebtorsLogic = () => {
     }
   }, [scrollIndex, rowHeight]); // Añade `rowHeight` como dependencia si su valor puede cambiar
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div>Cargando informacion...</div>;
   if (isError) return <div>Error...</div>;
 
   return (
