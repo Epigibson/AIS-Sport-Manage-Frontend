@@ -1,7 +1,7 @@
 export const InscriptionFormFields = [
   {
     name: "email",
-    label: "Email Contacto",
+    label: "Correo de Contacto",
     rules: [{ required: true, message: "El email es requerido" }],
     inputType: "input",
   },
