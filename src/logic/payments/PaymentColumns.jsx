@@ -167,7 +167,7 @@ export const PaymentColumns = ({
     },
   },
   {
-    title: "Fecha de Pago",
+    title: "Fecha limite de Pago",
     dataIndex: "limit_date",
     key: "limit_date",
     align: "center",
