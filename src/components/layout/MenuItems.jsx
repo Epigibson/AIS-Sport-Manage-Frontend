@@ -1,7 +1,6 @@
 import {
   CopyrightOutlined,
   DollarCircleOutlined,
-  ExpandAltOutlined,
   GroupOutlined,
   HomeFilled,
   LogoutOutlined,
@@ -60,12 +59,12 @@ export const MenuItems = [
     label: "Usuarios con Adeudos",
     path: "/adeudos",
   },
-  {
-    key: "9",
-    icon: <ExpandAltOutlined />,
-    label: "Panel de Analiticas",
-    path: "/analiticas",
-  },
+  // {
+  //   key: "9",
+  //   icon: <ExpandAltOutlined />,
+  //   label: "Panel de Analiticas",
+  //   path: "/analiticas",
+  // },
   {
     key: "10",
     icon: <LogoutOutlined />,

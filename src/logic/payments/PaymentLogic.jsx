@@ -8,7 +8,6 @@ import { getAllReceipts } from "../../api/ReceiptsService.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
-import "./PaymentsStyle.css";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
   usePayReceipt,
