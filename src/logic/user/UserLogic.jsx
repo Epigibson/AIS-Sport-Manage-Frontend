@@ -136,7 +136,8 @@ export const UserLogic = () => {
         <Button
           className={"bg-primary-700 mb-3"}
           type={"primary"}
-          onClick={showModal}
+          // onClick={showModal}
+          onClick={() => navigate("/inscripciones")}
         >
           Registrar Usuario
         </Button>
