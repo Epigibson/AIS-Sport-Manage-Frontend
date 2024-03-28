@@ -5,92 +5,20 @@ const { Text } = Typography;
 export const debtorsColumns = [
   {
     title: "Matricula",
-    dataIndex: "user",
-    key: "user",
+    dataIndex: "tuition",
+    key: "tuition",
     align: "center",
-    render: (user) =>
-      user ? (
+    render: (tuition) =>
+      tuition ? (
         <>
           <Tag color={"blue"} className={"mb-2"}>
-            <Text>{user.tuition}</Text>
+            <Text>{tuition}</Text>
           </Tag>
         </>
       ) : (
         <span>Sin Usuario</span>
       ), // Ajusta "group_name" según tu modelo de datos
   },
-  // {
-  //   title: "Nombre",
-  //   dataIndex: "name",
-  //   key: "name",
-  //   align: "center",
-  //   ellipsis: true,
-  //   render: (text) => (
-  //     <Tooltip placement="topLeft" title={text}>
-  //       <a>{text}</a>,{" "}
-  //     </Tooltip>
-  //   ),
-  // },
-  // {
-  //   title: "Nombre del Tutor 1",
-  //   dataIndex: "tutors_name_one",
-  //   key: "tutors_name_one",
-  //   align: "center",
-  //   ellipsis: true,
-  //   render: (text) => (
-  //     <Tooltip placement="topLeft" title={text}>
-  //       <a>{text}</a>,{" "}
-  //     </Tooltip>
-  //   ),
-  // },
-  // {
-  //   title: "Nombre del Tutor 2",
-  //   dataIndex: "tutors_name_two",
-  //   key: "tutors_name_two",
-  //   align: "center",
-  //   ellipsis: true,
-  //   render: (text) => (
-  //     <Tooltip placement="topLeft" title={text}>
-  //       <a>{text}</a>,{" "}
-  //     </Tooltip>
-  //   ),
-  // },
-  // {
-  //   title: "Email",
-  //   dataIndex: "email",
-  //   key: "email",
-  //   align: "center",
-  //   ellipsis: true,
-  //   render: (text) => (
-  //     <Tooltip placement="topLeft" title={text}>
-  //       <a>{text}</a>,{" "}
-  //     </Tooltip>
-  //   ),
-  // },
-  // {
-  //   title: "Edad",
-  //   dataIndex: "age",
-  //   key: "age",
-  //   align: "center",
-  // },
-  // {
-  //   title: "Celular 1",
-  //   dataIndex: "phone",
-  //   key: "phone",
-  //   align: "center",
-  // },
-  // {
-  //   title: "Celular 2",
-  //   dataIndex: "mobile",
-  //   key: "mobile",
-  //   align: "center",
-  // },
-  // {
-  //   title: "Genero",
-  //   dataIndex: "gender",
-  //   key: "gender",
-  //   align: "center",
-  // },
   {
     title: "Estatus",
     key: "status",
@@ -105,19 +33,33 @@ export const debtorsColumns = [
     },
   },
   {
-    title: "Grupos",
-    key: "group_id",
-    dataIndex: "group_id",
+    title: "Adeudo",
+    key: "debt",
+    dataIndex: "debt",
     align: "center",
-    render: (_, record) =>
-      record.groups && record.groups.length > 0 ? (
-        record.groups?.map((group) => (
-          <Tag color="blue" key={group._id}>
-            {group.name}
-          </Tag>
-        ))
-      ) : (
-        <span>No Group</span>
-      ),
+    render: (debt) => {
+      // Usando Intl.NumberFormat para dar formato de moneda MXN
+      const formattedDebt = new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN",
+      }).format(debt);
+
+      return <Text className={"text-white"}>{formattedDebt}</Text>;
+    },
+  },
+  {
+    title: "Ultimo Pago",
+    key: "last_payment",
+    dataIndex: "last_payment",
+    align: "center",
+    render: (last_payment) => {
+      const date = new Date(last_payment);
+      const formattedDate = [
+        `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
+        `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
+        date.getFullYear(), // Año completo
+      ].join("/"); // Junta los componentes con guiones
+      return <Text className={"text-white"}>{formattedDate}</Text>;
+    },
   },
 ];

@@ -53,4 +53,5 @@
     max-height: 600px; /* Ajusta esto según la altura deseada del contenedor */
     overflow-y: auto;
     scroll-behavior: smooth;
+    color: white;
 }

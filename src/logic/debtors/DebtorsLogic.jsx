@@ -1,42 +1,20 @@
-import { getAllUsers } from "../../api/UserService.jsx";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { debtorsColumns } from "./DebtorsColumns.jsx";
 import { useEffect, useRef, useState } from "react";
 import "./DebtorsLogicStyle.css";
-import { getAllHistoryPayments } from "../../api/PaymentService.jsx";
-import { getAllReceipts } from "../../api/ReceiptsService.jsx";
+import { getAllDebtors } from "../../api/DebtorService.jsx";
 
 export const DebtorsLogic = () => {
   const modifiedTable = useState(true);
   const {
-    data: historyPaymentData,
+    data: debtors,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["allHistoryPayments"],
-    queryFn: getAllHistoryPayments,
+    queryKey: ["allDebtors"],
+    queryFn: getAllDebtors,
   });
-
-  const { data: usersData } = useQuery({
-    queryKey: ["allUsers"],
-    queryFn: getAllUsers,
-  });
-
-  const { data: receiptsData } = useQuery({
-    queryKey: ["allReceipts"],
-    queryFn: getAllReceipts,
-  });
-
-  const enrichedHistoryPaymentsData = historyPaymentData?.map(
-    (historyPayment) => {
-      const user = usersData?.find((user) => user._id === historyPayment.user); // Ajusta según la estructura de tus datos
-      const receipt = receiptsData?.find(
-        (receipt) => receipt._id === historyPayment.receipt_id,
-      ); // Ajusta según la estructura de tus datos
-      return { ...historyPayment, user, receipt }; // Añade la información del grupo al objeto de usuario
-    },
-  );
 
   const [scrollIndex, setScrollIndex] = useState(0);
   const scrollRef = useRef(null);
@@ -105,7 +83,7 @@ export const DebtorsLogic = () => {
   return (
     <div ref={scrollRef} className="debtors-table-container">
       <TablesComponent
-        data={enrichedHistoryPaymentsData}
+        data={debtors}
         columns={debtorsColumns}
         modifiedTable={modifiedTable}
       ></TablesComponent>

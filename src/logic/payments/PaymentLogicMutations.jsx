@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { payReceipt } from "../../api/ReceiptsService.jsx";
 import { updatePaymentMethod } from "../../api/PaymentService.jsx";
+import { toastNotify } from "../../utils/ToastNotify.jsx";
 
 export const usePayReceipt = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
@@ -13,12 +14,22 @@ export const usePayReceipt = () => {
   } = useMutation({
     mutationFn: payReceipt,
     onSuccess: async () => {
+      toastNotify({
+        type: "success",
+        message: "Exito!.",
+        description: "Se ha confirmado correctamente el pago.",
+      });
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({
         queryKey: ["allReceipts", "allHistoryPayments"],
       }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Accion no realizada!.",
+        description: "No se ha podido confirmar el pago correctamente.",
+      });
       console.error("Error en la mutación", error);
     },
     onSettled: () => {
@@ -40,11 +51,21 @@ export const useUpdatePaymentMethod = () => {
     mutationFn: updatePaymentMethod,
     onSuccess: async () => {
       console.log("Mutación exitosa");
+      toastNotify({
+        type: "success",
+        message: "Exito!.",
+        description: "Se ha actualizado el metodo de pago correctamente.",
+      });
       await queryClient.invalidateQueries({
         queryKey: ["allReceipts", "allHistoryPayments"],
       }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Accion no realizada!.",
+        description: "No se ha podido actualizar el metodo de pago.",
+      });
       console.error("Error en la mutación", error);
     },
     onSettled: () => {
