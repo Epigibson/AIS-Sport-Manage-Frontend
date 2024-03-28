@@ -54,4 +54,5 @@
     overflow-y: auto;
     scroll-behavior: smooth;
     color: white;
+    margin-top: -150px;
 }
