@@ -62,4 +62,19 @@ export const debtorsColumns = [
       return <Text className={"text-white"}>{formattedDate}</Text>;
     },
   },
+  {
+    title: "Proximo Pago",
+    key: "next_payment",
+    dataIndex: "next_payment",
+    align: "center",
+    render: (last_payment) => {
+      const date = new Date(last_payment);
+      const formattedDate = [
+        `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
+        `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
+        date.getFullYear(), // Año completo
+      ].join("/"); // Junta los componentes con guiones
+      return <Text className={"text-white"}>{formattedDate}</Text>;
+    },
+  },
 ];
