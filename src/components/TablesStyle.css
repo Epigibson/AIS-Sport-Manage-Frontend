@@ -1,22 +1,56 @@
-.mi-tabla-delgada .ant-table-tbody > tr > td,
-.mi-tabla-delgada .ant-table-thead > tr > th {
-    padding: 4px 8px; /* Reduce el padding para hacer los renglones más delgados */
+/* Establece el modo oscuro para la tabla */
+.ant-table-wrapper.my-dark-table .ant-table,
+.ant-table-wrapper.my-dark-table .ant-table-container,
+.ant-table-wrapper.my-dark-table .ant-table-content,
+.ant-table-wrapper.my-dark-table .ant-table-body,
+.ant-table-wrapper.my-dark-table .ant-table-thead > tr > th,
+.ant-table-wrapper.my-dark-table .ant-table-tbody > tr > td,
+.ant-table-wrapper.my-dark-table .ant-table-footer > tr > td,
+.ant-table-wrapper.my-dark-table .ant-table-title,
+.ant-table-wrapper.my-dark-table .ant-table-footer {
+    background-color: #141414; /* Color de fondo oscuro */
+    color: #fff; /* Color del texto */
+    border-color: #272727; /* Color de los bordes */
 }
 
-.mi-tabla-delgada .ant-table-tbody > tr > td {
-    font-size: 10px; /* Opcional: Ajusta el tamaño del texto si es necesario */
+/* Ajustes para los encabezados de columna */
+.ant-table-wrapper.my-dark-table .ant-table-thead > tr > th {
+    background-color: #1f1f1f; /* Color de fondo para los encabezados */
+    color: #fff; /* Color del texto para los encabezados */
 }
 
-.mi-tabla-delgada .ant-table-thead > tr > th {
-    font-size: 10px; /* Opcional: Ajusta el tamaño del texto si es necesario */
+/* Ajustes para las filas y celdas */
+.ant-table-wrapper.my-dark-table .ant-table-tbody > tr > td {
+    color: #fff; /* Color del texto de las celdas */
 }
 
+/* Estilo para las filas al pasar el mouse */
+.ant-table-wrapper.my-dark-table .ant-table-tbody > tr:hover > td {
+    background-color: #272727; /* Color de fondo al pasar el mouse */
+}
 
+/* Si utilizas la paginación de Ant Design, también puedes ajustarla */
+.ant-table-wrapper.my-dark-table .ant-pagination {
+    color: #fff;
+}
 
+.ant-table-wrapper.my-dark-table .ant-pagination-item,
+.ant-table-wrapper.my-dark-table .ant-pagination-item-link {
+    background-color: #141414;
+    border-color: #272727;
+}
 
+.ant-table-wrapper.my-dark-table .ant-pagination-item-active {
+    background-color: #272727;
+    border-color: #272727;
+}
 
+.ant-table-wrapper.my-dark-table .ant-pagination-item-active a {
+    color: #fff;
+}
 
-
-
-
-
+.debtors-table-container {
+    max-height: 600px; /* Ajusta esto según la altura deseada del contenedor */
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}

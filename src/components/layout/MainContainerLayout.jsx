@@ -13,7 +13,7 @@ export const MainContainerLayout = ({ children, title, background }) => {
 
   return (
     <>
-      <div className={`h-svh text-center text-xl  mb-5 ${background || ""}`}>
+      <div className={`h-svh text-center text-xl  ${background || ""}`}>
         {title}
         {children}
       </div>

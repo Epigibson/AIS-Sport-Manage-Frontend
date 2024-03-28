@@ -151,13 +151,13 @@ export const TablesComponent = ({ data, columns, modifiedTable }) => {
         columns={modifiedColumns}
         dataSource={data}
         size={"small"}
-        className={modifiedTable ? "w-350 text-sm mi-tabla-delgada" : ""}
+        className={modifiedTable ? "my-dark-table" : ""}
         pagination={{
-          pageSize: 5,
+          pageSize: 25,
         }}
         scroll={{
           x: 1200,
-          y: 500,
+          y: modifiedTable ? undefined : 500,
         }}
       />
     </div>

@@ -68,7 +68,36 @@ export const DebtorsLogic = () => {
   }, [scrollIndex]);
 
   // rowHeight debería ser la altura de una fila en tu tabla
-  const rowHeight = 50; // Cambia esto según la altura de tus filas
+  const rowHeight = 100;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        setScrollIndex((prevIndex) => {
+          const newIndex = prevIndex + 1;
+          // Ajusta la condición según el total de filas y la altura del contenedor
+          if (
+            newIndex * rowHeight >=
+            scrollRef.current.scrollHeight - scrollRef.current.clientHeight
+          ) {
+            return 0;
+          }
+          return newIndex;
+        });
+      }
+    }, 3000); // Desplaza cada 3 segundos
+
+    return () => clearInterval(interval);
+  }, [rowHeight]); // Añade `rowHeight` como dependencia si su valor puede cambiar
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollIndex * rowHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [scrollIndex, rowHeight]); // Añade `rowHeight` como dependencia si su valor puede cambiar
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error...</div>;
