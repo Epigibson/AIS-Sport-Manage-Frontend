@@ -1,7 +1,7 @@
 import { MainContainerLayout } from "../components/layout/MainContainerLayout.jsx";
 import { DebtorsLogic } from "../logic/debtors/DebtorsLogic.jsx";
 import { Image } from "antd";
-import banner from "../assets/banner.jpg";
+import banner from "/src/assets/banner.jpg";
 
 export const DebtorsPage = () => {
   return (
