@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false); // Desactiva el estado de carga si el login es exitoso
       toastNotify({
         type: "success",
-        message: `Bienvenid@ ${user?.name}.`,
+        message: `Bienvenid@ de nuevo!.`,
         description: "Sesión iniciada correctamente.",
       });
     } catch (error) {

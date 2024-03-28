@@ -10,7 +10,15 @@ export const DebtorsPage = () => {
       title={"Listado de Pagos"}
       background={"bg-black text-white overflow-hidden"}
     >
-      <Image src={banner} preview={false} width={"50%"} height={"40%"} />
+      <Image
+        src={banner}
+        preview={false}
+        width={"50%"}
+        height={"40%"}
+        className={"mb-0 p-0"}
+        style={{ objectFit: "cover" }}
+        alt={"banner"}
+      />
       <DebtorsLogic />
     </MainContainerLayout>
     // </SideBarLayout>
