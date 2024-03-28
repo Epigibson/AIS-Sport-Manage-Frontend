@@ -153,13 +153,12 @@ export const TablesComponent = ({ data, columns, modifiedTable }) => {
         size={"small"}
         className={modifiedTable ? "w-350 text-sm mi-tabla-delgada" : ""}
         pagination={{
-          pageSize: 10,
+          pageSize: 5,
         }}
         scroll={{
           x: 1200,
           y: 500,
         }}
-        rowKey="_id"
       />
     </div>
   );
