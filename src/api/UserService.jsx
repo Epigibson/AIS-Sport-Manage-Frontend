@@ -58,6 +58,18 @@ export const updateUser = async (data) => {
   return null;
 };
 
+export const changeUserAvatar = async (data) => {
+  console.log("DATA FINAL", data);
+  const { user_id } = data;
+  try {
+    const response = await apiClient.put(`/user/avatar/${user_id}`, data.file);
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo actualizar el avatar del atleta.", error);
+  }
+  return null;
+};
+
 export const deleteUser = async (data) => {
   try {
     const response = await apiClient.delete(`/user/delete/${data}`);

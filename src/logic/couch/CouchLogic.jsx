@@ -7,13 +7,13 @@ import { couchFormFields } from "./CouchFormFields.jsx";
 import {
   useCreateCouch,
   useDeleteCouch,
+  useUpdateAvatarCouch,
   useUpdateCouch,
 } from "./CouchLoginMutations.jsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCouches } from "../../api/UserService.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
-import { useChangeAvatar } from "../athletes/AthleteLogicMutations.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -23,7 +23,7 @@ export const CouchLogic = () => {
   const { mutateCreate } = useCreateCouch();
   const { mutateUpdate } = useUpdateCouch();
   const { mutateDelete } = useDeleteCouch();
-  const { mutateUpdateAvatar } = useChangeAvatar();
+  const { mutateUpdateAvatar } = useUpdateAvatarCouch();
   const [form] = Form.useForm();
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -111,7 +111,7 @@ export const CouchLogic = () => {
       const data = {};
       const formData = new FormData();
       formData.append("file", file);
-      data.username = record.username;
+      data.user_id = record.user_id;
       data.file = formData;
       console.log("DATA", data);
       await mutateUpdateAvatar(data);
