@@ -9,6 +9,15 @@ export const getAllAthletes = async () => {
   }
 };
 
+export const getAthleteByUuid = async (athlete_id) => {
+  try {
+    const response = await apiClient.get(`/athletes/${athlete_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo obtener el atleta.", error);
+  }
+};
+
 export const createAthlete = async (data) => {
   try {
     const response = await apiClient.post("/athletes/create", data);

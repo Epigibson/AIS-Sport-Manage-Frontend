@@ -61,7 +61,7 @@ export const AthleteLogic = () => {
     return { ...athlete, groups: athleteGroups, tutors: tutorsData }; // Añade el array de grupos al objeto de usuario
   });
 
-  console.log("enrichedUsersData", enrichedUsersData);
+  // console.log("enrichedUsersData", enrichedUsersData);
 
   const showModal = () => {
     setIsModalVisible(true);

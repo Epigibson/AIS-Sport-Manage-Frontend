@@ -24,13 +24,13 @@ export const SideBarLayout = ({ children }) => {
     } else {
       setCollapsed(false);
     }
-    console.log(getToken());
+    // console.log(getToken());
   }, [screens]);
 
   const logout = () => {
     clearTokens();
     const tokens = getToken();
-    console.log(tokens);
+    // console.log(tokens);
     navigate("/");
   };
 

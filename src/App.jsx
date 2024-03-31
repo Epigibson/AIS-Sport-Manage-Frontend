@@ -29,13 +29,20 @@ const App = () => {
           <Route path="/atletas" element={<AthletesPage />} />
           <Route path="/coaches" element={<CouchesPage />} />
           <Route path="/grupos" element={<GroupsPage />} />
-          <Route path="/asignacion_de_grupos" element={<GroupAssignPage />} />
+          <Route
+            path="/asignacion_de_grupos/:athleteId"
+            element={<GroupAssignPage />}
+          />
           <Route path="/paquetes" element={<PackagesPage />} />
           <Route path="/adeudos" element={<DebtorsPage />} />
           <Route path="/analiticas" element={<AnalyticsPage />} />
           <Route path="/pago/fallo" element={<PaymentFailedPage />} />
           <Route path="/pago/pendiente" element={<PaymentPendingPage />} />
           <Route path="/pago/exito" element={<PaymentSuccessPage />} />
+          <Route
+            path="/asignacion_de_grupos/:userId"
+            element={<GroupAssignPage />}
+          />
         </Route>
       </Routes>
     </AuthProvider>

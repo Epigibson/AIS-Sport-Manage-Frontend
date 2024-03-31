@@ -1,5 +1,6 @@
 import { Button, Popconfirm, Space, Tag, Typography } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
+import { EyeFilled } from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -8,6 +9,7 @@ export const AthleteColumns = ({
   onDelete,
   onCancel,
   handleImageLoaded,
+  navigate,
 }) => [
   {
     title: "Avatar",
@@ -185,31 +187,33 @@ export const AthleteColumns = ({
     dataIndex: "groups",
     align: "center",
     width: 200,
-    render: (_, record) =>
-      record.groups && record.groups.length > 0 ? (
-        record.groups?.map((group) => (
-          <div
-            key={group?._id}
-            className={"flex flex-col justify-center items-center gap-1"}
-          >
-            {/*<Button*/}
-            {/*  onClick={() => navigate("/asignacion_de_grupos")}*/}
-            {/*  icon={<EyeFilled />}*/}
-            {/*  type="primary"*/}
-            {/*  shape="circle"*/}
-            {/*  size={"middle"}*/}
-            {/*  title={"Editar"}*/}
-            {/*  style={{ backgroundColor: "#fcba03" }}*/}
-            {/*  key={group?._id}*/}
-            {/*/>*/}
-            <Tag color="blue" key={group?._id}>
-              {group.name}
-            </Tag>
-          </div>
-        ))
-      ) : (
-        <Tag>Sin Grupos</Tag>
-      ),
+    render: (_, record) => (
+      <Button
+        className={"bg-primary-700"}
+        onClick={() => navigate(`/asignacion_de_grupos/${record.athlete_id}`)} // Asegúrate de que `record.key` es el ID del usuario
+        icon={<EyeFilled />}
+        type="primary"
+        shape="round"
+        size={"middle"}
+      >
+        Administrar
+      </Button>
+    ),
+    // record.groups && record.groups.length > 0 ? (
+    //   record.groups?.map((group) => (
+    //     <div
+    //       key={group?._id}
+    //       className={"flex flex-col justify-center items-center gap-1"}
+    //     >
+    //
+    //       <Tag color="blue" key={group?._id}>
+    //         {group.name}
+    //       </Tag>
+    //     </div>
+    //   ))
+    // ) : (
+    //   <Tag>Sin Grupos</Tag>
+    // ),
   },
   {
     title: "Acciones",
