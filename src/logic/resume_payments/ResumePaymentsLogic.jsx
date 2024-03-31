@@ -34,11 +34,12 @@ export const ResumePaymentsLogic = () => {
     <div style={{ padding: "20px" }}>
       <Row gutter={16}>
         {/* Usuarios */}
-        <Col span={8}>
+        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <Card
             className={"shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"}
           >
             <Statistic
+              className={"text-sm"}
               title="Usuarios"
               value={data?.athlete_count}
               prefix={<UserOutlined />}
@@ -47,11 +48,14 @@ export const ResumePaymentsLogic = () => {
         </Col>
 
         {/* Coaches */}
-        <Col span={8}>
+        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <Card
-            className={"shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"}
+            className={
+              "shadow-md bg-gradient-to-r from-cyan-50 to-blue-200 text-sm"
+            }
           >
             <Statistic
+              className={"text-sm"}
               title="Coaches"
               value={data?.couch_count}
               prefix={<TeamOutlined />}
@@ -60,11 +64,12 @@ export const ResumePaymentsLogic = () => {
         </Col>
 
         {/* Inscripciones */}
-        <Col span={8}>
+        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <Card
             className={"shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"}
           >
             <Statistic
+              className={"text-sm"}
               title="Inscripciones"
               value={data?.inscription_count}
               prefix={<FileTextOutlined />}
@@ -75,7 +80,7 @@ export const ResumePaymentsLogic = () => {
 
       <Row gutter={16} style={{ marginTop: "20px" }}>
         {/* Recibos Pagados */}
-        <Col span={8}>
+        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <Card
             className={
               "shadow-md bg-gradient-to-r from-indigo-50 to-purple-200"
@@ -98,7 +103,7 @@ export const ResumePaymentsLogic = () => {
         </Col>
 
         {/* Recibos Pendientes */}
-        <Col span={8}>
+        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <Card
             className={
               "shadow-md bg-gradient-to-r from-indigo-50 to-purple-200"
@@ -121,7 +126,7 @@ export const ResumePaymentsLogic = () => {
         </Col>
 
         {/* Recibos Vencidos */}
-        <Col span={8}>
+        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <Card
             className={
               "shadow-md bg-gradient-to-r from-indigo-50 to-purple-200"
@@ -146,7 +151,7 @@ export const ResumePaymentsLogic = () => {
 
       {/* Monto Total */}
       <Row style={{ marginTop: "20px" }}>
-        <Col span={24}>
+        <Col sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 24 }}>
           <Card
             className={"shadow-md bg-gradient-to-r from-red-100 to-orange-200"}
           >

@@ -57,7 +57,7 @@ export const AthleteColumns = ({
     render: (text) => <a>{text}</a>,
   },
   {
-    title: "Nombre del Tutor 1",
+    title: "Nombre del Tutor",
     dataIndex: "tutors",
     key: "tutors",
     align: "center",
@@ -120,7 +120,7 @@ export const AthleteColumns = ({
   //   width: 100,
   // },
   {
-    title: "Celular 1",
+    title: "Celular",
     dataIndex: "phone",
     key: "phone",
     align: "center",
