@@ -1,11 +1,12 @@
-import { Button, Popconfirm, Select, Tag, Typography } from "antd";
+import { Button, Popconfirm, Select, Tag, Tooltip, Typography } from "antd";
 import "./PaymentsStyle.css";
-import { EditFilled } from "@ant-design/icons";
+import { ClockCircleFilled, EditFilled } from "@ant-design/icons";
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 export const PaymentColumns = ({
   showReceipts,
+  showExtensionModal,
   handlePayReceipt,
   editingKey,
   editingValue,
@@ -191,7 +192,7 @@ export const PaymentColumns = ({
     dataIndex: "limit_date",
     key: "limit_date",
     align: "center",
-    render: (limit_date) => {
+    render: (limit_date, record) => {
       console.log(limit_date);
       const date = new Date(limit_date);
       const formattedDate = [
@@ -199,7 +200,16 @@ export const PaymentColumns = ({
         `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
         date.getFullYear(), // Año completo
       ].join("/"); // Junta los componentes con guiones
-      return <Text>{formattedDate}</Text>;
+      return (
+        <div>
+          <Text className={"mr-1"}>{formattedDate}</Text>
+          <Link onClick={() => showExtensionModal(record)}>
+            <Tooltip title={`Prorroga: ${record.extension}`} color={"blue"}>
+              <ClockCircleFilled />
+            </Tooltip>
+          </Link>
+        </div>
+      );
     },
   },
   {

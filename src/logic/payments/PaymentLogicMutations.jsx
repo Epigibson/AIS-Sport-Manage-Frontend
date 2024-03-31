@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { payReceipt } from "../../api/ReceiptsService.jsx";
-import { updatePaymentMethod } from "../../api/PaymentService.jsx";
+import {
+  editHistoryPaymentExtension,
+  updatePaymentMethod,
+} from "../../api/PaymentService.jsx";
 import { toastNotify } from "../../utils/ToastNotify.jsx";
 
 export const usePayReceipt = () => {
@@ -73,4 +76,46 @@ export const useUpdatePaymentMethod = () => {
     },
   });
   return { mutateUpdatePaymentMethod, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
+};
+
+export const useEditPaymentHistoryExtension = () => {
+  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+  const {
+    mutate: mutateEditHistoryPaymentExtension,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  } = useMutation({
+    mutationFn: editHistoryPaymentExtension,
+    onSuccess: async () => {
+      console.log("Mutación exitosa");
+      toastNotify({
+        type: "success",
+        message: "Exito!.",
+        description: "Se ha actualizado la prorroga de pago correctamente.",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["allReceipts", "allHistoryPayments"],
+      }); // Invalidar la consulta "allPackages"
+    },
+    onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Accion no realizada!.",
+        description: "No se ha podido actualizar la prorroga de pago.",
+      });
+      console.error("Error en la mutación", error);
+    },
+    onSettled: () => {
+      reset();
+    },
+  });
+  return {
+    mutateEditHistoryPaymentExtension,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  }; // Asegúrate de devolver estos valores desde tu hook
 };

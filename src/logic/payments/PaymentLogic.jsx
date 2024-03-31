@@ -10,14 +10,20 @@ import { useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
+  useEditPaymentHistoryExtension,
   usePayReceipt,
   useUpdatePaymentMethod,
 } from "./PaymentLogicMutations.jsx";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
+import { Form } from "antd";
+import { PaymentExtensionFields } from "./PaymentExtensionFields.jsx";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isExtensionModalVisible, setIsExtensionModalVisible] = useState(false);
+  const [form] = Form.useForm();
   const [selectedReceipt, setSelectedReceipt] = useState({});
+  const [selectedPayment, setSelectedPayment] = useState(null);
   const [userFilter, setUserFilter] = useState("");
   const [athleteFilter, setAthleteFilter] = useState("");
   const [statusPayFilter, setStatusPayFilter] = useState("");
@@ -28,6 +34,8 @@ export const PaymentLogic = () => {
   const [editingValue, setEditingValue] = useState("");
   const { mutateUpdate } = usePayReceipt();
   const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod();
+  const { mutateEditHistoryPaymentExtension } =
+    useEditPaymentHistoryExtension();
   const {
     data: historyPaymentData,
     isLoading,
@@ -94,12 +102,37 @@ export const PaymentLogic = () => {
     setIsModalVisible(true);
   };
 
+  const showExtensionModal = async (record) => {
+    // console.log("DATA DE EL RECIBO SELECCIONADO", record.receipt);
+    form.setFieldsValue({
+      extension: record.extension,
+    });
+    setSelectedPayment(record);
+    setIsExtensionModalVisible(true);
+  };
+
+  const handleCloseExtensionModal = () => {
+    setIsExtensionModalVisible(false);
+  };
+
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };
 
   if (isLoading) return <LoaderIconUtils />;
   if (isError) return <h1>Error...</h1>;
+
+  const handleEditExtension = async () => {
+    const values = await form.validateFields();
+    values.history_payment_id = selectedPayment.history_payment_id;
+    console.log("Datos", values);
+    await mutateEditHistoryPaymentExtension(values);
+    await handleSearch();
+    form.resetFields();
+    setIsExtensionModalVisible(false);
+    console.log("Aumentado correctamente");
+    // alert("Aumentado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
+  };
 
   const handlePayReceipt = async (record) => {
     console.log("PAGAR", record.receipt_id);
@@ -167,6 +200,7 @@ export const PaymentLogic = () => {
 
   const columns = PaymentColumns({
     showReceipts: showReceipts,
+    showExtensionModal: showExtensionModal,
     handlePayReceipt: handlePayReceipt,
     edit: edit,
     cancel: cancel,
@@ -190,6 +224,14 @@ export const PaymentLogic = () => {
         handleUserChange={handleUserChange}
         handleAthleteChange={handleAthleteChange}
         isLoading={isLoading}
+      />
+      <ModalComponent
+        form={form}
+        formFields={PaymentExtensionFields}
+        onOk={handleEditExtension}
+        title={"Prorroga"}
+        onOpen={isExtensionModalVisible}
+        onClose={handleCloseExtensionModal}
       />
       <ModalComponent
         dataTable={selectedReceipt}
