@@ -173,4 +173,5 @@ TablesComponent.propTypes = {
   data: PropTypes.any,
   columns: PropTypes.any,
   headerFixed: PropTypes.bool,
+  modifiedTable: PropTypes.bool,
 };
