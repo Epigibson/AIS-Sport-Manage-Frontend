@@ -85,6 +85,7 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
       >
         {imageUrl ? (
           <Image
+            height={100}
             className={"rounded-full"}
             src={imageUrl}
             alt="avatar"
