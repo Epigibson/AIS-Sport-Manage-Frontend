@@ -66,7 +66,7 @@ export const ResumePaymentsLogic = () => {
           >
             <Statistic
               title="Inscripciones"
-              value={data.inscription_count}
+              value={data?.inscription_count}
               prefix={<FileTextOutlined />}
             />
           </Card>
@@ -83,10 +83,10 @@ export const ResumePaymentsLogic = () => {
           >
             <Statistic
               title="Recibos Pagados"
-              value={`Elementos: ${data.count_receipts_payed}`}
+              value={`Elementos: ${data?.count_receipts_payed}`}
             />
             <Statistic
-              value={`Monto: $${parseFloat(data.amount_payed).toLocaleString(
+              value={`Monto: $${parseFloat(data?.amount_payed).toLocaleString(
                 "es-MX",
                 {
                   minimumFractionDigits: 2,
@@ -106,10 +106,10 @@ export const ResumePaymentsLogic = () => {
           >
             <Statistic
               title="Recibos Pendientes"
-              value={`Elementos: ${data.count_receipts_pending}`}
+              value={`Elementos: ${data?.count_receipts_pending}`}
             />
             <Statistic
-              value={`Monto: $${parseFloat(data.amount_pending).toLocaleString(
+              value={`Monto: $${parseFloat(data?.amount_pending).toLocaleString(
                 "es-MX",
                 {
                   minimumFractionDigits: 2,
@@ -129,10 +129,10 @@ export const ResumePaymentsLogic = () => {
           >
             <Statistic
               title="Recibos Vencidos"
-              value={`Elementos: ${data.count_receipts_expired}`}
+              value={`Elementos: ${data?.count_receipts_expired}`}
             />
             <Statistic
-              value={`Monto: $${parseFloat(data.amount_expired).toLocaleString(
+              value={`Monto: $${parseFloat(data?.amount_expired).toLocaleString(
                 "es-MX",
                 {
                   minimumFractionDigits: 2,
@@ -152,10 +152,13 @@ export const ResumePaymentsLogic = () => {
           >
             <Statistic
               title="Monto Total"
-              value={`$${parseFloat(data.total_amount).toLocaleString("es-MX", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })} MXN`}
+              value={`$${parseFloat(data?.total_amount).toLocaleString(
+                "es-MX",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )} MXN`}
             />
           </Card>
         </Col>

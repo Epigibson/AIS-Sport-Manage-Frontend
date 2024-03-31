@@ -6,9 +6,10 @@ export const PaymentFilters = ({
   setShowFilters,
   showFilters,
   handleUserChange,
+  handleAthleteChange,
   isLoading,
   filterOption,
-  usersData,
+  athletesData,
   handleChangeStatus,
   handleChangePaymentType,
   handleChangePaymentMethod,
@@ -43,15 +44,20 @@ export const PaymentFilters = ({
               allowClear={true}
               placeholder="Usuario"
               optionFilterProp="children"
-              onChange={handleUserChange}
+              onChange={handleAthleteChange}
               loading={isLoading}
               filterOption={filterOption}
-              options={usersData?.map((user) => ({
-                value: user._id,
-                key: user._id,
-                label: <span>{user.name}</span>,
-                search: user.name.toLowerCase(), // Este campo se usará para el filtrado
-              }))}
+              options={athletesData.map(
+                (athlete) => (
+                  console.log("ATLETAAAAA", athlete),
+                  {
+                    value: athlete._id,
+                    key: athlete._id,
+                    label: <span>{athlete.name}</span>,
+                    search: athlete.name.toLowerCase(), // Este campo se usará para el filtrado
+                  }
+                ),
+              )}
             />
           </Col>
           <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
@@ -123,9 +129,10 @@ PaymentFilters.propTypes = {
   setShowFilters: PropTypes.func,
   showFilters: PropTypes.bool,
   handleUserChange: PropTypes.func,
+  handleAthleteChange: PropTypes.func,
   isLoading: PropTypes.bool,
   filterOption: PropTypes.func,
-  usersData: PropTypes.array,
+  athletesData: PropTypes.array,
   handleChangeStatus: PropTypes.func,
   handleChangePaymentType: PropTypes.func,
   handleChangePaymentMethod: PropTypes.func,

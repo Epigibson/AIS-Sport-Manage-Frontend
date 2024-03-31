@@ -2,7 +2,7 @@ import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { getAllGroups } from "../../api/GroupService.jsx";
 import { GroupColumns } from "./GroupColumns.jsx";
-import { getAllCouches, getAllUsers } from "../../api/UserService.jsx";
+import { getAllCouches } from "../../api/UserService.jsx";
 import { Button, Form, message, Row } from "antd";
 import { useState } from "react";
 import {
@@ -16,6 +16,7 @@ import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { MembersGroupsColumns } from "./MembersGroupsColumns.jsx";
 import moment from "moment";
 import { groupMemberFields } from "./GroupMemberFields.jsx";
+import { getAllAthletes } from "../../api/AtheleService.jsx";
 
 export const GroupLogic = () => {
   const { mutateCreate } = useCreateGroup();
@@ -41,9 +42,9 @@ export const GroupLogic = () => {
     queryFn: getAllCouches,
   });
 
-  const { data: usersData } = useQuery({
-    queryKey: ["allUsers"],
-    queryFn: getAllUsers,
+  const { data: athletesData } = useQuery({
+    queryKey: ["allAthletes"],
+    queryFn: getAllAthletes,
   });
 
   const enrichedGroupsData = groupData?.map((group) => {
@@ -52,15 +53,14 @@ export const GroupLogic = () => {
   });
 
   const enrichedGroupsMembersData = (membersIds) => {
-    return usersData
-      ?.filter((user) => membersIds.includes(user._id))
-      .map((user) => ({
-        key: user._id,
-        name: user.name,
-        email: user.email,
-        age: user.age,
-        status: user.status,
-        tutors_name: user.tutors_name,
+    return athletesData
+      ?.filter((athlete) => membersIds.includes(athlete._id))
+      .map((athlete) => ({
+        key: athlete._id,
+        name: athlete.name,
+        tuition: athlete.tuition,
+        age: athlete.age,
+        status: athlete.status,
         // Otros campos que quieras mostrar
       }));
   };

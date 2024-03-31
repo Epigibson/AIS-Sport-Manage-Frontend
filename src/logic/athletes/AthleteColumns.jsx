@@ -1,7 +1,9 @@
-import { Button, Popconfirm, Space, Tag } from "antd";
+import { Button, Popconfirm, Space, Tag, Typography } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
 
-export const UserColumns = ({
+const { Text } = Typography;
+
+export const AthleteColumns = ({
   onEdit,
   onDelete,
   onCancel,
@@ -54,72 +56,115 @@ export const UserColumns = ({
   },
   {
     title: "Nombre del Tutor 1",
-    dataIndex: "tutors_name_one",
-    key: "tutors_name_one",
+    dataIndex: "tutors",
+    key: "tutors",
     align: "center",
     width: 200,
     searchable: true, // Esta columna será buscable
-    render: (text) => {
-      if (text) {
-        return <Tag color={"blue"}>{text}</Tag>;
-      } else {
-        return <Tag color={"default"}>Sin Tutor</Tag>;
-      }
-    },
+    render: (_, record) =>
+      record.tutors ? (
+        record.tutors?.map((tutors) => (
+          <div
+            key={tutors?._id}
+            className={"flex flex-col justify-center items-center gap-1"}
+          >
+            {/*<Button*/}
+            {/*  onClick={() => navigate("/asignacion_de_grupos")}*/}
+            {/*  icon={<EyeFilled />}*/}
+            {/*  type="primary"*/}
+            {/*  shape="circle"*/}
+            {/*  size={"middle"}*/}
+            {/*  title={"Editar"}*/}
+            {/*  style={{ backgroundColor: "#fcba03" }}*/}
+            {/*  key={group?._id}*/}
+            {/*/>*/}
+            <Tag color="blue" key={tutors?._id}>
+              {tutors.tutors_name_one}
+            </Tag>
+          </div>
+        ))
+      ) : (
+        <Tag>Sin Tutor</Tag>
+      ),
   },
-  {
-    title: "Nombre del Tutor 2",
-    dataIndex: "tutors_name_two",
-    key: "tutors_name_two",
-    align: "center",
-    width: 200,
-    searchable: true, // Esta columna será buscable
-    render: (text) => {
-      if (text) {
-        return <Tag color={"blue"}>{text}</Tag>;
-      } else {
-        return <Tag color={"default"}>Sin Tutor</Tag>;
-      }
-    },
-  },
-  {
-    title: "Email de Contacto",
-    dataIndex: "email",
-    key: "email",
-    align: "center",
-    width: 200,
-    searchable: true, // Esta columna será buscable
-  },
-  {
-    title: "Edad",
-    dataIndex: "age",
-    key: "age",
-    align: "center",
-    width: 100,
-  },
+  // {
+  //   title: "Nombre del Tutor 2",
+  //   dataIndex: "tutors_name_two",
+  //   key: "tutors_name_two",
+  //   align: "center",
+  //   width: 200,
+  //   searchable: true, // Esta columna será buscable
+  //   render: (text) => {
+  //     if (text) {
+  //       return <Tag color={"blue"}>{text}</Tag>;
+  //     } else {
+  //       return <Tag color={"default"}>Sin Tutor</Tag>;
+  //     }
+  //   },
+  // },
+  // {
+  //   title: "Email de Contacto",
+  //   dataIndex: "email",
+  //   key: "email",
+  //   align: "center",
+  //   width: 200,
+  //   searchable: true, // Esta columna será buscable
+  // },
+  // {
+  //   title: "Edad",
+  //   dataIndex: "age",
+  //   key: "age",
+  //   align: "center",
+  //   width: 100,
+  // },
   {
     title: "Celular 1",
-    dataIndex: "mobile",
-    key: "mobile",
-    align: "center",
-    width: 150,
-    searchable: true, // Esta columna será buscable
-  },
-  {
-    title: "Celular 2",
     dataIndex: "phone",
     key: "phone",
     align: "center",
     width: 150,
     searchable: true, // Esta columna será buscable
+    render: (_, record) =>
+      record.tutors ? (
+        record.tutors?.map((tutors) => (
+          <div
+            key={tutors?._id}
+            className={"flex flex-col justify-center items-center gap-1"}
+          >
+            {/*<Button*/}
+            {/*  onClick={() => navigate("/asignacion_de_grupos")}*/}
+            {/*  icon={<EyeFilled />}*/}
+            {/*  type="primary"*/}
+            {/*  shape="circle"*/}
+            {/*  size={"middle"}*/}
+            {/*  title={"Editar"}*/}
+            {/*  style={{ backgroundColor: "#fcba03" }}*/}
+            {/*  key={group?._id}*/}
+            {/*/>*/}
+            <Text color="blue" key={tutors?._id}>
+              {tutors.phone}
+            </Text>
+          </div>
+        ))
+      ) : (
+        <Text>Sin Celular</Text>
+      ),
   },
-  {
-    title: "Genero",
-    dataIndex: "gender",
-    key: "gender",
-    align: "center",
-    width: 100,
-  },
+  // {
+  //   title: "Celular 2",
+  //   dataIndex: "phone",
+  //   key: "phone",
+  //   align: "center",
+  //   width: 150,
+  //   searchable: true, // Esta columna será buscable
+  // },
+  // {
+  //   title: "Genero",
+  //   dataIndex: "gender",
+  //   key: "gender",
+  //   align: "center",
+  //   width: 100,
+  // },
   {
     title: "Estatus",
     key: "status",

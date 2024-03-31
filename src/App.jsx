@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Login } from "./components/auth/Login.jsx";
 import { HomePage } from "./pages/HomePage.jsx";
-import { UsersPage } from "./pages/UsersPage.jsx";
+import { AthletesPage } from "./pages/AthletesPage.jsx";
 import { InscriptionPage } from "./pages/InscriptionPage.jsx";
 import { CouchesPage } from "./pages/CouchesPage.jsx";
 import { GroupsPage } from "./pages/GroupsPage.jsx";
@@ -26,7 +26,7 @@ const App = () => {
           <Route path="/home" element={<HomePage />} />
           <Route path="/inscripciones" element={<InscriptionPage />} />
           <Route path="/pagos" element={<PaymentsPage />} />
-          <Route path="/users" element={<UsersPage />} />
+          <Route path="/atletas" element={<AthletesPage />} />
           <Route path="/coaches" element={<CouchesPage />} />
           <Route path="/grupos" element={<GroupsPage />} />
           <Route path="/asignacion_de_grupos" element={<GroupAssignPage />} />

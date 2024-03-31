@@ -13,11 +13,13 @@ import {
   usePayReceipt,
   useUpdatePaymentMethod,
 } from "./PaymentLogicMutations.jsx";
+import { getAllAthletes } from "../../api/AtheleService.jsx";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState({});
   const [userFilter, setUserFilter] = useState("");
+  const [athleteFilter, setAthleteFilter] = useState("");
   const [statusPayFilter, setStatusPayFilter] = useState("");
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
@@ -35,6 +37,7 @@ export const PaymentLogic = () => {
     queryKey: [
       "allHistoryPayments",
       userFilter,
+      athleteFilter,
       statusPayFilter,
       paymentTypeFilter,
       paymentMethodFilter,
@@ -42,6 +45,7 @@ export const PaymentLogic = () => {
     queryFn: () =>
       getAllHistoryPayments({
         user: userFilter,
+        athlete: athleteFilter,
         status_pay: statusPayFilter,
         payment_type: paymentTypeFilter,
         payment_method: paymentMethodFilter,
@@ -54,6 +58,11 @@ export const PaymentLogic = () => {
     queryFn: getAllUsers,
   });
 
+  const { data: athletesData, refetch: refetchAthletesData } = useQuery({
+    queryKey: ["allAthletes"],
+    queryFn: getAllAthletes,
+  });
+
   const { data: receiptsData, refetch: refetchReceiptsData } = useQuery({
     queryKey: ["allReceipts"],
     queryFn: getAllReceipts,
@@ -62,12 +71,16 @@ export const PaymentLogic = () => {
   const enrichedHistoryPaymentsData = historyPaymentData?.map(
     (historyPayment) => {
       const user = usersData?.find((user) => user._id === historyPayment.user); // Ajusta según la estructura de tus datos
+      const athlete = athletesData.find(
+        (athlete) => athlete._id === historyPayment.athlete,
+      );
       const receipt = receiptsData?.find(
         (receipt) => receipt._id === historyPayment.receipt_id,
       ); // Ajusta según la estructura de tus datos
       return {
         ...historyPayment,
         user,
+        athlete,
         receipt,
         limit_date: receipt?.limit_date,
         updated_at: receipt?.updated_at,
@@ -99,6 +112,7 @@ export const PaymentLogic = () => {
   const handleSearch = async () => {
     await refetchReceiptsData();
     await refetchUsersData();
+    await refetchAthletesData();
     await refetch();
   };
 
@@ -108,6 +122,11 @@ export const PaymentLogic = () => {
   // Asegúrate de incluir esta parte dentro de tu componente
   const handleUserChange = (value, option) => {
     setUserFilter(option.key); // Opcional, si quieres guardar también el nombre del usuario seleccionado
+  };
+
+  const handleAthleteChange = (value) => {
+    setAthleteFilter(value);
+    console.log(`selected ${value}`);
   };
 
   const handleChangeStatus = (value) => {
@@ -162,13 +181,14 @@ export const PaymentLogic = () => {
       <PaymentFilters
         showFilters={showFilters}
         setShowFilters={setShowFilters}
-        usersData={usersData}
+        athletesData={athletesData}
         handleChangeStatus={handleChangeStatus}
         handleChangePaymentType={handleChangePaymentType}
         handleChangePaymentMethod={handleChangePaymentMethod}
         handleSearch={handleSearch}
         filterOption={filterOption}
         handleUserChange={handleUserChange}
+        handleAthleteChange={handleAthleteChange}
         isLoading={isLoading}
       />
       <ModalComponent

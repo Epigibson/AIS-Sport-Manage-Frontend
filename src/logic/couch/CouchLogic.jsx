@@ -13,7 +13,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCouches } from "../../api/UserService.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
-import { useChangeAvatarWithoutRegister } from "../user/UserLogicMutations.jsx";
+import { useChangeAvatarWithoutRegister } from "../athletes/AthleteLogicMutations.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -45,7 +45,7 @@ export const CouchLogic = () => {
   const { mutateUpdateAvatar } = useChangeAvatarWithoutRegister();
 
   const enrichedUsersData = couchesData?.map((user) => {
-    // Encuentra todos los grupos que coincidan con los IDs en user.group_id
+    // Encuentra todos los grupos que coincidan con los IDs en athletes.group_id
     const userGroups = groupsData?.filter((group) =>
       user.groups?.includes(group._id),
     );

@@ -98,12 +98,25 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel, onShowMembers }) => [
         // Retornar las etiquetas (tags) y el Tooltip
         return (
           <Tooltip placement="topLeft" title={daysString}>
-            <div>
-              {schedule_initial_final.map((day) => (
-                <Tag color="blue" key={day} className="mr-2 text-xs">
-                  {day}
-                </Tag>
-              ))}
+            <div
+              style={{
+                overflowX: "auto",
+                whiteSpace: "nowrap",
+                paddingBottom: "1px",
+              }}
+            >
+              <div style={{ paddingBottom: "-20px" }}>
+                {schedule_initial_final.map((day) => (
+                  <Tag
+                    color="blue"
+                    key={day}
+                    className="mr-2 text-xs"
+                    style={{ display: "inline-block" }}
+                  >
+                    {day}
+                  </Tag>
+                ))}
+              </div>
             </div>
           </Tooltip>
         );

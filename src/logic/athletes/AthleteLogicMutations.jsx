@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   changeAvatar,
-  createUser,
-  deleteUser,
-  updateUser,
-} from "../../api/UserService.jsx";
+  createAthlete,
+  deleteAthlete,
+  updateAthlete,
+} from "../../api/AtheleService.jsx";
 
-export const useCreateUser = () => {
+export const useCreateAthlete = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateCreate,
@@ -15,10 +15,10 @@ export const useCreateUser = () => {
     error,
     reset,
   } = useMutation({
-    mutationFn: createUser,
+    mutationFn: createAthlete,
     onSuccess: async () => {
       console.log("Mutación exitosa");
-      await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -30,7 +30,7 @@ export const useCreateUser = () => {
   return { mutateCreate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useUpdateUser = () => {
+export const useUpdateAthlete = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateUpdate,
@@ -39,10 +39,10 @@ export const useUpdateUser = () => {
     error,
     reset,
   } = useMutation({
-    mutationFn: updateUser,
+    mutationFn: updateAthlete,
     onSuccess: async () => {
       console.log("Mutación exitosa");
-      await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -54,7 +54,7 @@ export const useUpdateUser = () => {
   return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useDeleteUser = () => {
+export const useDeleteAthlete = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateDelete,
@@ -63,10 +63,10 @@ export const useDeleteUser = () => {
     error,
     reset,
   } = useMutation({
-    mutationFn: deleteUser,
+    mutationFn: deleteAthlete,
     onSuccess: async () => {
       console.log("Mutación exitosa");
-      await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -88,7 +88,7 @@ export const useChangeAvatar = () => {
     mutationFn: changeAvatar,
     onSuccess: async (data) => {
       console.log("Mutación exitosa", data);
-      await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
       // window.location.href = data?.init_point;
     },
     onError: (error) => {
@@ -114,7 +114,7 @@ export const useChangeAvatarWithoutRegister = () => {
     mutationFn: changeAvatar,
     onSuccess: async (data) => {
       console.log("Mutación exitosa", data);
-      await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
+      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
       console.error("Error en la mutación", error);

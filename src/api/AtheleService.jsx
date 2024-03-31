@@ -1,0 +1,56 @@
+import { apiClient } from "./index.jsx";
+
+export const getAllAthletes = async () => {
+  try {
+    const response = await apiClient.get("/athletes/");
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo obtener la lista de atletas.", error);
+  }
+};
+
+export const createAthlete = async (data) => {
+  try {
+    const response = await apiClient.post("/athletes/create", data);
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo crear el usuario.", error);
+  }
+  return null;
+};
+
+export const updateAthlete = async (data) => {
+  const { athlete_id, ...rest } = data;
+  try {
+    const response = await apiClient.put(`/athletes/${athlete_id}`, rest);
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo actualizar el usuario.", error);
+  }
+  return null;
+};
+
+export const deleteAthlete = async (data) => {
+  try {
+    const response = await apiClient.delete(`/athletes/${data}`);
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo eliminar el usuario.", error);
+  }
+  return null;
+};
+
+export const changeAvatar = async (data) => {
+  console.log("DATA FINAL", data);
+  const { athlete_id } = data;
+  try {
+    const response = await apiClient.put(
+      `/athletes/updateAvatar/${athlete_id}`,
+      data.file,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo actualizar el avatar del atleta.", error);
+  }
+  return null;
+};

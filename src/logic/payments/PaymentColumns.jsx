@@ -16,18 +16,18 @@ export const PaymentColumns = ({
 }) => [
   {
     title: "Matricula",
-    dataIndex: "user",
-    key: "user",
+    dataIndex: "athlete",
+    key: "athlete",
     align: "center",
-    render: (user) =>
-      user ? (
+    render: (athlete) =>
+      athlete ? (
         <>
           <Tag color={"blue"} className={"mb-2"}>
-            <Text>{user.tuition}</Text>
+            <Text>{athlete.tuition}</Text>
           </Tag>
         </>
       ) : (
-        <span>Sin Usuario</span>
+        <span>Sin Matricula</span>
       ), // Ajusta "group_name" según tu modelo de datos
   },
   {
@@ -40,13 +40,33 @@ export const PaymentColumns = ({
       user ? (
         <>
           <Tag color={"blue"} className={"mb-2"}>
-            <Text>{user.name}</Text>
+            <Text>{user.username}</Text>
           </Tag>
           {/*<br/>*/}
           {/*<Tag color={"cyan"}>*/}
-          {/*    <Text>{user.email}</Text>*/}
+          {/*    <Text>{athletes.email}</Text>*/}
           {/*</Tag>*/}
         </>
+      ) : (
+        <span>Sin Usuario</span>
+      ), // Ajusta "group_name" según tu modelo de datos
+  },
+  {
+    title: "Atleta",
+    dataIndex: "athlete",
+    key: "athlete",
+    align: "center",
+    render: (athlete) =>
+      athlete ? (
+        <div className={"overflow-x-auto"}>
+          <Tag color={"blue"} className={"mb-2"}>
+            <Text>{athlete.name}</Text>
+          </Tag>
+          {/*<br/>*/}
+          {/*<Tag color={"cyan"}>*/}
+          {/*    <Text>{athletes.email}</Text>*/}
+          {/*</Tag>*/}
+        </div>
       ) : (
         <span>Sin Usuario</span>
       ), // Ajusta "group_name" según tu modelo de datos

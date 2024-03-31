@@ -2,23 +2,18 @@ import { Tag } from "antd";
 
 export const MembersGroupsColumns = [
   {
+    title: "Matricula",
+    dataIndex: "tuition",
+    key: "tuition",
+    align: "center",
+    render: (text) => <Tag color={"green"}>{text}</Tag>,
+  },
+  {
     title: "Nombre",
     dataIndex: "name",
     key: "name",
     align: "center",
     render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Tutor",
-    dataIndex: "tutors_name",
-    key: "tutors_name",
-    align: "center",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-    align: "center",
   },
   {
     title: "Edad",

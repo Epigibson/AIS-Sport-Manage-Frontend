@@ -8,8 +8,8 @@ export const MainContainerLayout = ({ children, title, background }) => {
     return <div>Cargando datos del usuario...</div>;
   }
 
-  // console.log("DATA DE USUARIO EN EL MAIN", user);
-  // console.log("DATA DE USUARIO EN EL MAIN", user);
+  // console.log("DATA DE USUARIO EN EL MAIN", athletes);
+  // console.log("DATA DE USUARIO EN EL MAIN", athletes);
 
   return (
     <>

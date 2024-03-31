@@ -1,55 +1,67 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllUsers } from "../../api/UserService.jsx";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
 import { Button, Form, Grid, message, Row } from "antd";
 import { useState } from "react";
 import {
   useChangeAvatarWithoutRegister,
-  useCreateUser,
-  useDeleteUser,
-  useUpdateUser,
-} from "./UserLogicMutations.jsx";
+  useCreateAthlete,
+  useDeleteAthlete,
+  useUpdateAthlete,
+} from "./AthleteLogicMutations.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
-import { userFormFields } from "./UserFormFields.jsx";
-import { UserColumns } from "./UserColumns.jsx";
+import { athleteFormFields } from "./AthleteFormFields.jsx";
+import { AthleteColumns } from "./AthleteColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { useNavigate } from "react-router-dom";
+import { getAllAthletes } from "../../api/AtheleService.jsx";
+import { getAllUsers } from "../../api/UserService.jsx";
 
 const { useBreakpoint } = Grid;
 
-export const UserLogic = () => {
+export const AthleteLogic = () => {
   const navigate = useNavigate();
   const screen = useBreakpoint();
   const queryClient = useQueryClient();
-  const { mutateCreate } = useCreateUser();
-  const { mutateUpdate } = useUpdateUser();
-  const { mutateDelete } = useDeleteUser();
+  const { mutateCreate } = useCreateAthlete();
+  const { mutateUpdate } = useUpdateAthlete();
+  const { mutateDelete } = useDeleteAthlete();
   const [form] = Form.useForm();
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
-  // const [profileImage, setProfileImage] = useState(false);
   const {
-    data: usersData,
+    data: athletesData,
     isLoading,
     isError,
-  } = useQuery({ queryKey: ["allUsers"], queryFn: getAllUsers });
+  } = useQuery({ queryKey: ["allAthletes"], queryFn: getAllAthletes });
 
   const { data: groupsData } = useQuery({
     queryKey: ["allGroups"],
     queryFn: getAllGroups,
   });
 
+  const { data: usersData } = useQuery({
+    queryKey: ["allUsers"],
+    queryFn: getAllUsers,
+  });
+
   const { mutateUpdateAvatar } = useChangeAvatarWithoutRegister();
 
-  const enrichedUsersData = usersData?.map((user) => {
-    // Encuentra todos los grupos que coincidan con los IDs en user.group_id
-    const userGroups = groupsData?.filter((group) =>
-      user.groups?.includes(group._id),
+  const enrichedUsersData = athletesData?.map((athlete) => {
+    // Encuentra todos los grupos que coincidan con los IDs en athletes.group_id
+    const athleteGroups = groupsData?.filter((group) =>
+      athlete.groups?.includes(group._id),
     );
-    return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
+    const tutorsData = usersData?.filter((user) =>
+      user.athletes.map((athlete) => athlete).includes(athlete._id)
+        ? user
+        : null,
+    );
+    return { ...athlete, groups: athleteGroups, tutors: tutorsData }; // Añade el array de grupos al objeto de usuario
   });
+
+  console.log("enrichedUsersData", enrichedUsersData);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -67,7 +79,8 @@ export const UserLogic = () => {
     if (modalContext === "edit") {
       console.log("SE EDITA");
       console.log("VER SI CAMBIA", values);
-      await mutateUpdate({ ...values, user_id: selectedRecord.user_id });
+      console.log("VER QUE TRAE", selectedRecord);
+      await mutateUpdate({ ...values, athlete_id: selectedRecord.athlete_id });
     }
     if (modalContext === "create") {
       console.log("SE CREA");
@@ -108,7 +121,7 @@ export const UserLogic = () => {
       const data = {};
       const formData = new FormData();
       formData.append("file", file);
-      data.username = record.username;
+      data.athlete_id = record.athlete_id;
       data.file = formData;
       console.log("DATA", data);
       await mutateUpdateAvatar(data);
@@ -117,7 +130,7 @@ export const UserLogic = () => {
     }
   };
 
-  const columns = UserColumns({
+  const columns = AthleteColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,
@@ -139,12 +152,12 @@ export const UserLogic = () => {
           // onClick={showModal}
           onClick={() => navigate("/inscripciones")}
         >
-          Registrar Usuario
+          Registrar Atleta
         </Button>
       </Row>
       <ModalComponent
         form={form}
-        formFields={userFormFields}
+        formFields={athleteFormFields}
         title={modalContext === "edit" ? "Editar Registro" : "Crear Registro"}
         onOk={handleSubmit}
         onOpen={isModalVisible}

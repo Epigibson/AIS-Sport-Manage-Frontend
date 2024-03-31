@@ -46,13 +46,13 @@ export const groupFormFields = [
     rules: [{ required: false }],
     inputType: "multipleSelect", // Indica el tipo de control de entrada
     options: [
-      { label: "Lunes", value: "Lunes" },
-      { label: "Martes", value: "Martes" },
-      { label: "Miercoles", value: "Miercoles" },
-      { label: "Jueves", value: "Jueves" },
-      { label: "Viernes", value: "Viernes" },
-      { label: "Sabado", value: "Sabado" },
-      { label: "Domingo", value: "Domingo" },
+      { label: "Lunes", value: "L" },
+      { label: "Martes", value: "M" },
+      { label: "Miercoles", value: "X" },
+      { label: "Jueves", value: "J" },
+      { label: "Viernes", value: "V" },
+      { label: "Sábado", value: "S" },
+      { label: "Domingo", value: "D" },
     ],
   },
 ];

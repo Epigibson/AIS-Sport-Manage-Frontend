@@ -32,8 +32,8 @@ export const MenuItems = [
   {
     key: "4",
     icon: <UserOutlined />,
-    label: "Usuarios",
-    path: "/users",
+    label: "Atletas",
+    path: "/atletas",
   },
   {
     key: "6",

@@ -9,6 +9,9 @@ export const getAllHistoryPayments = async (options = {}) => {
     if (options.user) {
       queryParams.append("user", options.user);
     }
+    if (options.athlete) {
+      queryParams.append("athlete", options.athlete);
+    }
     if (options.status_pay) {
       queryParams.append("status_pay", options.status_pay);
     }

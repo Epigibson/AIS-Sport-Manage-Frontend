@@ -18,7 +18,7 @@ export const UsersInscribedLayout = () => {
   });
 
   const enrichedUsersData = usersData?.map((user) => {
-    // Encuentra todos los grupos que coincidan con los IDs en user.group_id
+    // Encuentra todos los grupos que coincidan con los IDs en athletes.group_id
     const userGroups = groupsData?.filter((group) =>
       user.groups?.includes(group._id),
     );

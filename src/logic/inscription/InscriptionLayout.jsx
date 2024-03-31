@@ -6,7 +6,7 @@ import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { useState } from "react";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { UserAvatarFormFields } from "./UserAvatarFormFields.jsx";
-import { useChangeAvatar } from "../user/UserLogicMutations.jsx";
+import { useChangeAvatar } from "../athletes/AthleteLogicMutations.jsx";
 
 export const InscriptionLayout = () => {
   const [form] = Form.useForm();

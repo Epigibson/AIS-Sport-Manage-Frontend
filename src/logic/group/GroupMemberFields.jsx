@@ -1,9 +1,9 @@
 export const groupMemberFields = [
   {
     name: "members",
-    label: "Usuarios",
+    label: "Atletas",
     rules: [{ required: true }],
     inputType: "multipleSelect", // Indica el tipo de control de entrada
-    optionsSource: "users",
+    optionsSource: "athletes",
   },
 ];
