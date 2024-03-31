@@ -31,7 +31,7 @@ export const DebtorsLogic = () => {
           return newIndex;
         });
       }
-    }, 3000); // Desplaza cada 3 segundos
+    }, 10000); // Desplaza cada 3 segundos
 
     return () => clearInterval(interval);
   }, []);
@@ -86,6 +86,7 @@ export const DebtorsLogic = () => {
         data={debtors}
         columns={debtorsColumns}
         modifiedTable={modifiedTable}
+        headerFixed={true}
       ></TablesComponent>
     </div>
   );

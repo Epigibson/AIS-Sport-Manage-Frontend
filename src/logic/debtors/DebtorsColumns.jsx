@@ -65,10 +65,17 @@ export const debtorsColumns = [
   {
     title: "Proximo Pago",
     key: "next_payment",
-    dataIndex: "next_payment",
+    dataIndex: "last_payment",
     align: "center",
     render: (last_payment) => {
       const date = new Date(last_payment);
+      date.setMonth(date.getMonth() + 1); // Sumamos un mes a la fecha del último pago
+
+      // Verifica si el día del mes ha cambiado después de sumar un mes (caso de fin de mes)
+      if (date.getDate() === 1) {
+        date.setDate(0); // Ajusta a último día del mes anterior en caso de desbordamiento
+      }
+
       const formattedDate = [
         `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
         `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11

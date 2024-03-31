@@ -5,7 +5,12 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./TablesStyle.css";
 
-export const TablesComponent = ({ data, columns, modifiedTable }) => {
+export const TablesComponent = ({
+  data,
+  columns,
+  modifiedTable,
+  headerFixed,
+}) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -157,7 +162,7 @@ export const TablesComponent = ({ data, columns, modifiedTable }) => {
         }}
         scroll={{
           x: 1200,
-          y: modifiedTable ? undefined : 500,
+          y: headerFixed ? 240 : 500,
         }}
       />
     </div>
@@ -167,4 +172,5 @@ export const TablesComponent = ({ data, columns, modifiedTable }) => {
 TablesComponent.propTypes = {
   data: PropTypes.any,
   columns: PropTypes.any,
+  headerFixed: PropTypes.bool,
 };
