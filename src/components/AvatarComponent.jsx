@@ -31,9 +31,11 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
       setLoading(true);
       return;
     }
-    if (info.file.status === "done") {
+    if (info.file.status === "done" || info.file.status === "removed") {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (url) => {
+      const file = info.file.originFileObj;
+
+      getBase64(file, (url) => {
         onImageLoaded(info.file.originFileObj);
         setLoading(false);
         setImageUrl(url);
@@ -71,9 +73,15 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
         listType="picture-circle"
         className="avatar-uploader"
         showUploadList={false}
-        action="https://run.mocky.io/v3/b4f1dde6-a2ea-4a72-bd38-be5b8898ec31"
+        // action=""
         beforeUpload={beforeUpload}
         onChange={handleChange}
+        customRequest={({ file, onSuccess }) => {
+          // Simula inmediatamente un éxito. Esto previene la carga automática.
+          setTimeout(() => {
+            onSuccess("ok");
+          }, 0);
+        }}
       >
         {imageUrl ? (
           <img

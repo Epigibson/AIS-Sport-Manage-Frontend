@@ -4,7 +4,7 @@ import { getAllGroups } from "../../api/GroupService.jsx";
 import { Button, Form, Grid, message, Row } from "antd";
 import { useState } from "react";
 import {
-  useChangeAvatarWithoutRegister,
+  useChangeAvatar,
   useCreateAthlete,
   useDeleteAthlete,
   useUpdateAthlete,
@@ -46,7 +46,7 @@ export const AthleteLogic = () => {
     queryFn: getAllUsers,
   });
 
-  const { mutateUpdateAvatar } = useChangeAvatarWithoutRegister();
+  const { mutateUpdateAvatar } = useChangeAvatar();
 
   const enrichedUsersData = athletesData?.map((athlete) => {
     // Encuentra todos los grupos que coincidan con los IDs en athletes.group_id
