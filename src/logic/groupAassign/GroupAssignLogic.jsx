@@ -9,13 +9,17 @@ import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { AthleteGroupAssignFields } from "./AthleteGroupAssignFields.jsx";
 import { useState } from "react";
-import { GroupAssignMutations } from "./GroupAssignMutations.jsx";
+import {
+  GroupAssignMutations,
+  GroupRemoveMutations,
+} from "./GroupAssignMutations.jsx";
 
 export const GroupAssignLogic = () => {
   const { athleteId } = useParams();
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { mutateCreate } = GroupAssignMutations();
+  const { mutateRemove } = GroupRemoveMutations();
 
   const {
     data: currentAthlete,
@@ -60,8 +64,13 @@ export const GroupAssignLogic = () => {
     setIsModalVisible(true);
   };
 
-  const handleDelete = (id) => {
-    console.log("Eliminar grupo", id);
+  const handleDelete = async (record) => {
+    const values = {
+      group_id: record._id,
+      user_id: currentAthlete._id,
+    };
+    console.log("Eliminar del grupo", values);
+    await mutateRemove(values);
   };
 
   const handleCancel = () => {

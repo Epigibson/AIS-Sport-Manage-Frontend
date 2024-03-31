@@ -1,5 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { assignUserToGroup } from "../../api/GroupService.jsx";
+import {
+  assignUserToGroup,
+  removeUserFromGroup,
+} from "../../api/GroupService.jsx";
+import { toastNotify } from "../../utils/ToastNotify.jsx";
 
 export const GroupAssignMutations = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
@@ -14,6 +18,11 @@ export const GroupAssignMutations = () => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["currentAthlete"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Exito en el registro",
+        description: "Se ha aregado correctamente el atleta al grupo.",
+      });
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -23,4 +32,30 @@ export const GroupAssignMutations = () => {
     },
   });
   return { mutateCreate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
+};
+
+export const GroupRemoveMutations = () => {
+  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+  const {
+    mutate: mutateRemove,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  } = useMutation({
+    mutationFn: removeUserFromGroup,
+    onSuccess: async () => {
+      console.log("Mutación exitosa");
+      await queryClient.invalidateQueries({ queryKey: ["currentAthlete"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Exito al eliminar",
+        description: "Se ha eliminado correctamente el registro.",
+      });
+    },
+    onError: (error) => {
+      console.error("Error en la mutación", error);
+    },
+  });
+  return { mutateRemove, isSuccess, isError, error, reset };
 };

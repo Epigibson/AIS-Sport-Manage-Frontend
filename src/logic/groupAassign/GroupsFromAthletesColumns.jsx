@@ -97,13 +97,6 @@ export const GroupsFromAthletesColumns = ({ onDelete, onCancel }) => [
     width: 200,
     render: (_, record) => (
       <Space direction={"horizontal"} align={"center"}>
-        <Button
-          style={{ backgroundColor: "#fcba03" }}
-          type="primary"
-          onClick={() => onEdit(record)}
-        >
-          Editar
-        </Button>
         <Popconfirm
           title="Eliminar grupo"
           description="Estas seguro de eliminar el registro?"
@@ -114,7 +107,7 @@ export const GroupsFromAthletesColumns = ({ onDelete, onCancel }) => [
           okType={"default"}
         >
           <Button type={"primary"} danger>
-            Borrar
+            Remover
           </Button>
         </Popconfirm>
       </Space>

@@ -18,7 +18,7 @@ export const useInscription = () => {
     onSuccess: async (data) => {
       console.log("Mutación exitosa", data);
       await queryClient.invalidateQueries({ queryKey: ["allUsers"] }); // Invalidar la consulta "allPackages"
-      await navigate("/users");
+      await navigate("/atletas");
       // Verificar si data.init_point existe y no es undefined antes de redireccionar
       // if (data.init_point) {
       //   window.location.href = data.init_point;

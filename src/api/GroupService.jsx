@@ -41,6 +41,20 @@ export const assignUserToGroup = async (data) => {
   return null; // Devuelve null si hubo un error.
 };
 
+export const removeUserFromGroup = async (data) => {
+  const { group_id, user_id } = data;
+  console.log("DATA", data);
+  try {
+    const response = await apiClient.put(
+      `/groups/remove/${user_id}/${group_id}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo remover el usuario del grupo.", error);
+  }
+  return null; // Devuelve null si hubo un error.
+};
+
 export const updateGroup = async (data) => {
   const { group_id, ...restData } = data;
   try {
