@@ -1,5 +1,5 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { message, Upload } from "antd";
+import { Image, message, Upload } from "antd";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
@@ -84,12 +84,11 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
         }}
       >
         {imageUrl ? (
-          <img
+          <Image
+            className={"rounded-full"}
             src={imageUrl}
             alt="avatar"
-            style={{
-              width: "100%",
-            }}
+            preview={false}
           />
         ) : (
           uploadButton

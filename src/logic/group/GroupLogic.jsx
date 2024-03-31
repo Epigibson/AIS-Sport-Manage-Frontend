@@ -69,7 +69,7 @@ export const GroupLogic = () => {
 
   const showModalMembers = (value) => {
     const data = enrichedGroupsMembersData(value.members);
-    console.log("DATA PROCESADA", data);
+    // console.log("DATA PROCESADA", data);
     setSelectedRecord(data);
     setSelectedGroup(value);
     setIsModalMembersVisible(true);
@@ -80,10 +80,16 @@ export const GroupLogic = () => {
   };
 
   const showModalAssignGroup = (record) => {
+    console.log("RECORD", record);
     setModalContext("addUser");
     setIsModalGroupAssignVisible(true);
     setIsModalMembersVisible(false);
-    formAddUsers.setFieldsValue(record); // Ajusta esto según tu estructura de datos
+    formAddUsers.setFieldsValue({
+      members: record.map(
+        (item) => `${item.tuition} : ${item.name}`,
+        // Mapea aquí cualquier otro campo que necesites
+      ),
+    }); // Ajusta esto según tu estructura de datos
   };
 
   const handleCancelGroupAssign = () => {
@@ -172,8 +178,6 @@ export const GroupLogic = () => {
       // Si no hay valores de 'schedule', o no están completos, maneja ese caso aquí.
       form.setFieldsValue(record);
     }
-    formAddUsers.setFieldsValue(selectedGroup); // Asegúrate de que 'schedule' en tu formulario espera un arreglo
-
     setSelectedRecord(record);
     setIsModalVisible(true);
   };

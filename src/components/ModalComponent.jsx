@@ -19,7 +19,7 @@ export const ModalComponent = ({
   textButtonModal,
   external,
 }) => {
-  console.log(buttonModal, textButtonModal); // Verifica que se reciban las props
+  // console.log(buttonModal, textButtonModal); // Verifica que se reciban las props
   const screen = useBreakpoint();
   return (
     <Modal
@@ -34,7 +34,7 @@ export const ModalComponent = ({
           <Button
             type={"primary"}
             className={"bg-primary-700"}
-            onClick={() => buttonModal()}
+            onClick={() => buttonModal(dataTable)}
           >
             {textButtonModal}
           </Button>

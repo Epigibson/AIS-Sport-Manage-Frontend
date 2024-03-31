@@ -40,7 +40,7 @@ export const ResumePaymentsLogic = () => {
           >
             <Statistic
               title="Usuarios"
-              value={data?.user_count}
+              value={data?.athlete_count}
               prefix={<UserOutlined />}
             />
           </Card>
