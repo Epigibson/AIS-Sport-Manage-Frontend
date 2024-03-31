@@ -28,4 +28,15 @@ export const packageFormFields = [
     inputType: "select",
     optionsSource: "categories", // Utiliza un identificador para las opciones
   },
+  {
+    name: "payment_deadline",
+    label: "Plazo de Pago",
+    rules: [{ required: true }],
+    inputType: "select",
+    options: [
+      { label: "8 días", value: 8 },
+      { label: "15 días", value: 15 },
+      { label: "30 días", value: 30 },
+    ],
+  },
 ];

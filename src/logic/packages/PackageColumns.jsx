@@ -26,6 +26,15 @@ export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
       }).format(price),
   },
   {
+    title: "Plazo de Pago",
+    dataIndex: "payment_deadline",
+    key: "payment_deadline",
+    align: "center",
+    render: (payment_deadline) => {
+      return <div>{payment_deadline} dias</div>;
+    },
+  },
+  {
     title: "Estatus",
     key: "is_active",
     dataIndex: "is_active",

@@ -162,7 +162,7 @@ export const TablesComponent = ({
         }}
         scroll={{
           x: 1200,
-          y: headerFixed ? 240 : 500,
+          y: headerFixed ? 840 : 500,
         }}
       />
     </div>

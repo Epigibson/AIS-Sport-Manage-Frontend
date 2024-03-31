@@ -204,8 +204,17 @@ export const PaymentColumns = ({
         <div>
           <Text className={"mr-1"}>{formattedDate}</Text>
           <Link onClick={() => showExtensionModal(record)}>
-            <Tooltip title={`Prorroga: ${record.extension}`} color={"blue"}>
-              <ClockCircleFilled />
+            <Tooltip
+              title={
+                record.extension !== "" || null
+                  ? `Prorroga: ${record.extension}`
+                  : "Especificar Prorroga"
+              }
+              color={record.extension ? "blue" : "gray"}
+            >
+              <ClockCircleFilled
+                className={record.extension === "" ? "text-gray-500" : ""}
+              />
             </Tooltip>
           </Link>
         </div>
