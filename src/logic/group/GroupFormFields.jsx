@@ -11,13 +11,13 @@ export const groupFormFields = [
     rules: [{ required: false }],
     inputType: "input",
   },
-  // {
-  //   name: "couch",
-  //   label: "Couch",
-  //   rules: [{ required: true }],
-  //   inputType: "select", // Indica el tipo de control de entrada
-  //   optionsSource: "couches", // Utiliza un identificador para las opciones
-  // },
+  {
+    name: "couch",
+    label: "Coach",
+    rules: [{ required: true }],
+    inputType: "select", // Indica el tipo de control de entrada
+    optionsSource: "couches", // Utiliza un identificador para las opciones
+  },
   {
     name: "status",
     label: "Estatus",

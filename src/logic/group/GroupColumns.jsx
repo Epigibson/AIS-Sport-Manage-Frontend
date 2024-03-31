@@ -21,17 +21,18 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel, onShowMembers }) => [
       </Tooltip>
     ),
   },
-  // {
-  //   title: "Couch",
-  //   dataIndex: "couch",
-  //   key: "couch",
-  //   render: (_, record) =>
-  //     record.couch ? (
-  //       <Tag color={"blue"}>{record.couch.name}</Tag>
-  //     ) : (
-  //       <span>No Couch</span>
-  //     ), // Ajusta "group_name" según tu modelo de datos
-  // },
+  {
+    title: "Coach",
+    dataIndex: "couch",
+    key: "couch",
+    align: "center",
+    render: (_, record) =>
+      record.couch ? (
+        <Tag color={"blue"}>{record.couch.name}</Tag>
+      ) : (
+        <span>No Couch</span>
+      ), // Ajusta "group_name" según tu modelo de datos
+  },
   {
     title: "Miembros",
     dataIndex: "members",

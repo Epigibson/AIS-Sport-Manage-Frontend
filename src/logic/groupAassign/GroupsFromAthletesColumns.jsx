@@ -22,6 +22,18 @@ export const GroupsFromAthletesColumns = ({ onDelete, onCancel }) => [
     ),
   },
   {
+    title: "Coach",
+    dataIndex: "couch",
+    key: "couch",
+    align: "center",
+    ellipsis: true,
+    render: (couch) => (
+      <Tooltip placement="topLeft" title={couch}>
+        <Tag color={"blue"}>{couch}</Tag>
+      </Tooltip>
+    ),
+  },
+  {
     title: "Estatus",
     key: "status",
     dataIndex: "status",

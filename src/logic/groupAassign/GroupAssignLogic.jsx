@@ -13,6 +13,7 @@ import {
   GroupAssignMutations,
   GroupRemoveMutations,
 } from "./GroupAssignMutations.jsx";
+import { getAllCouches } from "../../api/UserService.jsx";
 
 export const GroupAssignLogic = () => {
   const { athleteId } = useParams();
@@ -37,15 +38,28 @@ export const GroupAssignLogic = () => {
     queryFn: getAllGroups,
   });
 
+  const { data: couchesData } = useQuery({
+    queryKey: ["couchList"],
+    queryFn: getAllCouches,
+  });
+
   const enrichedGroupData = groupData
     ?.filter((group) => currentAthlete?.groups.includes(group._id))
-    .map((group) => ({
-      ...group,
-      key: group.id,
-      name: group.name,
-      description: group.description,
-      status: group.status,
-    }));
+    .map((group) => {
+      // Encuentra el entrenador (couch) para este grupo
+      const couch = couchesData?.find((c) => c._id === group.couch);
+
+      // Retorna un nuevo objeto con toda la información del grupo
+      // y añade la información del entrenador
+      return {
+        ...group,
+        key: group._id, // Asegúrate de que usas el identificador correcto aquí
+        name: group.name,
+        description: group.description,
+        status: group.status,
+        couch: couch ? `${couch.name}` : "No asignado", // Ejemplo de cómo podrías combinar el nombre y la especialidad del entrenador
+      };
+    });
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {error.message}</div>;
