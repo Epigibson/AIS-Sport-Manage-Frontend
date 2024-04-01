@@ -63,9 +63,9 @@ export const PackageLogic = () => {
   };
 
   const handleDelete = async (record) => {
+    // console.log(record);
     setModalContext("delete");
-    setSelectedRecord(record);
-    await mutateDelete(selectedRecord?.product_id);
+    await mutateDelete(record.product_id);
   };
 
   const cancel = () => {
