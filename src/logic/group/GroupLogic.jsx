@@ -189,7 +189,7 @@ export const GroupLogic = () => {
     await mutateDelete(selectedRecord?.group_id);
   };
 
-  const cancel = (e) => {
+  const cancel = () => {
     // console.log(e);
     message.error("Click on No").then((e) => e);
   };
