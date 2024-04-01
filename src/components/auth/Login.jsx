@@ -1,6 +1,5 @@
 import { useAuth } from "../../hooks/AuthContext/useAuth.jsx";
 import { useEffect } from "react";
-import { getToken } from "../../utils/tokenUtils.jsx";
 import logo from "/src/assets/logo-be.png";
 import { Button, Input } from "antd";
 
@@ -11,12 +10,12 @@ export const Login = () => {
     const formData = new FormData(event.target);
     const username = formData.get("username");
     const password = formData.get("password");
-    console.log({ username, password });
+    // console.log({ username, password });
     await loginHandler(username, password);
   };
 
   useEffect(() => {
-    console.log(getToken());
+    // console.log(getToken());
   }, []);
 
   return (
