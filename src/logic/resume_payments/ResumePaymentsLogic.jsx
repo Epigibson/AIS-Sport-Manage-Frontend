@@ -27,7 +27,7 @@ export const ResumePaymentsLogic = () => {
     return <div>Cargando elementos...</div>;
   }
   if (isSuccess) {
-    console.log(data);
+    // console.log(data);
   }
 
   return (

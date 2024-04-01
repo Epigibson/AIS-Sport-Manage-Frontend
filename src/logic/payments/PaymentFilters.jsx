@@ -47,16 +47,14 @@ export const PaymentFilters = ({
               onChange={handleAthleteChange}
               loading={isLoading}
               filterOption={filterOption}
-              options={athletesData.map(
-                (athlete) => (
-                  console.log("ATLETAAAAA", athlete),
-                  {
-                    value: athlete._id,
-                    key: athlete._id,
-                    label: <span>{athlete.name}</span>,
-                    search: athlete.name.toLowerCase(), // Este campo se usará para el filtrado
-                  }
-                ),
+              options={athletesData.map((athlete) =>
+                // console.log("ATLETAAAAA", athlete),
+                ({
+                  value: athlete._id,
+                  key: athlete._id,
+                  label: <span>{athlete.name}</span>,
+                  search: athlete.name.toLowerCase(), // Este campo se usará para el filtrado
+                }),
               )}
             />
           </Col>

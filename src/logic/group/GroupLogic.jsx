@@ -232,7 +232,7 @@ export const GroupLogic = () => {
         onClose={handleCancelMembers}
         buttonModal={showModalAssignGroup}
         textButtonModal={"Asignar Usuario a un Grupo"}
-        external={true}
+        external={false}
       />
       <ModalComponent
         form={form}

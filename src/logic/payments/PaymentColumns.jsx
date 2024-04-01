@@ -194,7 +194,7 @@ export const PaymentColumns = ({
     key: "limit_date",
     align: "center",
     render: (limit_date, record) => {
-      console.log(limit_date);
+      // console.log(limit_date);
       const date = new Date(limit_date);
       const formattedDate = [
         `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos

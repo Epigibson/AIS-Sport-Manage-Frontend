@@ -152,7 +152,7 @@ export const TablesComponent = ({
   return (
     <div className={"w-full"}>
       <Table
-        rowKey={(record) => record._id}
+        rowKey={(record) => (record._id ? record._id : record.name)}
         columns={modifiedColumns}
         dataSource={data}
         size={"small"}
