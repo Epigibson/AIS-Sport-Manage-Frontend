@@ -67,7 +67,7 @@ export const GroupAssignLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     values.users = [currentAthlete._id];
-    console.log("Grupo Seleccionado", values);
+    // console.log("Grupo Seleccionado", values);
     await mutateCreate(values);
     form.resetFields();
     setIsModalVisible(false);
@@ -83,7 +83,7 @@ export const GroupAssignLogic = () => {
       group_id: record._id,
       user_id: currentAthlete._id,
     };
-    console.log("Eliminar del grupo", values);
+    // console.log("Eliminar del grupo", values);
     await mutateRemove(values);
   };
 

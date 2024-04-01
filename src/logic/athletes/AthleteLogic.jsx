@@ -63,10 +63,10 @@ export const AthleteLogic = () => {
 
   // console.log("enrichedUsersData", enrichedUsersData);
 
-  const showModal = () => {
-    setIsModalVisible(true);
-    setModalContext("create");
-  };
+  // const showModal = () => {
+  //   setIsModalVisible(true);
+  //   setModalContext("create");
+  // };
 
   const handleCancel = () => {
     setModalContext("");
@@ -77,14 +77,14 @@ export const AthleteLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
-      console.log("SE EDITA");
-      console.log("VER SI CAMBIA", values);
-      console.log("VER QUE TRAE", selectedRecord);
+      // console.log("SE EDITA");
+      // console.log("VER SI CAMBIA", values);
+      // console.log("VER QUE TRAE", selectedRecord);
       await mutateUpdate({ ...values, athlete_id: selectedRecord.athlete_id });
     }
     if (modalContext === "create") {
-      console.log("SE CREA");
-      console.log("VER SI CAMBIA", values);
+      // console.log("SE CREA");
+      // console.log("VER SI CAMBIA", values);
       await mutateCreate(values);
     }
     form.resetFields();
@@ -106,8 +106,8 @@ export const AthleteLogic = () => {
     await mutateDelete(record.user_id);
   };
 
-  const cancel = (e) => {
-    console.log(e);
+  const cancel = () => {
+    // console.log(e);
     message.error("Click on No").then((e) => e);
   };
 
@@ -117,13 +117,13 @@ export const AthleteLogic = () => {
 
   const handleChanceAvatar = async (file, record) => {
     try {
-      console.log(selectedRecord);
+      // console.log(selectedRecord);
       const data = {};
       const formData = new FormData();
       formData.append("file", file);
       data.athlete_id = record.athlete_id;
       data.file = formData;
-      console.log("DATA", data);
+      // console.log("DATA", data);
       await mutateUpdateAvatar(data);
     } catch (error) {
       console.error("Error al guardar la imagen:", error);

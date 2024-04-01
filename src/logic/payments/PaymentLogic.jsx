@@ -133,20 +133,20 @@ export const PaymentLogic = () => {
   const handleEditExtension = async () => {
     const values = await form.validateFields();
     values.history_payment_id = selectedPayment.history_payment_id;
-    console.log("Datos", values);
+    // console.log("Datos", values);
     await mutateEditHistoryPaymentExtension(values);
     await handleSearch();
     form.resetFields();
     setIsExtensionModalVisible(false);
-    console.log("Aumentado correctamente");
+    // console.log("Aumentado correctamente");
     // alert("Aumentado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
   };
 
   const handlePayReceipt = async (record) => {
-    console.log("PAGAR", record.receipt_id);
+    // console.log("PAGAR", record.receipt_id);
     await mutateUpdate(record.receipt_id);
     await handleSearch();
-    console.log("Pago realizado correctamente");
+    // console.log("Pago realizado correctamente");
     // alert("Pago realizado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
   };
 
@@ -160,23 +160,23 @@ export const PaymentLogic = () => {
 
   const handleAthleteChange = (value) => {
     setAthleteFilter(value);
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
   };
 
   const handleChangeStatus = (value) => {
     setStatusPayFilter(value);
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
   };
 
   const handleChangePaymentType = (value) => {
     setPaymentTypeFilter(value);
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
   };
 
   const handleChangePaymentMethod = async (value) => {
     setPaymentMethodFilter(value);
     await handleSearch();
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
   };
 
   const edit = (record) => {
@@ -190,7 +190,7 @@ export const PaymentLogic = () => {
   };
 
   const handleSave = async (record) => {
-    console.log("Guardando", record.history_payment_id, editingValue);
+    // console.log("Guardando", record.history_payment_id, editingValue);
     const data = {
       history_payment_id: record.history_payment_id,
       payment_method: editingValue,

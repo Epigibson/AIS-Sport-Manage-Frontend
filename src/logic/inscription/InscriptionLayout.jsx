@@ -34,7 +34,7 @@ export const InscriptionLayout = () => {
   const handleChanceAvatar = async () => {
     try {
       const image = await formAvatar.validateFields();
-      console.log(profileImage);
+      // console.log(profileImage);
       console.log(image);
       const data = {};
       const formData = new FormData();

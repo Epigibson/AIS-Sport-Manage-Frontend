@@ -42,11 +42,11 @@ export const PackageLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
-      console.log("SE EDITA");
+      // console.log("SE EDITA");
       await mutateUpdate({ ...values, product_id: selectedRecord.product_id });
     }
     if (modalContext === "create") {
-      console.log("SE CREA");
+      // console.log("SE CREA");
       await mutateCreate(values);
     }
     form.resetFields();
@@ -68,8 +68,8 @@ export const PackageLogic = () => {
     await mutateDelete(selectedRecord?.product_id);
   };
 
-  const cancel = (e) => {
-    console.log(e);
+  const cancel = () => {
+    // console.log(e);
     message?.error("Click on No");
   };
 

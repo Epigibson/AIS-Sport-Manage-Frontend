@@ -80,7 +80,7 @@ export const GroupLogic = () => {
   };
 
   const showModalAssignGroup = (record) => {
-    console.log("RECORD", record);
+    // console.log("RECORD", record);
     setModalContext("addUser");
     setIsModalGroupAssignVisible(true);
     setIsModalMembersVisible(false);
@@ -110,7 +110,7 @@ export const GroupLogic = () => {
 
   const handleSubmit = async () => {
     let values = null;
-    console.log("Modales", modalContext);
+    // console.log("Modales", modalContext);
     if (modalContext === "edit" || modalContext === "create") {
       values = await form.validateFields();
     } else if (modalContext === "addUser") {
@@ -129,11 +129,11 @@ export const GroupLogic = () => {
     }
 
     // Ahora `values.schedule` está listo para ser enviado
-    console.log(values);
+    // console.log(values);
 
     if (modalContext === "addUser") {
-      console.log("SE AGREGA USER A GRUPO");
-      console.log("Datos", selectedRecord);
+      // console.log("SE AGREGA USER A GRUPO");
+      // console.log("Datos", selectedRecord);
       await mutateUpdate({
         ...values,
         group_id: selectedGroup.group_id,
@@ -141,11 +141,11 @@ export const GroupLogic = () => {
     }
 
     if (modalContext === "edit") {
-      console.log("SE EDITA");
+      // console.log("SE EDITA");
       await mutateUpdate({ ...values, group_id: selectedRecord.group_id });
     }
     if (modalContext === "create") {
-      console.log("SE CREA");
+      // console.log("SE CREA");
       await mutateCreate(values);
     }
     form.resetFields();
@@ -183,14 +183,14 @@ export const GroupLogic = () => {
   };
 
   const handleDelete = async (record) => {
-    console.log("PARA ELIMINAR", record);
+    // console.log("PARA ELIMINAR", record);
     setModalContext("delete");
     setSelectedRecord(record);
     await mutateDelete(selectedRecord?.group_id);
   };
 
   const cancel = (e) => {
-    console.log(e);
+    // console.log(e);
     message.error("Click on No").then((e) => e);
   };
 

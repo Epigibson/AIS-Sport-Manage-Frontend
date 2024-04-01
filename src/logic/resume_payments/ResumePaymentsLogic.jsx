@@ -20,7 +20,7 @@ export const ResumePaymentsLogic = () => {
   });
 
   if (isError) {
-    console.log(error);
+    // console.log(error);
     return <div>Error: {error.message}</div>;
   }
   if (isPending) {
