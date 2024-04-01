@@ -31,35 +31,36 @@ export const PaymentColumns = ({
         <span>Sin Matricula</span>
       ), // Ajusta "group_name" según tu modelo de datos
   },
-  {
-    title: "Usuario",
-    dataIndex: "user",
-    key: "user",
-    align: "center",
-    ellipsis: true,
-    render: (user) =>
-      user ? (
-        <>
-          <Tag color={"blue"} className={"mb-2"}>
-            <Text>{user.username}</Text>
-          </Tag>
-          {/*<br/>*/}
-          {/*<Tag color={"cyan"}>*/}
-          {/*    <Text>{athletes.email}</Text>*/}
-          {/*</Tag>*/}
-        </>
-      ) : (
-        <span>Sin Usuario</span>
-      ), // Ajusta "group_name" según tu modelo de datos
-  },
+  // {
+  //   title: "Usuario",
+  //   dataIndex: "user",
+  //   key: "user",
+  //   align: "center",
+  //   ellipsis: true,
+  //   render: (user) =>
+  //     user ? (
+  //       <>
+  //         <Tag color={"blue"} className={"mb-2"}>
+  //           <Text>{user.username}</Text>
+  //         </Tag>
+  //         {/*<br/>*/}
+  //         {/*<Tag color={"cyan"}>*/}
+  //         {/*    <Text>{athletes.email}</Text>*/}
+  //         {/*</Tag>*/}
+  //       </>
+  //     ) : (
+  //       <span>Sin Usuario</span>
+  //     ), // Ajusta "group_name" según tu modelo de datos
+  // },
   {
     title: "Atleta",
     dataIndex: "athlete",
     key: "athlete",
     align: "center",
+    width: 200,
     render: (athlete) =>
       athlete ? (
-        <div className={"overflow-x-auto"}>
+        <div className={"overflow-x-hidden"}>
           <Tag color={"blue"} className={"mb-2"}>
             <Text>{athlete.name}</Text>
           </Tag>
