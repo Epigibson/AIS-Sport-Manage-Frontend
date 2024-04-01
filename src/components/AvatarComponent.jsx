@@ -26,6 +26,10 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(existingImageUrl);
 
+  // URL de la imagen predeterminada
+  const defaultImageUrl =
+    "https://res.cloudinary.com/dxetn6kzs/image/upload/v1712009550/ktwdgg96az6xnhlwag4g.jpg";
+
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
       setLoading(true);
@@ -49,23 +53,44 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
   }, [existingImageUrl]);
 
   const uploadButton = (
-    <button
+    <div
       style={{
-        border: 0,
-        background: "none",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 100,
+        width: 100,
+        borderRadius: "50%",
+        backgroundImage: `url(${defaultImageUrl})`,
+        backgroundSize: "cover",
+        position: "relative", // Necesario para posicionar el overlay correctamente
       }}
-      type="button"
     >
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div
         style={{
+          position: "absolute", // Hace que el overlay cubra el div padre
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          borderRadius: "50%", // Asegura que el overlay tenga bordes redondeados
+          background: "rgba(0, 0, 0, 0.5)", // Overlay semitransparente negro, ajusta la transparencia según necesites
+        }}
+      ></div>
+      <div
+        style={{
+          zIndex: 1, // Asegura que el texto esté sobre el overlay
+          color: "white", // Cambia el color del texto si es necesario para mejorar la legibilidad
           marginTop: 8,
         }}
       >
-        Upload
+        {loading ? <LoadingOutlined /> : <PlusOutlined />}
+        <div>Upload</div>
       </div>
-    </button>
+    </div>
   );
+
   return (
     <>
       <Upload
