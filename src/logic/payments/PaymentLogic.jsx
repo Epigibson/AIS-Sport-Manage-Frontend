@@ -33,7 +33,6 @@ export const PaymentLogic = () => {
   const [editingKey, setEditingKey] = useState("");
   const [editingValue, setEditingValue] = useState("");
   const { mutateUpdate } = usePayReceipt();
-  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod();
   const { mutateEditHistoryPaymentExtension } =
     useEditPaymentHistoryExtension();
   const {
@@ -75,6 +74,15 @@ export const PaymentLogic = () => {
     queryKey: ["allReceipts"],
     queryFn: getAllReceipts,
   });
+
+  const handleSearch = async () => {
+    await refetchReceiptsData();
+    await refetchUsersData();
+    await refetchAthletesData();
+    await refetch();
+  };
+
+  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
 
   const enrichedHistoryPaymentsData = historyPaymentData?.map(
     (historyPayment) => {
@@ -142,13 +150,6 @@ export const PaymentLogic = () => {
     // alert("Pago realizado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
   };
 
-  const handleSearch = async () => {
-    await refetchReceiptsData();
-    await refetchUsersData();
-    await refetchAthletesData();
-    await refetch();
-  };
-
   const filterOption = (input, option) =>
     option.search.includes(input.toLowerCase());
 
@@ -169,12 +170,12 @@ export const PaymentLogic = () => {
 
   const handleChangePaymentType = (value) => {
     setPaymentTypeFilter(value);
-    handleSearch().then((r) => r);
     console.log(`selected ${value}`);
   };
 
-  const handleChangePaymentMethod = (value) => {
+  const handleChangePaymentMethod = async (value) => {
     setPaymentMethodFilter(value);
+    await handleSearch();
     console.log(`selected ${value}`);
   };
 

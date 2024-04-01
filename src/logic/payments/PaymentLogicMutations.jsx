@@ -42,7 +42,7 @@ export const usePayReceipt = () => {
   return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useUpdatePaymentMethod = () => {
+export const useUpdatePaymentMethod = (onSuccessCallback) => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateUpdatePaymentMethod,
@@ -54,6 +54,7 @@ export const useUpdatePaymentMethod = () => {
     mutationFn: updatePaymentMethod,
     onSuccess: async () => {
       console.log("Mutación exitosa");
+      onSuccessCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
