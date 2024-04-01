@@ -1,12 +1,17 @@
-import { TablesComponent } from "../../components/TablesComponent.jsx";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { debtorsColumns } from "./DebtorsColumns.jsx";
-import { useEffect, useRef, useState } from "react";
-import "./DebtorsLogicStyle.css";
 import { getAllDebtors } from "../../api/DebtorService.jsx";
+import "./DebtorsLogicStyle.css";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 export const DebtorsLogic = () => {
-  const modifiedTable = useState(true);
+  const [modifiedTable] = useState(true);
+  const [displayedData, setDisplayedData] = useState([]);
+  const [segmentKey, setSegmentKey] = useState(0); // Clave para identificar el segmento actual
+  const pageSize = 3;
+
   const {
     data: debtors,
     isLoading,
@@ -16,78 +21,42 @@ export const DebtorsLogic = () => {
     queryFn: getAllDebtors,
   });
 
-  const [scrollIndex, setScrollIndex] = useState(0);
-  const scrollRef = useRef(null);
-
   useEffect(() => {
+    let currentSegment = 0;
     const interval = setInterval(() => {
-      if (scrollRef.current) {
-        setScrollIndex((prevIndex) => {
-          const newIndex = prevIndex + 1;
-          // Si llegaste al final de la tabla, vuelve al principio
-          if (newIndex * rowHeight >= scrollRef.current.scrollHeight) {
-            return 0;
-          }
-          return newIndex;
-        });
+      if (debtors && debtors.length > 0) {
+        const numberOfSegments = Math.ceil(debtors.length / pageSize);
+        const start = currentSegment * pageSize;
+        const end = start + pageSize;
+        const currentDataToShow = debtors.slice(start, end);
+        setDisplayedData(currentDataToShow);
+        setSegmentKey(currentSegment); // Actualiza la clave del segmento para la animación
+        currentSegment = (currentSegment + 1) % numberOfSegments;
       }
-    }, 10000); // Desplaza cada 3 segundos
+    }, 5000); // Cambia los datos cada 5 segundos
 
     return () => clearInterval(interval);
-  }, []);
+  }, [debtors]);
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollIndex * rowHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [scrollIndex]);
-
-  // rowHeight debería ser la altura de una fila en tu tabla
-  const rowHeight = 100;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (scrollRef.current) {
-        setScrollIndex((prevIndex) => {
-          const newIndex = prevIndex + 1;
-          // Ajusta la condición según el total de filas y la altura del contenedor
-          if (
-            newIndex * rowHeight >=
-            scrollRef.current.scrollHeight - scrollRef.current.clientHeight
-          ) {
-            return 0;
-          }
-          return newIndex;
-        });
-      }
-    }, 3000); // Desplaza cada 3 segundos
-
-    return () => clearInterval(interval);
-  }, [rowHeight]); // Añade `rowHeight` como dependencia si su valor puede cambiar
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollIndex * rowHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [scrollIndex, rowHeight]); // Añade `rowHeight` como dependencia si su valor puede cambiar
-
-  if (isLoading) return <div>Cargando informacion...</div>;
-  if (isError) return <div>Error...</div>;
+  if (isLoading) return <div>Cargando información...</div>;
+  if (isError) return <div>Error al cargar los datos...</div>;
 
   return (
-    <div ref={scrollRef} className="debtors-table-container">
-      <TablesComponent
-        data={debtors}
-        columns={debtorsColumns}
-        modifiedTable={modifiedTable}
-        headerFixed={true}
-      ></TablesComponent>
-    </div>
+    <TransitionGroup className="table-transition-group">
+      <CSSTransition
+        key={segmentKey}
+        timeout={500}
+        classNames="table-container"
+      >
+        <div className="debtors-table-container">
+          <TablesComponent
+            data={displayedData}
+            columns={debtorsColumns}
+            modifiedTable={modifiedTable}
+            headerFixed={true}
+          />
+        </div>
+      </CSSTransition>
+    </TransitionGroup>
   );
 };

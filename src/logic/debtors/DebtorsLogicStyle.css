@@ -6,4 +6,48 @@
     height: fit-content; /* Ajusta a la cantidad de filas que quieres mostrar a la vez */
 }
 
+.table-container-enter {
+    opacity: 0;
+}
+
+.table-container-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+}
+
+.table-container-exit {
+    opacity: 1;
+}
+
+.table-container-exit-active {
+    opacity: 0;
+    transition: opacity 500ms ease-out;
+}
+
+/* Oculta la barra de desplazamiento para todos los componentes de tabla de Ant Design */
+.ant-table-body {
+    overflow-y: scroll;
+}
+
+/* Para navegadores basados en WebKit (Chrome, Safari, etc.) */
+.ant-table-body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Para Firefox */
+.ant-table-body {
+    scrollbar-width: none;
+}
+
+/* Para Internet Explorer y Edge */
+.ant-table-body {
+    -ms-overflow-style: none;
+}
+
+/* Ocultar el contenedor de paginación de Ant Design */
+.ant-table-pagination {
+    display: none;
+}
+
+
 /* Otras reglas CSS para tu tabla */

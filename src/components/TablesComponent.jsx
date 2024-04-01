@@ -157,12 +157,10 @@ export const TablesComponent = ({
         dataSource={data}
         size={"small"}
         className={modifiedTable ? "my-dark-table" : ""}
-        pagination={{
-          pageSize: 25,
-        }}
+        pagination={modifiedTable ? false : { pageSize: 10 }}
         scroll={{
           x: 1200,
-          y: headerFixed ? 840 : 500,
+          y: headerFixed ? "100%" : 500,
         }}
       />
     </div>
@@ -173,5 +171,5 @@ TablesComponent.propTypes = {
   data: PropTypes.any,
   columns: PropTypes.any,
   headerFixed: PropTypes.bool,
-  modifiedTable: PropTypes.bool,
+  modifiedTable: PropTypes.any,
 };

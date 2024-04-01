@@ -6,10 +6,7 @@ import banner from "/src/assets/banner.jpg";
 export const DebtorsPage = () => {
   return (
     // <SideBarLayout>
-    <MainContainerLayout
-      title={"Listado de Pagos"}
-      background={"bg-black text-white overflow-hidden"}
-    >
+    <MainContainerLayout background={"bg-black text-white overflow-hidden"}>
       <Image
         src={banner}
         preview={false}
