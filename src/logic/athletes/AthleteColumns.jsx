@@ -182,6 +182,25 @@ export const AthleteColumns = ({
     },
   },
   {
+    title: "Paquete",
+    key: "products_which_inscribed",
+    dataIndex: "products_which_inscribed",
+    align: "center",
+    width: 200,
+    render: (products_which_inscribed) => {
+      console.log("Packages", products_which_inscribed);
+      if (products_which_inscribed && products_which_inscribed.length > 0) {
+        return products_which_inscribed.map((product) => (
+          <Tag key={product.id} color={"cyan"}>
+            {product.name} {/* Aquí muestras el valor del producto */}
+          </Tag>
+        ));
+      } else {
+        return <Tag color={"volcano"}>Sin Paquete</Tag>;
+      }
+    },
+  },
+  {
     title: "Grupos",
     key: "groups",
     dataIndex: "groups",

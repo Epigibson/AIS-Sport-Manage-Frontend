@@ -16,6 +16,7 @@ import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { useNavigate } from "react-router-dom";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
+import { getAllPackages } from "../../api/ProductService.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -46,6 +47,11 @@ export const AthleteLogic = () => {
     queryFn: getAllUsers,
   });
 
+  const { data: packagesData } = useQuery({
+    queryKey: ["allPackages"],
+    queryFn: getAllPackages,
+  });
+
   const { mutateUpdateAvatar } = useChangeAvatar();
 
   const enrichedUsersData = athletesData?.map((athlete) => {
@@ -58,7 +64,26 @@ export const AthleteLogic = () => {
         ? user
         : null,
     );
-    return { ...athlete, groups: athleteGroups, tutors: tutorsData }; // Añade el array de grupos al objeto de usuario
+
+    const packages = packagesData
+      ?.filter((packageObject) =>
+        athlete.products_which_inscribed.some(
+          (productInscribed) => productInscribed === packageObject._id,
+        ),
+      )
+      .filter((packageObject) => packageObject.product_name !== "Inscripcion")
+      .map((packageObject) => ({
+        id: packageObject._id, // Conserva la ID del paquete
+        name: packageObject.product_name, // Asume que 'name' es el campo con el nombre del paquete
+        // Añade aquí otras propiedades del paquete que sean necesarias
+      }));
+
+    return {
+      ...athlete,
+      groups: athleteGroups,
+      tutors: tutorsData,
+      products_which_inscribed: packages,
+    }; // Añade el array de grupos al objeto de usuario
   });
 
   // console.log("enrichedUsersData", enrichedUsersData);
