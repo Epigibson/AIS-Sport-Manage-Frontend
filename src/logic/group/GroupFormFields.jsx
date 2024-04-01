@@ -14,7 +14,7 @@ export const groupFormFields = [
   {
     name: "couch",
     label: "Coach",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "select", // Indica el tipo de control de entrada
     optionsSource: "couches", // Utiliza un identificador para las opciones
   },

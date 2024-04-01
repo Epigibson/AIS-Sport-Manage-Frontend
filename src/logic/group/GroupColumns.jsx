@@ -30,7 +30,7 @@ export const GroupColumns = ({ onEdit, onDelete, onCancel, onShowMembers }) => [
       record.couch ? (
         <Tag color={"blue"}>{record.couch.name}</Tag>
       ) : (
-        <span>No Couch</span>
+        <span>No Coach</span>
       ), // Ajusta "group_name" según tu modelo de datos
   },
   {

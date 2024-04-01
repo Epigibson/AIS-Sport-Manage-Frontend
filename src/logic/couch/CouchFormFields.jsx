@@ -36,7 +36,7 @@ export const couchFormFields = [
   {
     name: "groups",
     label: "Grupo",
-    rules: [{ required: true, message: "El grupo es obligatorio" }],
+    rules: [{ required: false, message: "El grupo es obligatorio" }],
     inputType: "multipleSelect", // Indica el tipo de control de entrada
     optionsSource: "groups", // Utiliza un identificador para las opciones
   },
