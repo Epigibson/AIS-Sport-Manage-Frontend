@@ -67,10 +67,21 @@ export const SideBarLayout = ({ children }) => {
             key: item.key,
             label: item.label,
             icon: item.icon,
+            children: item.children, // Esto es nuevo
           }))}
           onClick={({ key }) => {
-            const path = MenuItems.find((item) => item.key === key)?.path;
-            const func = MenuItems.find((item) => item.key === key)?.function;
+            const menuItem = MenuItems.find(
+              (item) =>
+                item.key === key ||
+                item.children?.find((subItem) => subItem.key === key),
+            );
+            const path =
+              menuItem?.path ||
+              menuItem?.children?.find((subItem) => subItem.key === key)?.path;
+            const func =
+              menuItem?.function ||
+              menuItem?.children?.find((subItem) => subItem.key === key)
+                ?.function;
             if (path) {
               navigate(path);
             }

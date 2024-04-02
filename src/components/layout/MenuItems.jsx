@@ -6,6 +6,7 @@ import {
   LogoutOutlined,
   ProductFilled,
   ReadOutlined,
+  SettingOutlined,
   UsergroupAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -36,22 +37,30 @@ export const MenuItems = [
     path: "/atletas",
   },
   {
-    key: "6",
-    icon: <GroupOutlined />,
-    label: "Grupos",
-    path: "/grupos",
-  },
-  {
-    key: "5",
-    icon: <CopyrightOutlined />,
-    label: "Coaches",
-    path: "/coaches",
-  },
-  {
-    key: "7",
-    icon: <ProductFilled />,
-    label: "Tipo de Membresias",
-    path: "/paquetes",
+    key: "sub1", // Clave única para el submenú
+    icon: <SettingOutlined />, // Ícono para el submenú
+    label: "Catálogos", // Título del submenú
+    children: [
+      // Elementos dentro del submenú
+      {
+        key: "6",
+        icon: <GroupOutlined />,
+        label: "Grupos",
+        path: "/grupos",
+      },
+      {
+        key: "5",
+        icon: <CopyrightOutlined />,
+        label: "Coaches",
+        path: "/coaches",
+      },
+      {
+        key: "7",
+        icon: <ProductFilled />,
+        label: "Tipo de Membresias",
+        path: "/paquetes",
+      },
+    ],
   },
   {
     key: "8",
