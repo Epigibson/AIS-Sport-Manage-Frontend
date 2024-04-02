@@ -50,7 +50,7 @@ export const MenuItems = [
   {
     key: "7",
     icon: <ProductFilled />,
-    label: "Membresias",
+    label: "Tipo de Membresias",
     path: "/paquetes",
   },
   {
