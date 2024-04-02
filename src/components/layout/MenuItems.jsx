@@ -26,7 +26,7 @@ export const MenuItems = [
   {
     key: "3",
     icon: <DollarCircleOutlined />,
-    label: "Pagos",
+    label: "Control de Pagos",
     path: "/pagos",
   },
   {
