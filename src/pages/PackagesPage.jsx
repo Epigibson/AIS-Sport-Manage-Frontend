@@ -5,7 +5,7 @@ import { PackageLogic } from "../logic/packages/PakageLogic.jsx";
 export const PackagesPage = () => {
   return (
     <SideBarLayout>
-      <MainContainerLayout title={"Paquetes"}>
+      <MainContainerLayout title={"Membresías"}>
         <PackageLogic />
       </MainContainerLayout>
     </SideBarLayout>

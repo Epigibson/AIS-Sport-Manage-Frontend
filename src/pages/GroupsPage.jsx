@@ -5,7 +5,7 @@ import { GroupLogic } from "../logic/group/GroupLogic.jsx";
 export const GroupsPage = () => {
   return (
     <SideBarLayout>
-      <MainContainerLayout title={"Membresías"}>
+      <MainContainerLayout title={"Grupos"}>
         <GroupLogic />
       </MainContainerLayout>
     </SideBarLayout>
