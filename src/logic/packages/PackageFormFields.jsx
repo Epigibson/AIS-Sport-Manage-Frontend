@@ -1,13 +1,13 @@
 export const packageFormFields = [
   {
     name: "product_name",
-    label: "Nombre del producto",
+    label: "Nombre",
     rules: [{ required: true }],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
     name: "product_description",
-    label: "Descripcion del producto",
+    label: "Descripcion",
     rules: [{ required: true }],
     inputType: "input",
     // valuePropName: "checked",

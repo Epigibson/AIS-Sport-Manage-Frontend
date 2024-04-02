@@ -90,7 +90,7 @@ export const PackageLogic = () => {
           type={"primary"}
           onClick={showModal}
         >
-          Crear nuevo paquete
+          Crear nueva membresía
         </Button>
       </Row>
       <ModalComponent
