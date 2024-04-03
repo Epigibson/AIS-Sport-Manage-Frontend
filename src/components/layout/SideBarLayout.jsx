@@ -12,6 +12,11 @@ const { useBreakpoint } = Grid;
 
 export const SideBarLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [openKeys, setOpenKeys] = useState(() => {
+    // Intenta leer los keys de los menús abiertos desde localStorage
+    const storedKeys = localStorage.getItem("openMenuKeys");
+    return storedKeys ? JSON.parse(storedKeys) : [];
+  });
   const screens = useBreakpoint();
   const navigate = useNavigate();
   const {
@@ -24,8 +29,15 @@ export const SideBarLayout = ({ children }) => {
     } else {
       setCollapsed(false);
     }
+    localStorage.setItem("openMenuKeys", JSON.stringify(openKeys));
+
     // console.log(getToken());
-  }, [screens]);
+  }, [screens, openKeys]);
+
+  // Asegúrate de actualizar el estado openKeys basado en la interacción del usuario
+  const onOpenChange = (keys) => {
+    setOpenKeys(keys);
+  };
 
   const logout = () => {
     clearTokens();
@@ -60,6 +72,8 @@ export const SideBarLayout = ({ children }) => {
         <Divider className="bg-blue-950" />
         <Menu
           style={{ width: "100%" }}
+          openKeys={openKeys}
+          onOpenChange={onOpenChange}
           theme="dark"
           mode="inline"
           defaultSelectedKeys={["1"]}
