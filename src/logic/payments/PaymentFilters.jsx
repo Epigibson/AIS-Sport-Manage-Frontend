@@ -14,6 +14,7 @@ export const PaymentFilters = ({
   handleChangePaymentType,
   handleChangePaymentMethod,
   handleSearch,
+  handleResetFilters,
 }) => {
   return (
     <>
@@ -47,7 +48,7 @@ export const PaymentFilters = ({
               onChange={handleAthleteChange}
               loading={isLoading}
               filterOption={filterOption}
-              options={athletesData.map((athlete) =>
+              options={athletesData?.map((athlete) =>
                 // console.log("ATLETAAAAA", athlete),
                 ({
                   value: athlete._id,
@@ -63,6 +64,7 @@ export const PaymentFilters = ({
               size={"small"}
               style={{ width: "100%" }}
               showSearch
+              allowClear={true}
               placeholder="Estatus"
               onChange={handleChangeStatus}
               options={[
@@ -78,6 +80,7 @@ export const PaymentFilters = ({
               size={"small"}
               style={{ width: "100%" }}
               showSearch
+              allowClear={true}
               placeholder="Tipo de Pago"
               onChange={handleChangePaymentType}
               options={[
@@ -92,6 +95,7 @@ export const PaymentFilters = ({
                 size={"small"}
                 style={{ width: "100%" }}
                 showSearch
+                allowClear={true}
                 placeholder="Metodo de Pago"
                 onChange={handleChangePaymentMethod}
                 options={[
@@ -112,6 +116,15 @@ export const PaymentFilters = ({
                 className={"bg-primary-700"}
               >
                 Buscar
+              </Button>
+              <Button
+                size={"small"}
+                style={{ width: "100%" }}
+                onClick={handleResetFilters}
+                type="primary"
+                className={"ml-2 bg-primary-700"}
+              >
+                Limpiar Filtros
               </Button>
             </Space.Compact>
           </Col>
@@ -135,4 +148,5 @@ PaymentFilters.propTypes = {
   handleChangePaymentType: PropTypes.func,
   handleChangePaymentMethod: PropTypes.func,
   handleSearch: PropTypes.func,
+  handleResetFilters: PropTypes.func,
 };

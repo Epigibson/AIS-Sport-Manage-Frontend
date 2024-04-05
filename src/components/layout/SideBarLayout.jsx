@@ -1,7 +1,7 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Divider, Grid, Layout, Menu, theme } from "antd";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from "../../assets/logo-be.png";
 import PropTypes from "prop-types";
 import { clearTokens, getToken } from "../../utils/tokenUtils.jsx";
@@ -19,6 +19,8 @@ export const SideBarLayout = ({ children }) => {
   });
   const screens = useBreakpoint();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -30,9 +32,15 @@ export const SideBarLayout = ({ children }) => {
       setCollapsed(false);
     }
     localStorage.setItem("openMenuKeys", JSON.stringify(openKeys));
-
     // console.log(getToken());
   }, [screens, openKeys]);
+
+  useEffect(() => {
+    // Extrae la parte relevante de la ruta como la key del menú.
+    // Asegúrate de que esto coincida con cómo has definido las keys de tus items de menú.
+    const key = location.pathname.slice(1) || "defaultKey"; // Añade una key por defecto si necesario
+    setSelectedKeys([key]);
+  }, [location]);
 
   // Asegúrate de actualizar el estado openKeys basado en la interacción del usuario
   const onOpenChange = (keys) => {
@@ -76,7 +84,7 @@ export const SideBarLayout = ({ children }) => {
           onOpenChange={onOpenChange}
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          selectedKeys={selectedKeys}
           items={MenuItems.map((item) => ({
             key: item.key,
             label: item.label,

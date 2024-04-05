@@ -6,7 +6,7 @@ import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllReceipts } from "../../api/ReceiptsService.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
@@ -29,9 +29,11 @@ export const PaymentLogic = () => {
   const [statusPayFilter, setStatusPayFilter] = useState("");
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const [editingKey, setEditingKey] = useState("");
   const [editingValue, setEditingValue] = useState("");
+  const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
+  const [firstCharge, setFirstCharge] = useState(0);
   const { mutateUpdate } = usePayReceipt();
   const { mutateEditHistoryPaymentExtension } =
     useEditPaymentHistoryExtension();
@@ -57,28 +59,34 @@ export const PaymentLogic = () => {
         payment_type: paymentTypeFilter,
         payment_method: paymentMethodFilter,
       }),
-    enabled: false, // no ejecutar la consulta automáticamente
+    enabled: autoFetchEnabled,
   });
 
-  const { data: usersData, refetch: refetchUsersData } = useQuery({
+  const { data: usersData } = useQuery({
     queryKey: ["allUsers"],
     queryFn: getAllUsers,
   });
 
-  const { data: athletesData, refetch: refetchAthletesData } = useQuery({
+  const { data: athletesData } = useQuery({
     queryKey: ["allAthletes"],
     queryFn: getAllAthletes,
   });
 
-  const { data: receiptsData, refetch: refetchReceiptsData } = useQuery({
+  const { data: receiptsData } = useQuery({
     queryKey: ["allReceipts"],
     queryFn: getAllReceipts,
   });
 
+  useEffect(() => {
+    console.log("AUTOFETCH", autoFetchEnabled);
+    if (historyPaymentData && firstCharge <= 0) {
+      setFirstCharge(firstCharge + 2);
+    } else {
+      setAutoFetchEnabled(false);
+    }
+  }, [historyPaymentData, firstCharge, autoFetchEnabled]);
+
   const handleSearch = async () => {
-    await refetchReceiptsData();
-    await refetchUsersData();
-    await refetchAthletesData();
     await refetch();
   };
 
@@ -87,7 +95,7 @@ export const PaymentLogic = () => {
   const enrichedHistoryPaymentsData = historyPaymentData?.map(
     (historyPayment) => {
       const user = usersData?.find((user) => user._id === historyPayment.user); // Ajusta según la estructura de tus datos
-      const athlete = athletesData.find(
+      const athlete = athletesData?.find(
         (athlete) => athlete._id === historyPayment.athlete,
       );
       const receipt = receiptsData?.find(
@@ -127,6 +135,14 @@ export const PaymentLogic = () => {
     setIsModalVisible(false);
   };
 
+  const handleResetFilters = async () => {
+    setAthleteFilter("");
+    setUserFilter("");
+    setStatusPayFilter("");
+    setPaymentTypeFilter("");
+    setPaymentMethodFilter("");
+  };
+
   if (isLoading) return <LoaderIconUtils />;
   if (isError) return <h1>Error...</h1>;
 
@@ -150,32 +166,30 @@ export const PaymentLogic = () => {
     // alert("Pago realizado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
   };
 
-  const filterOption = (input, option) =>
-    option.search.includes(input.toLowerCase());
+  const filterOption = (input, option) => option.search.includes(input);
 
   // Asegúrate de incluir esta parte dentro de tu componente
-  const handleUserChange = (value, option) => {
-    setUserFilter(option.key); // Opcional, si quieres guardar también el nombre del usuario seleccionado
+  const handleUserChange = async (value, option) => {
+    await setUserFilter(option.key); // Opcional, si quieres guardar también el nombre del usuario seleccionado
   };
 
-  const handleAthleteChange = (value) => {
-    setAthleteFilter(value);
+  const handleAthleteChange = async (value) => {
+    await setAthleteFilter(value);
     // console.log(`selected ${value}`);
   };
 
-  const handleChangeStatus = (value) => {
-    setStatusPayFilter(value);
+  const handleChangeStatus = async (value) => {
+    await setStatusPayFilter(value);
     // console.log(`selected ${value}`);
   };
 
-  const handleChangePaymentType = (value) => {
-    setPaymentTypeFilter(value);
+  const handleChangePaymentType = async (value) => {
+    await setPaymentTypeFilter(value);
     // console.log(`selected ${value}`);
   };
 
   const handleChangePaymentMethod = async (value) => {
-    setPaymentMethodFilter(value);
-    await handleSearch();
+    await setPaymentMethodFilter(value);
     // console.log(`selected ${value}`);
   };
 
@@ -224,6 +238,7 @@ export const PaymentLogic = () => {
         filterOption={filterOption}
         handleUserChange={handleUserChange}
         handleAthleteChange={handleAthleteChange}
+        handleResetFilters={handleResetFilters}
         isLoading={isLoading}
       />
       <ModalComponent

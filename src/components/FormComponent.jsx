@@ -90,7 +90,11 @@ export const FormComponent = ({
             value: c._id,
           }));
         } else if (field.optionsSource === "products") {
-          newSelectOptions[field.name] = packages?.map((c) => ({
+          // Filtra los productos para excluir aquellos con product_name igual a "inscription"
+          const filteredPackages = packages?.filter(
+            (p) => p.product_name !== "Inscripcion",
+          );
+          newSelectOptions[field.name] = filteredPackages?.map((c) => ({
             label: c.product_name,
             value: c._id,
           }));
