@@ -1,4 +1,12 @@
-import { Button, Popconfirm, Select, Tag, Tooltip, Typography } from "antd";
+import {
+  Button,
+  Popconfirm,
+  Select,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd";
 import "./PaymentsStyle.css";
 import { ClockCircleFilled, EditFilled } from "@ant-design/icons";
 
@@ -61,8 +69,8 @@ export const PaymentColumns = ({
     render: (athlete) =>
       athlete ? (
         <div className={"overflow-x-hidden"}>
-          <Tag color={"blue"} className={"mb-2"}>
-            <Text>{athlete.name}</Text>
+          <Tag color={"blue"} className={"text-style mb-2"}>
+            <Text className="text-style">{athlete.name}</Text>
           </Tag>
           {/*<br/>*/}
           {/*<Tag color={"cyan"}>*/}
@@ -134,29 +142,33 @@ export const PaymentColumns = ({
     key: "payment_method",
     align: "center",
     editable: true,
+    width: 200,
     render: (_, record) =>
       editingKey === record._id ? ( // Asumimos que usas _id como identificador único
         <span>
           <Select
             value={editingValue}
-            style={{ width: 120 }} // Ajusta el ancho según tus necesidades
+            size={"small"}
+            style={{ width: "100%" }}
             onChange={(value) => setEditingValue(value)}
           >
-            {/* Opciones del Select. Reemplaza estas con tus métodos de pago reales */}
             <Select.Option value="Transferencia">Transferencia</Select.Option>
             <Select.Option value="Efectivo">Efectivo</Select.Option>
           </Select>
 
-          <Button
-            onClick={() => handleSave(record)}
-            size="small"
-            style={{ marginRight: 8 }}
-          >
-            Guardar
-          </Button>
-          <Button onClick={cancel} size="small">
-            Cancelar
-          </Button>
+          <Space.Compact className={"mt-2"}>
+            <Button
+              onClick={() => handleSave(record)}
+              size="small"
+              style={{ marginRight: 8 }}
+              success
+            >
+              Guardar
+            </Button>
+            <Button onClick={cancel} danger size="small">
+              Cancelar
+            </Button>
+          </Space.Compact>
         </span>
       ) : (
         <div>
@@ -204,7 +216,10 @@ export const PaymentColumns = ({
       return (
         <div>
           <Text className={"mr-1"}>{formattedDate}</Text>
-          <Link onClick={() => showExtensionModal(record)}>
+          <Link
+            onClick={() => showExtensionModal(record)}
+            hidden={record.status === "Pagado"}
+          >
             <Tooltip
               title={
                 record.extension !== "" || null

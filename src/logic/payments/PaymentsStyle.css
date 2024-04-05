@@ -6,3 +6,13 @@
 .mi-popconfirm-especifico .ant-popover-buttons .ant-btn {
     color: #FF5722; /* Nuevo color para el botón de cancelar */
 }
+
+.text-style {
+    max-width: 150px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.text-style::-webkit-scrollbar {
+    display: none;
+}
