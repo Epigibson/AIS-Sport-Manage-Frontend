@@ -1,7 +1,12 @@
 import { useAuth } from "../../hooks/AuthContext/useAuth.jsx";
 import PropTypes from "prop-types";
 
-export const MainContainerLayout = ({ children, title, background }) => {
+export const MainContainerLayout = ({
+  children,
+  title,
+  background,
+  overflowY,
+}) => {
   const { user } = useAuth();
 
   if (!user) {
@@ -13,7 +18,10 @@ export const MainContainerLayout = ({ children, title, background }) => {
 
   return (
     <>
-      <div className={`h-svh text-center text-xl  ${background || ""}`}>
+      <div
+        className={`h-svh text-center text-xl  ${background || ""}`}
+        style={{ overflowY: overflowY, height: "100%" }}
+      >
         {title}
         {children}
       </div>
@@ -26,4 +34,5 @@ MainContainerLayout.propTypes = {
   children: PropTypes.node, // 'node' cubre cualquier cosa que pueda ser renderizada: números, strings, elementos o fragmentos
   title: PropTypes.string, // Definiendo que 'title' debería ser una string
   background: PropTypes.string, // Definiendo que 'background' debería ser una string
+  overflowY: PropTypes.any, // Definiendo que 'overflow' debería ser una string
 };
