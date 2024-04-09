@@ -39,4 +39,21 @@ export const packageFormFields = [
       { label: "30 días", value: 30 },
     ],
   },
+  {
+    name: "is_temporary",
+    label: "Es temporal",
+    inputType: "checkbox",
+    tooltip:
+      "Selecciona esta opción para agregar el producto a la lista de temporales.",
+  },
+  {
+    name: "week_duration",
+    label: "Semanas de duración",
+    rules: [{ required: true }],
+    inputType: "input",
+    dependencies: {
+      fieldName: "is_temporary",
+      value: true,
+    },
+  },
 ];

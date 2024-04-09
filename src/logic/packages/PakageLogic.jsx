@@ -18,9 +18,9 @@ export const PackageLogic = () => {
   const { mutateUpdate } = useUpdatePackage();
   const { mutateDelete } = useDeletePackage();
   const [form] = Form.useForm();
-  const [modalContext, setModalContext] = useState(""); // "create" o "edit"
+  const [modalContext, setModalContext] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   const {
     data: packagesData,
@@ -42,11 +42,10 @@ export const PackageLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
-      // console.log("SE EDITA");
+      console.log(values);
       await mutateUpdate({ ...values, product_id: selectedRecord.product_id });
     }
     if (modalContext === "create") {
-      // console.log("SE CREA");
       await mutateCreate(values);
     }
     form.resetFields();
@@ -63,13 +62,11 @@ export const PackageLogic = () => {
   };
 
   const handleDelete = async (record) => {
-    // console.log(record);
     setModalContext("delete");
     await mutateDelete(record.product_id);
   };
 
   const cancel = () => {
-    // console.log(e);
     message?.error("Click on No");
   };
 

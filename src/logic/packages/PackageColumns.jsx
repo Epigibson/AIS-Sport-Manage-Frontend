@@ -48,6 +48,32 @@ export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
     },
   },
   {
+    title: "De Temporada",
+    key: "is_temporary",
+    dataIndex: "is_temporary",
+    align: "center",
+    render: (is_temporary) => {
+      if (is_temporary === true) {
+        return <Tag color={"green"}>Si</Tag>;
+      } else {
+        return <Tag color={"orange"}>No</Tag>;
+      }
+    },
+  },
+  {
+    title: "Semanas de Duración",
+    key: "week_duration",
+    dataIndex: "week_duration",
+    align: "center",
+    render: (week_duration, record) => {
+      if (week_duration && record.is_temporary) {
+        return <Tag color={"blue"}>{week_duration} Semanas</Tag>;
+      } else {
+        return <Tag>No Aplica</Tag>;
+      }
+    },
+  },
+  {
     title: "Acciones",
     key: "action",
     align: "center",

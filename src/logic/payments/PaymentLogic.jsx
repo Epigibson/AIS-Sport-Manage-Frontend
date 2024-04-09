@@ -159,11 +159,11 @@ export const PaymentLogic = () => {
   };
 
   const handlePayReceipt = async (record) => {
-    // console.log("PAGAR", record.receipt_id);
     await mutateUpdate(record.receipt_id);
+    setAutoFetchEnabled(true);
     await handleSearch();
-    // console.log("Pago realizado correctamente");
-    // alert("Pago realizado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
+    await refetch();
+    setAutoFetchEnabled(false);
   };
 
   const filterOption = (input, option) => option.search.includes(input);
