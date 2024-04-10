@@ -20,7 +20,7 @@ export const MainContainerLayout = ({
     <>
       <div
         className={`h-svh text-center text-xl  ${background || ""}`}
-        style={{ overflowY: overflowY, height: "100%" }}
+        style={{ overflowY: overflowY, height: "" }}
       >
         {title}
         {children}

@@ -12,7 +12,7 @@ export const DebtorsPage = () => {
         preview={false}
         width={"50%"}
         height={"40%"}
-        className={"mb-0 p-0"}
+        className={"mb-56 p-0"}
         style={{ objectFit: "cover" }}
         alt={"banner"}
       />
