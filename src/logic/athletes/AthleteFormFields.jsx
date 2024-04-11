@@ -84,6 +84,13 @@ export const athleteFormFields = [
       { label: "Femenino", value: "Femenino" },
     ],
   },
+  {
+    name: "products_which_inscribed",
+    label: "Paquete",
+    rules: [{ required: true, message: "El paquete es requerido" }],
+    inputType: "multipleSelect",
+    optionsSource: "products", // Utiliza un identificador para las opciones
+  },
   // {
   //   name: "group_id",
   //   label: "Grupo",

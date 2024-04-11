@@ -5,6 +5,7 @@ import {
   deleteAthlete,
   updateAthlete,
 } from "../../api/AtheleService.jsx";
+import { toastNotify } from "../../utils/ToastNotify.jsx";
 
 export const useCreateAthlete = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
@@ -43,9 +44,19 @@ export const useUpdateAthlete = () => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Registro actualizado",
+        description: "Se ha actualizado correctamente el registro.",
+      });
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
+      toastNotify({
+        type: "error",
+        message: "Error al actualizar el registro.",
+        description: "No se ha podido actualizar correctamente el registro.",
+      });
     },
     onSettled: () => {
       reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto
@@ -67,9 +78,19 @@ export const useDeleteAthlete = () => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
+      toastNotify({
+        type: "success",
+        message: "Registro eliminado",
+        description: "Se ha eliminado correctamente el registro.",
+      });
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
+      toastNotify({
+        type: "error",
+        message: "Error al eliminar el registro.",
+        description: "No se ha podido eliminar correctamente el registro.",
+      });
     },
   });
   return { mutateDelete, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
@@ -90,9 +111,19 @@ export const useChangeAvatar = () => {
       console.log("Mutación exitosa", data);
       await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
       // window.location.href = data?.init_point;
+      toastNotify({
+        type: "success",
+        message: "Avatar actualizado correctamente.",
+        description: "Se ha actualizado correctamente el avatar.",
+      });
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
+      toastNotify({
+        type: "error",
+        message: "Error al actualizar el avatar.",
+        description: "No se ha podido actualizar correctamente el avatar.",
+      });
     },
     onSettled: () => {
       reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Est

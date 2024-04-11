@@ -161,7 +161,7 @@ export const FormComponent = ({
       onFinish={() => handleSubmit("create")}
       size={"small"}
       autoComplete={"on"}
-      initialValues={initialValues}
+      // initialValues={initialValues}
       onValuesChange={(_, allValues) => {
         // Aquí actualizas la visibilidad de los campos basada en allValues
         const visibility = {};

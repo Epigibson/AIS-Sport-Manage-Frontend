@@ -78,7 +78,7 @@ export const InscriptionFormFields = [
   {
     name: "hobbies",
     label: "Otros Deportes",
-    rules: [{ required: true, message: "Los hobbies son requeridos" }],
+    rules: [{ required: false, message: "Los hobbies son requeridos" }],
     inputType: "multipleSelect",
     options: [
       { label: "Soccer", value: "Soccer" },

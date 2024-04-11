@@ -121,6 +121,9 @@ export const AthleteLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
+    record.products_which_inscribed = record.products_which_inscribed.map(
+      (packageObject) => packageObject.id,
+    );
     form.setFieldsValue(record);
     setSelectedRecord(record);
     setIsModalVisible(true);
