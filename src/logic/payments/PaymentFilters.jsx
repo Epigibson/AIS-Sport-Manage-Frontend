@@ -93,7 +93,7 @@ export const PaymentFilters = ({
             <Space.Compact block style={{ width: "100%" }}>
               <Select
                 size={"small"}
-                style={{ width: "100%" }}
+                className="w-2/5 lg:w-full"
                 showSearch
                 allowClear={true}
                 placeholder="Metodo de Pago"

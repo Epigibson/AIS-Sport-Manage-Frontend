@@ -4,6 +4,7 @@ import { Row } from "antd";
 import { statisticCardsData } from "./StaticCardsData.jsx";
 import { StatisticCard } from "../../components/StatisticCardComponent.jsx";
 import { useResponsiveFontSize } from "../../hooks/ResponsiveFontSize/ResponsiveFontSizeHook.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 export const ResumePaymentsLogic = () => {
   const fontSize = useResponsiveFontSize();
@@ -24,7 +25,7 @@ export const ResumePaymentsLogic = () => {
     return <div>Error: {error.message}</div>;
   }
   if (isPending) {
-    return <div>Cargando elementos...</div>;
+    return <LoaderIconUtils />;
   }
   if (isSuccess) {
     // console.log(data);
