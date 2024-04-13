@@ -55,14 +55,13 @@ export const AthleteLogic = () => {
   const { mutateUpdateAvatar } = useChangeAvatar();
 
   const enrichedUsersData = athletesData?.map((athlete) => {
-    // Encuentra todos los grupos que coincidan con los IDs en athletes.group_id
     const athleteGroups = groupsData?.filter((group) =>
       athlete.groups?.includes(group._id),
     );
-    const tutorsData = usersData?.filter((user) =>
-      user.athletes.map((athlete) => athlete).includes(athlete._id)
-        ? user
-        : null,
+
+    // Use filter to ensure all conditions are checked and map to transform the structure.
+    const tutorsData = usersData?.filter(
+      (user) => user.athletes.includes(athlete._id), // simplified condition, adjust as needed
     );
 
     const packages = packagesData
@@ -73,17 +72,24 @@ export const AthleteLogic = () => {
       )
       .filter((packageObject) => packageObject.product_name !== "Inscripcion")
       .map((packageObject) => ({
-        id: packageObject._id, // Conserva la ID del paquete
-        name: packageObject.product_name, // Asume que 'name' es el campo con el nombre del paquete
-        // Añade aquí otras propiedades del paquete que sean necesarias
+        id: packageObject._id,
+        name: packageObject.product_name,
       }));
+
+    // Check if tutorsData has elements before accessing
+    const firstTutor = tutorsData && tutorsData.length > 0 ? tutorsData[0] : {};
 
     return {
       ...athlete,
       groups: athleteGroups,
       tutors: tutorsData,
+      tutors_name_one: firstTutor.tutors_name_one,
+      tutors_name_two: firstTutor.tutors_name_two,
+      email: firstTutor.email,
+      phone: firstTutor.phone,
+      mobile: firstTutor.mobile,
       products_which_inscribed: packages,
-    }; // Añade el array de grupos al objeto de usuario
+    };
   });
 
   // console.log("enrichedUsersData", enrichedUsersData);
@@ -103,7 +109,7 @@ export const AthleteLogic = () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
       // console.log("SE EDITA");
-      // console.log("VER SI CAMBIA", values);
+      console.log("VER SI CAMBIA", values);
       // console.log("VER QUE TRAE", selectedRecord);
       await mutateUpdate({ ...values, athlete_id: selectedRecord.athlete_id });
     }
