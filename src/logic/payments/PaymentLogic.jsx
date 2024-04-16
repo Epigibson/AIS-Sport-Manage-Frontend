@@ -223,6 +223,7 @@ export const PaymentLogic = () => {
       console.log("Cantidad");
       await mutateEditHistoryPaymentAmount(data);
     }
+    await handleSearch();
     await refetch();
     cancel(); // Restablece el estado de edición
   };
