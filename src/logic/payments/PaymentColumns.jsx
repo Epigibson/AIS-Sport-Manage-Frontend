@@ -9,7 +9,11 @@ import {
   Typography,
 } from "antd";
 import "./PaymentsStyle.css";
-import { ClockCircleFilled, EditFilled } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  ClockCircleFilled,
+  EditFilled,
+} from "@ant-design/icons";
 
 const { Text, Link } = Typography;
 
@@ -128,6 +132,15 @@ export const PaymentColumns = ({
 
             return (
               <>
+                <Tooltip title={"Monto actualizado"}>
+                  <CheckCircleFilled
+                    color={"green"}
+                    className={"mr-2 text-green-500"}
+                    hidden={
+                      !record.amount_updated || record.status === "Pagado"
+                    }
+                  />
+                </Tooltip>
                 <Text className={"mr-2"}>{formattedAmount}</Text>
                 {record.status !== "Pagado" ? (
                   <Tooltip
