@@ -35,6 +35,7 @@ export const PaymentColumns = ({
     dataIndex: "athlete",
     key: "athlete",
     align: "center",
+    width: 100,
     render: (athlete) =>
       athlete ? (
         <>
@@ -63,21 +64,21 @@ export const PaymentColumns = ({
         <span>Sin Usuario</span>
       ),
   },
-  {
-    title: "Tipo de Pago",
-    dataIndex: "payment_type",
-    key: "payment_type",
-    align: "center",
-    render: (payment_type) => {
-      if (payment_type === "inscription") {
-        return <Tag color={"blue"}>Inscripción</Tag>;
-      } else if (payment_type === "payment") {
-        return <Tag color={"purple"}>Mensualidad</Tag>;
-      } else {
-        return <Tag color={"blue"}>{payment_type}</Tag>;
-      }
-    },
-  },
+  // {
+  //   title: "Tipo de Pago",
+  //   dataIndex: "payment_type",
+  //   key: "payment_type",
+  //   align: "center",
+  //   render: (payment_type) => {
+  //     if (payment_type === "inscription") {
+  //       return <Tag color={"blue"}>Inscripción</Tag>;
+  //     } else if (payment_type === "payment") {
+  //       return <Tag color={"purple"}>Mensualidad</Tag>;
+  //     } else {
+  //       return <Tag color={"blue"}>{payment_type}</Tag>;
+  //     }
+  //   },
+  // },
   {
     title: "Paquete",
     dataIndex: "receipt",
@@ -170,7 +171,8 @@ export const PaymentColumns = ({
     dataIndex: "status",
     key: "status",
     align: "center",
-    searchable: true, // Esta columna será buscable
+    searchable: true,
+    width: 100,
     render: (status) => {
       if (status === "Pagado") {
         return <Tag color={"green"}>{status}</Tag>;
@@ -233,6 +235,7 @@ export const PaymentColumns = ({
     dataIndex: "created_at",
     key: "created_at",
     align: "center",
+    width: 100,
     render: (created_at) => {
       const date = new Date(created_at);
       const formattedDate = [
@@ -248,6 +251,7 @@ export const PaymentColumns = ({
     dataIndex: "limit_date",
     key: "limit_date",
     align: "center",
+    width: 150,
     render: (limit_date, record) => {
       // console.log(limit_date);
       const date = new Date(limit_date);
@@ -285,6 +289,7 @@ export const PaymentColumns = ({
     dataIndex: "updated_at",
     key: "updated_at",
     align: "center",
+    width: 100,
     render: (updated_at, record) => {
       if (record.status === "Pagado") {
         const date = new Date(updated_at);
