@@ -63,3 +63,20 @@ export const editHistoryPaymentExtension = async (data) => {
   }
   return null;
 };
+
+export const editHistoryPaymentAmount = async (data) => {
+  try {
+    console.log("Metodo de Pago", data);
+    // Construye los parámetros de consulta correctamente
+    const queryParams = new URLSearchParams({
+      amount: data.amount,
+    }).toString();
+    const response = await apiClient.put(
+      `/history_payment/amount/${data.history_payment_id}?${queryParams}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("No se pudo actualizar el metodo de pago..", error);
+  }
+  return null;
+};

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
+  useEditPaymentHistoryAmount,
   useEditPaymentHistoryExtension,
   usePayReceipt,
   useUpdatePaymentMethod,
@@ -32,11 +33,13 @@ export const PaymentLogic = () => {
   const [showFilters, setShowFilters] = useState(true);
   const [editingKey, setEditingKey] = useState("");
   const [editingValue, setEditingValue] = useState("");
+  const [editingAmount, setEditingAmount] = useState("");
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
   const { mutateUpdate } = usePayReceipt();
   const { mutateEditHistoryPaymentExtension } =
     useEditPaymentHistoryExtension();
+  const { mutateEditHistoryPaymentAmount } = useEditPaymentHistoryAmount();
   const {
     data: historyPaymentData,
     isLoading,
@@ -196,20 +199,31 @@ export const PaymentLogic = () => {
   const edit = (record) => {
     setEditingKey(record._id); // Usamos _id como clave de edición, ajusta según tu data
     setEditingValue(record.payment_method);
+    setEditingAmount(record.amount);
   };
 
   const cancel = () => {
     setEditingKey("");
     setEditingValue("");
+    setEditingAmount("");
   };
 
-  const handleSave = async (record) => {
+  const handleSave = async (record, field) => {
     // console.log("Guardando", record.history_payment_id, editingValue);
     const data = {
       history_payment_id: record.history_payment_id,
       payment_method: editingValue,
+      amount: editingAmount,
     };
-    await mutateUpdatePaymentMethod(data);
+    if (field === "payment_method") {
+      console.log("Metodo de pago");
+      await mutateUpdatePaymentMethod(data);
+    }
+    if (field === "amount") {
+      console.log("Cantidad");
+      await mutateEditHistoryPaymentAmount(data);
+    }
+    await refetch();
     cancel(); // Restablece el estado de edición
   };
 
@@ -222,7 +236,9 @@ export const PaymentLogic = () => {
     handleSave: handleSave,
     editingKey: editingKey,
     editingValue: editingValue,
+    editingAmount: editingAmount,
     setEditingValue: setEditingValue,
+    setEditingAmount: setEditingAmount,
   });
 
   return (

@@ -1,5 +1,6 @@
 import {
   Button,
+  InputNumber,
   Popconfirm,
   Select,
   Space,
@@ -18,7 +19,9 @@ export const PaymentColumns = ({
   handlePayReceipt,
   editingKey,
   editingValue,
+  editingAmount,
   setEditingValue,
+  setEditingAmount,
   edit,
   cancel,
   handleSave,
@@ -37,29 +40,8 @@ export const PaymentColumns = ({
         </>
       ) : (
         <span>Sin Matricula</span>
-      ), // Ajusta "group_name" según tu modelo de datos
+      ),
   },
-  // {
-  //   title: "Usuario",
-  //   dataIndex: "user",
-  //   key: "user",
-  //   align: "center",
-  //   ellipsis: true,
-  //   render: (user) =>
-  //     user ? (
-  //       <>
-  //         <Tag color={"blue"} className={"mb-2"}>
-  //           <Text>{user.username}</Text>
-  //         </Tag>
-  //         {/*<br/>*/}
-  //         {/*<Tag color={"cyan"}>*/}
-  //         {/*    <Text>{athletes.email}</Text>*/}
-  //         {/*</Tag>*/}
-  //       </>
-  //     ) : (
-  //       <span>Sin Usuario</span>
-  //     ), // Ajusta "group_name" según tu modelo de datos
-  // },
   {
     title: "Atleta",
     dataIndex: "athlete",
@@ -72,14 +54,10 @@ export const PaymentColumns = ({
           <Tag color={"blue"} className={"text-style mb-2"}>
             <Text className="text-style">{athlete.name}</Text>
           </Tag>
-          {/*<br/>*/}
-          {/*<Tag color={"cyan"}>*/}
-          {/*    <Text>{athletes.email}</Text>*/}
-          {/*</Tag>*/}
         </div>
       ) : (
         <span>Sin Usuario</span>
-      ), // Ajusta "group_name" según tu modelo de datos
+      ),
   },
   {
     title: "Tipo de Pago",
@@ -91,36 +69,88 @@ export const PaymentColumns = ({
         return <Tag color={"blue"}>Inscripción</Tag>;
       } else if (payment_type === "payment") {
         return <Tag color={"purple"}>Mensualidad</Tag>;
-
-        // else if (payment_type === "Pago") {
-        //   return <Tag color={"green"}>{payment_type}</Tag>;
-        // } else if (payment_type === "Pago de Servicio") {
-        //   return <Tag color={"cyan"}>{payment_type}</Tag>;
-        // } else if (payment_type === "Pago de Material") {
-        //   return <Tag color={"magenta"}>{payment_type}</Tag>;
-        // } else if (payment_type === "Pago de Comida") {
-        //   return <Tag color={"orange"}>{payment_type}</Tag>;
-        // } else if (payment_type === "Pago de Transporte") {
-        //   return <Tag color={"red"}>{payment_type}</Tag>;
-        // } else if (payment_type === "Pago de Otros") {
-        //   return <Text>{payment_type}</Text>; // Ajusta "group_name" según tu modelo de datos
       } else {
         return <Tag color={"blue"}>{payment_type}</Tag>;
       }
     },
   },
   {
+    title: "Paquete",
+    dataIndex: "receipt",
+    key: "receipt",
+    align: "center",
+    width: 150,
+    render: (receipt) =>
+      receipt && receipt.receipt_package_name ? (
+        <div className={"overflow-x-hidden text-center"}>
+          <Tag color={"cyan"} className={"text-style mb-2"}>
+            <Text className="text-style">{receipt?.receipt_package_name}</Text>
+          </Tag>
+        </div>
+      ) : (
+        <Tag>Sin datos</Tag>
+      ),
+  },
+  {
     title: "Cantidad",
     dataIndex: "amount",
     key: "amount",
     align: "center",
-    render: (amount) => {
-      const formattedAmount = new Intl.NumberFormat("es-MX", {
-        style: "currency",
-        currency: "MXN",
-      }).format(amount);
-      return <Text>{formattedAmount}</Text>;
-    },
+    width: 250,
+    render: (_, record) =>
+      editingKey === record._id ? (
+        <span>
+          <InputNumber
+            value={editingAmount}
+            onChange={(value) => setEditingAmount(value)}
+          />
+          <Space compact className="mt-2">
+            <Button
+              onClick={() => handleSave(record, "amount")}
+              size="small"
+              style={{ marginRight: 8 }}
+              success
+            >
+              Guardar
+            </Button>
+            <Button onClick={cancel} danger size="small">
+              Cancelar
+            </Button>
+          </Space>
+        </span>
+      ) : (
+        <div>
+          {(() => {
+            const formattedAmount = new Intl.NumberFormat("es-MX", {
+              style: "currency",
+              currency: "MXN",
+            }).format(record.amount); // Asegúrate de que 'record.amount' está definido correctamente
+
+            return (
+              <>
+                <Text className={"mr-2"}>{formattedAmount}</Text>
+                {record.status !== "Pagado" ? (
+                  <Tooltip
+                    title={
+                      "Al editar el monto solo se ajustara el recibo actual. La recurrencia del monto " +
+                      "original del paquete se respetara en los recibos consecuentes."
+                    }
+                    color={record.extension ? "blue" : "gray"}
+                  >
+                    <EditFilled
+                      onClick={() => edit(record)}
+                      size="small"
+                      disabled={editingKey !== ""}
+                    >
+                      Editar
+                    </EditFilled>
+                  </Tooltip>
+                ) : null}
+              </>
+            );
+          })()}
+        </div>
+      ),
   },
   {
     title: "Estatus",
@@ -158,7 +188,7 @@ export const PaymentColumns = ({
 
           <Space.Compact className={"mt-2"}>
             <Button
-              onClick={() => handleSave(record)}
+              onClick={() => handleSave(record, "payment_method")}
               size="small"
               style={{ marginRight: 8 }}
               success
@@ -243,8 +273,6 @@ export const PaymentColumns = ({
     key: "updated_at",
     align: "center",
     render: (updated_at, record) => {
-      // Asegúrate de recibir el registro completo como segundo argumento
-      // Verifica si el estatus del registro es "Pagado"
       if (record.status === "Pagado") {
         const date = new Date(updated_at);
         const formattedDate = [
@@ -254,8 +282,7 @@ export const PaymentColumns = ({
         ].join("/");
         return <Text>{formattedDate}</Text>;
       } else {
-        // Retorna null o un mensaje específico si el registro no está "Pagado"
-        return <Text>No pagado</Text>; // o simplemente null si no quieres mostrar nada
+        return <Text>No pagado</Text>;
       }
     },
   },
