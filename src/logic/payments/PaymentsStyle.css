@@ -8,7 +8,8 @@
 }
 
 .text-style {
-    max-width: 150px;
+    text-align: center;
+    max-width: 120px;
     overflow-x: auto;
     white-space: nowrap;
 }

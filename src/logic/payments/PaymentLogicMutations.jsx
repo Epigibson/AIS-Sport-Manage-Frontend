@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { payReceipt } from "../../api/ReceiptsService.jsx";
 import {
+  editHistoryPaymentAmount,
   editHistoryPaymentExtension,
   updatePaymentMethod,
 } from "../../api/PaymentService.jsx";
@@ -114,6 +115,48 @@ export const useEditPaymentHistoryExtension = () => {
   });
   return {
     mutateEditHistoryPaymentExtension,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  }; // Asegúrate de devolver estos valores desde tu hook
+};
+
+export const useEditPaymentHistoryAmount = () => {
+  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+  const {
+    mutate: mutateEditHistoryPaymentAmount,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  } = useMutation({
+    mutationFn: editHistoryPaymentAmount,
+    onSuccess: async () => {
+      console.log("Mutación exitosa");
+      toastNotify({
+        type: "success",
+        message: "Exito!.",
+        description: "Se ha actualizado la cantidad de pago correctamente.",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["allReceipts", "allHistoryPayments"],
+      }); // Invalidar la consulta "allPackages"
+    },
+    onError: (error) => {
+      toastNotify({
+        type: "error",
+        message: "Accion no realizada!.",
+        description: "No se ha podido actualizar la cantidad de pago.",
+      });
+      console.error("Error en la mutación", error);
+    },
+    onSettled: () => {
+      reset();
+    },
+  });
+  return {
+    mutateEditHistoryPaymentAmount,
     isSuccess,
     isError,
     error,
