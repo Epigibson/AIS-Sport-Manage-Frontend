@@ -160,7 +160,7 @@ export const TablesComponent = ({
         pagination={modifiedTable ? false : { pageSize: 10 }}
         scroll={{
           x: 1200,
-          y: headerFixed ? "100%" : 500,
+          y: headerFixed ? 800 : 500,
         }}
       />
     </div>

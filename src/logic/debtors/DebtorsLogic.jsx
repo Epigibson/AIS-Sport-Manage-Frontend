@@ -10,7 +10,7 @@ export const DebtorsLogic = () => {
   const [modifiedTable] = useState(true);
   const [displayedData, setDisplayedData] = useState([]);
   const [segmentKey, setSegmentKey] = useState(0); // Clave para identificar el segmento actual
-  const pageSize = 3;
+  const pageSize = 10;
 
   const {
     data: debtors,

@@ -3,7 +3,7 @@
     color: #39FF14; /* Verde claro, como los tableros de aeropuerto */
     background-color: #000; /* Fondo negro */
     overflow: hidden;
-    height: fit-content; /* Ajusta a la cantidad de filas que quieres mostrar a la vez */
+    height: 1800px; /* Ajusta a la cantidad de filas que quieres mostrar a la vez */
 }
 
 .table-container-enter {

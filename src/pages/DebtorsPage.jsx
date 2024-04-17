@@ -11,10 +11,9 @@ export const DebtorsPage = () => {
         src={banner}
         preview={false}
         width={"50%"}
-        height={"40%"}
-        className={"mb-56 p-0"}
         style={{ objectFit: "cover" }}
         alt={"banner"}
+        className={"mb-40"}
       />
       <DebtorsLogic />
     </MainContainerLayout>
