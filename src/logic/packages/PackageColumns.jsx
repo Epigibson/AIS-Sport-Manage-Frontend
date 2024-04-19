@@ -112,6 +112,19 @@ export const PackagesColumns = ({ onEdit, onDelete, onCancel }) => [
     },
   },
   {
+    title: "Politica de Negocio",
+    key: "business_policy",
+    dataIndex: "business_policy",
+    align: "center",
+    render: (business_policy) => {
+      if (business_policy === true) {
+        return <Tag color={"green"}>Activo</Tag>;
+      } else {
+        return <Tag color={"volcano"}>Inactivo</Tag>;
+      }
+    },
+  },
+  {
     title: "Acciones",
     key: "action",
     align: "center",
