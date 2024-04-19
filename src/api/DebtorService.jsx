@@ -5,6 +5,8 @@ export const getAllDebtors = async () => {
     const response = await apiClient.get("/debtors/");
     return response.data; // Devuelve un array de objetos con los datos de los grupos.
   } catch (error) {
-    console.error("No se pudo obtener la lista de usuarios.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };

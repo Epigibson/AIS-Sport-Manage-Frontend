@@ -56,4 +56,24 @@ export const packageFormFields = [
       value: true,
     },
   },
+  {
+    name: "start_date",
+    label: "Fecha de Inicio",
+    rules: [{ required: true }],
+    inputType: "datePicker",
+    dependencies: {
+      fieldName: "is_temporary",
+      value: true,
+    },
+  },
+  {
+    name: "end_date",
+    label: "Fecha de Finalizacion",
+    rules: [{ required: true }],
+    inputType: "datePicker",
+    dependencies: {
+      fieldName: "is_temporary",
+      value: true,
+    },
+  },
 ];

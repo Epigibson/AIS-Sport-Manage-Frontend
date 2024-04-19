@@ -5,7 +5,9 @@ export const getAllGroups = async () => {
     const response = await apiClient.get("/groups/");
     return response.data; // Devuelve un array de objetos con los datos de los grupos.
   } catch (error) {
-    console.error("No se pudo obtener la lista de grupos.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -14,7 +16,9 @@ export const getGroupById = async (group_id) => {
     const response = await apiClient.get(`/groups/${group_id}`);
     return response.data; // Devuelve un objeto con los datos del grupo.
   } catch (error) {
-    console.error("No se pudo obtener el grupo.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -23,7 +27,9 @@ export const createGroup = async (data) => {
     const response = await apiClient.post("/groups/", data);
     return response.data; // Devuelve el objeto creado.
   } catch (error) {
-    console.error("No se pudo crear el grupo.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -36,9 +42,10 @@ export const assignUserToGroup = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("No se pudo asignar el usuario al grupo.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null; // Devuelve null si hubo un error.
 };
 
 export const removeUserFromGroup = async (data) => {
@@ -50,9 +57,10 @@ export const removeUserFromGroup = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("No se pudo remover el usuario del grupo.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null; // Devuelve null si hubo un error.
 };
 
 export const updateGroup = async (data) => {
@@ -61,7 +69,9 @@ export const updateGroup = async (data) => {
     const response = await apiClient.put(`/groups/${group_id}`, restData);
     return response.data; // Devuelve el objeto actualizado.
   } catch (error) {
-    console.error("No se pudo actualizar el grupo.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -70,6 +80,8 @@ export const deleteGroup = async (group_id) => {
     const response = await apiClient.delete(`/groups/${group_id}`);
     return response.data; // Devuelve el objeto eliminado.
   } catch (error) {
-    console.error("No se pudo eliminar el grupo.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };

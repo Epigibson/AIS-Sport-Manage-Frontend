@@ -1,6 +1,7 @@
 import {
   Button,
   Checkbox,
+  DatePicker,
   Form,
   Grid,
   Input,
@@ -18,7 +19,7 @@ import { getAllPackages } from "../api/ProductService.jsx";
 import { getAllCategories } from "../api/CategoryService.jsx";
 import PropTypes from "prop-types";
 import { getAllAthletes } from "../api/AtheleService.jsx";
-import { prepareInitialValues } from "./PrepareInitialValues.jsx";
+// import { prepareInitialValues } from "./PrepareInitialValues.jsx";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -152,7 +153,7 @@ export const FormComponent = ({
     setSelectOptions(newSelectOptions);
   }, [formFields, categories, couches, groups, users, packages, athletes]);
 
-  const initialValues = prepareInitialValues(formFields);
+  // const initialValues = prepareInitialValues(formFields);
 
   return (
     <Form
@@ -260,6 +261,9 @@ export const FormComponent = ({
                   console.log(dates, dateStrings);
                 }}
               />
+            )}
+            {field.inputType === "datePicker" && (
+              <DatePicker placeholder={field.label} value={field.name} />
             )}
           </Form.Item>
         );

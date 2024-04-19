@@ -5,7 +5,9 @@ export const getAllAthletes = async () => {
     const response = await apiClient.get("/athletes/");
     return response.data;
   } catch (error) {
-    console.error("No se pudo obtener la lista de atletas.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -14,7 +16,9 @@ export const getAthleteByUuid = async (athlete_id) => {
     const response = await apiClient.get(`/athletes/${athlete_id}`);
     return response.data;
   } catch (error) {
-    console.error("No se pudo obtener el atleta.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -23,9 +27,10 @@ export const createAthlete = async (data) => {
     const response = await apiClient.post("/athletes/create", data);
     return response.data;
   } catch (error) {
-    console.error("No se pudo crear el usuario.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const updateAthlete = async (data) => {
@@ -34,9 +39,10 @@ export const updateAthlete = async (data) => {
     const response = await apiClient.put(`/athletes/${athlete_id}`, rest);
     return response.data;
   } catch (error) {
-    console.error("No se pudo actualizar el usuario.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const deleteAthlete = async (data) => {
@@ -44,9 +50,10 @@ export const deleteAthlete = async (data) => {
     const response = await apiClient.delete(`/athletes/${data}`);
     return response.data;
   } catch (error) {
-    console.error("No se pudo eliminar el usuario.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const changeAvatar = async (data) => {
@@ -59,7 +66,8 @@ export const changeAvatar = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("No se pudo actualizar el avatar del atleta.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };

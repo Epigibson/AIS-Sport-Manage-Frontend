@@ -13,6 +13,7 @@ import {
   CheckCircleFilled,
   ClockCircleFilled,
   EditFilled,
+  StopOutlined,
 } from "@ant-design/icons";
 
 const { Text, Link } = Typography;
@@ -21,6 +22,7 @@ export const PaymentColumns = ({
   showReceipts,
   showExtensionModal,
   handlePayReceipt,
+  handleCancelReceipt,
   editingKey,
   editingValue,
   editingAmount,
@@ -143,7 +145,7 @@ export const PaymentColumns = ({
                   />
                 </Tooltip>
                 <Text className={"mr-2"}>{formattedAmount}</Text>
-                {record.status !== "Pagado" ? (
+                {record.status !== "Pagado" && record.status !== "Cancelado" ? (
                   <Tooltip
                     title={
                       "Al editar el monto solo se ajustara el recibo actual. La recurrencia del monto " +
@@ -176,6 +178,8 @@ export const PaymentColumns = ({
     render: (status) => {
       if (status === "Pagado") {
         return <Tag color={"green"}>{status}</Tag>;
+      } else if (status === "Cancelado") {
+        return <Tag color={"red"}>{status}</Tag>;
       } else {
         return <Tag color={"warning"}>{status}</Tag>;
       }
@@ -218,7 +222,7 @@ export const PaymentColumns = ({
       ) : (
         <div>
           <Tag color="blue">{record.payment_method || "No especificado"}</Tag>
-          {record.status !== "Pagado" ? (
+          {record.status !== "Pagado" && record.status !== "Cancelado" ? (
             <EditFilled
               onClick={() => edit(record)}
               size="small"
@@ -265,7 +269,7 @@ export const PaymentColumns = ({
           <Text className={"mr-1"}>{formattedDate}</Text>
           <Link
             onClick={() => showExtensionModal(record)}
-            hidden={record.status === "Pagado"}
+            hidden={record.status === "Pagado" || record.status === "Cancelado"}
           >
             <Tooltip
               title={
@@ -304,7 +308,6 @@ export const PaymentColumns = ({
       }
     },
   },
-
   {
     title: "Pago",
     dataIndex: "receipt_id",
@@ -323,11 +326,15 @@ export const PaymentColumns = ({
             wrapClassName="mi-popconfirm-especifico"
           >
             <Button
-              disabled={record.status === "Pagado"}
+              disabled={
+                record.status === "Pagado" || record.status === "Cancelado"
+              }
               type={"primary"}
               className="ant-btn-custom px-2 mr-2"
               style={
-                record.status !== "Pagado" ? { backgroundColor: "#48bb78" } : {}
+                record.status !== "Pagado" && record.status !== "Cancelado"
+                  ? { backgroundColor: "#48bb78" }
+                  : {}
               }
               size={"small"}
               // onClick={() => handlePayReceipt(record)}
@@ -344,6 +351,44 @@ export const PaymentColumns = ({
           >
             Ver Recibo
           </Button>
+        </div>
+      );
+    },
+  },
+  {
+    title: "Cancelar",
+    dataIndex: "receipt_id",
+    key: "receipt_id",
+    align: "center",
+    width: 100,
+    render: (_, record) => {
+      return (
+        <div className={"flex flex-row items-center justify-center"}>
+          <Popconfirm
+            title="Cancelar Pago"
+            description={`Estas seguro de cancelar el recibo?`}
+            onConfirm={() => handleCancelReceipt(record)}
+            okText="Si"
+            cancelText="No"
+            wrapClassName="mi-popconfirm-especifico"
+          >
+            <Button
+              disabled={
+                record.status === "Pagado" || record.status === "Cancelado"
+              }
+              type={"primary"}
+              className=""
+              style={
+                record.status !== "Pagado" && record.status !== "Cancelado"
+                  ? { backgroundColor: "#ea4747" }
+                  : {}
+              }
+              size={"middle"}
+              // onClick={() => handlePayReceipt(record)}
+            >
+              <StopOutlined />
+            </Button>
+          </Popconfirm>
         </div>
       );
     },

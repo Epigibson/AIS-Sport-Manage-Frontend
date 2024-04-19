@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
+  useCancelReceipt,
   useEditPaymentHistoryAmount,
   useEditPaymentHistoryExtension,
   usePayReceipt,
@@ -37,6 +38,7 @@ export const PaymentLogic = () => {
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
   const { mutateUpdate } = usePayReceipt();
+  const { mutateUpdateCancelReceipt } = useCancelReceipt();
   const { mutateEditHistoryPaymentExtension } =
     useEditPaymentHistoryExtension();
   const { mutateEditHistoryPaymentAmount } = useEditPaymentHistoryAmount();
@@ -169,6 +171,14 @@ export const PaymentLogic = () => {
     setAutoFetchEnabled(false);
   };
 
+  const handleCancelReceipt = async (record) => {
+    await mutateUpdateCancelReceipt(record.receipt_id);
+    setAutoFetchEnabled(true);
+    await handleSearch();
+    await refetch();
+    setAutoFetchEnabled(false);
+  };
+
   const filterOption = (input, option) => option.search.includes(input);
 
   // Asegúrate de incluir esta parte dentro de tu componente
@@ -232,6 +242,7 @@ export const PaymentLogic = () => {
     showReceipts: showReceipts,
     showExtensionModal: showExtensionModal,
     handlePayReceipt: handlePayReceipt,
+    handleCancelReceipt: handleCancelReceipt,
     edit: edit,
     cancel: cancel,
     handleSave: handleSave,
