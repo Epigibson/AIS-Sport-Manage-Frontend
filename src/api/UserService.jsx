@@ -5,7 +5,9 @@ export const getUserSession = async () => {
     const response = await apiClient.get("/user/me");
     return response.data;
   } catch (error) {
-    console.error("No se pudo obtener el usuario.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -14,7 +16,9 @@ export const getAllUsers = async () => {
     const response = await apiClient.get("/user/list");
     return response.data;
   } catch (error) {
-    console.error("No se pudo obtener los usuarios.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -23,7 +27,9 @@ export const getAllCouches = async () => {
     const response = await apiClient.get("/user/list/couches");
     return response.data;
   } catch (error) {
-    console.error("No se pudo obtener los couches.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };
 
@@ -32,9 +38,10 @@ export const createCouch = async (data) => {
     const response = await apiClient.post("/user/create_couch", data);
     return response.data;
   } catch (error) {
-    console.error("No se pudo crear el couch.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const createUser = async (data) => {
@@ -42,9 +49,10 @@ export const createUser = async (data) => {
     const response = await apiClient.post("/user/create", data);
     return response.data;
   } catch (error) {
-    console.error("No se pudo crear el usuario.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const updateUser = async (data) => {
@@ -53,9 +61,10 @@ export const updateUser = async (data) => {
     const response = await apiClient.put(`/userupdate/admin/${user_id}`, rest);
     return response.data;
   } catch (error) {
-    console.error("No se pudo actualizar el usuario.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const changeUserAvatar = async (data) => {
@@ -65,9 +74,10 @@ export const changeUserAvatar = async (data) => {
     const response = await apiClient.put(`/user/avatar/${user_id}`, data.file);
     return response.data;
   } catch (error) {
-    console.error("No se pudo actualizar el avatar del atleta.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const deleteUser = async (data) => {
@@ -75,7 +85,8 @@ export const deleteUser = async (data) => {
     const response = await apiClient.delete(`/user/delete/${data}`);
     return response.data;
   } catch (error) {
-    console.error("No se pudo eliminar el usuario.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };

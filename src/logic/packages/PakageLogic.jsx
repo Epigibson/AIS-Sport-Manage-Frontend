@@ -12,6 +12,7 @@ import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { packageFormFields } from "./PackageFormFields.jsx";
 import { PackagesColumns } from "./PackageColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
+import dayjs from "dayjs";
 
 export const PackageLogic = () => {
   const { mutateCreate } = useCreatePackage();
@@ -42,7 +43,6 @@ export const PackageLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
-      console.log(values);
       await mutateUpdate({ ...values, product_id: selectedRecord.product_id });
     }
     if (modalContext === "create") {
@@ -56,7 +56,21 @@ export const PackageLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
-    form.setFieldsValue(record);
+    if (record?.start_date && record?.end_date) {
+      const startMoment = dayjs(record.start_date);
+      const endMoment = dayjs(record.end_date);
+      // Asegúrate de asignar correctamente los objetos moment a las propiedades correspondientes
+      const recordWithMoment = {
+        ...record,
+        start_date: startMoment, // Aquí se debe asignar startMoment
+        end_date: endMoment, // Aquí se debe asignar endMoment
+      };
+      // Usar el objeto actualizado para establecer los valores del formulario
+      form.setFieldsValue(recordWithMoment);
+    } else {
+      // Si no hay fechas, establecer los valores del formulario directamente
+      form.setFieldsValue(record);
+    }
     setSelectedRecord(record);
     setIsModalVisible(true);
   };

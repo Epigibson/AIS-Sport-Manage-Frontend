@@ -40,6 +40,14 @@ export const packageFormFields = [
     ],
   },
   {
+    name: "business_policy",
+    label: "Politica de Negocio",
+    rules: [{ required: true }],
+    inputType: "checkbox",
+    tooltip:
+      "Selecciona esta opción para aplicar el descuento de mitad de precio del paquete si se inscribe despues del dia 15 del mes.",
+  },
+  {
     name: "is_temporary",
     label: "Es temporal",
     inputType: "checkbox",
@@ -51,6 +59,26 @@ export const packageFormFields = [
     label: "Semanas de duración",
     rules: [{ required: true }],
     inputType: "input",
+    dependencies: {
+      fieldName: "is_temporary",
+      value: true,
+    },
+  },
+  {
+    name: "start_date",
+    label: "Fecha de Inicio",
+    rules: [{ required: true }],
+    inputType: "datePicker",
+    dependencies: {
+      fieldName: "is_temporary",
+      value: true,
+    },
+  },
+  {
+    name: "end_date",
+    label: "Fecha de Finalizacion",
+    rules: [{ required: true }],
+    inputType: "datePicker",
     dependencies: {
       fieldName: "is_temporary",
       value: true,

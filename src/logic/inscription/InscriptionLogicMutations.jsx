@@ -34,11 +34,14 @@ export const useInscription = () => {
       reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado
     },
     onError: (error) => {
-      console.error("Error en la mutación", error.response.data.detail);
+      console.error("Error en la mutación", error);
+      const errorMessage =
+        error.message ||
+        "No se ha podido actualizar correctamente el registro.";
       toastNotify({
         type: "error",
         message: "Inscripción fallida",
-        description: "No se ha podido relizar correctamete la inscripción.",
+        description: errorMessage,
       });
     },
     onSettled: () => {

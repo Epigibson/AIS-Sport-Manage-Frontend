@@ -5,7 +5,8 @@ export const inscribeUser = async (data) => {
     const response = await apiClient.post("/inscription/", data);
     return response.data;
   } catch (error) {
-    console.error("No se pudo inscribir al usaurio.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };

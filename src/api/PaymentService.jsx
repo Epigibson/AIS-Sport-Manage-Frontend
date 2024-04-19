@@ -25,9 +25,10 @@ export const getAllHistoryPayments = async (options = {}) => {
     const response = await apiClient.get(`/history_payment/?${queryParams}`);
     return response.data;
   } catch (error) {
-    console.error("No se pudo inscribir al usaurio.", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const updatePaymentMethod = async (data) => {
@@ -42,9 +43,10 @@ export const updatePaymentMethod = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("No se pudo actualizar el metodo de pago..", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const editHistoryPaymentExtension = async (data) => {
@@ -59,9 +61,10 @@ export const editHistoryPaymentExtension = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("No se pudo actualizar el metodo de pago..", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };
 
 export const editHistoryPaymentAmount = async (data) => {
@@ -76,7 +79,8 @@ export const editHistoryPaymentAmount = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("No se pudo actualizar el metodo de pago..", error);
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
-  return null;
 };

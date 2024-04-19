@@ -5,7 +5,8 @@ export const login = async (credentials) => {
     const response = await apiClient.post("/auth/login", credentials);
     return response.data;
   } catch (error) {
-    // console.log(error.response.data.detail);
-    throw new Error(error.response.data.detail || "Error al inciar sesion.");
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
   }
 };

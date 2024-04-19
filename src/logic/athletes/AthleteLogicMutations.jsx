@@ -52,10 +52,13 @@ export const useUpdateAthlete = () => {
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
+      const errorMessage =
+        error.message ||
+        "No se ha podido actualizar correctamente el registro.";
       toastNotify({
         type: "error",
         message: "Error al actualizar el registro.",
-        description: "No se ha podido actualizar correctamente el registro.",
+        description: errorMessage,
       });
     },
     onSettled: () => {
@@ -86,10 +89,13 @@ export const useDeleteAthlete = () => {
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
+      const errorMessage =
+        error.message ||
+        "No se ha podido actualizar correctamente el registro.";
       toastNotify({
         type: "error",
         message: "Error al eliminar el registro.",
-        description: "No se ha podido eliminar correctamente el registro.",
+        description: errorMessage,
       });
     },
   });
@@ -119,10 +125,13 @@ export const useChangeAvatar = () => {
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
+      const errorMessage =
+        error.message ||
+        "No se ha podido actualizar correctamente el registro.";
       toastNotify({
         type: "error",
         message: "Error al actualizar el avatar.",
-        description: "No se ha podido actualizar correctamente el avatar.",
+        description: errorMessage,
       });
     },
     onSettled: () => {
