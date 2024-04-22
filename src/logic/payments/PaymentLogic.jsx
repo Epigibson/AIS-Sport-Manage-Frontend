@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllHistoryPayments } from "../../api/PaymentService.jsx";
 import { PaymentColumns } from "./PaymentColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
@@ -14,6 +14,7 @@ import {
   useEditPaymentHistoryAmount,
   useEditPaymentHistoryExtension,
   usePayReceipt,
+  useRevertReceipt,
   useUpdatePaymentMethod,
 } from "./PaymentLogicMutations.jsx";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
@@ -39,9 +40,11 @@ export const PaymentLogic = () => {
   const [firstCharge, setFirstCharge] = useState(0);
   const { mutateUpdate } = usePayReceipt();
   const { mutateUpdateCancelReceipt } = useCancelReceipt();
+  const { mutateRevertReceipt } = useRevertReceipt();
   const { mutateEditHistoryPaymentExtension } =
     useEditPaymentHistoryExtension();
   const { mutateEditHistoryPaymentAmount } = useEditPaymentHistoryAmount();
+  const queryClient = useQueryClient();
   const {
     data: historyPaymentData,
     isLoading,
@@ -92,6 +95,9 @@ export const PaymentLogic = () => {
   }, [historyPaymentData, firstCharge, autoFetchEnabled]);
 
   const handleSearch = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["allReceipts", "allHistoryPayments"],
+    });
     await refetch();
   };
 
@@ -165,6 +171,9 @@ export const PaymentLogic = () => {
 
   const handlePayReceipt = async (record) => {
     await mutateUpdate(record.receipt_id);
+    await queryClient.invalidateQueries({
+      queryKey: ["allReceipts", "allHistoryPayments"],
+    });
     setAutoFetchEnabled(true);
     await handleSearch();
     await refetch();
@@ -173,6 +182,20 @@ export const PaymentLogic = () => {
 
   const handleCancelReceipt = async (record) => {
     await mutateUpdateCancelReceipt(record.receipt_id);
+    await queryClient.invalidateQueries({
+      queryKey: ["allReceipts", "allHistoryPayments"],
+    });
+    setAutoFetchEnabled(true);
+    await handleSearch();
+    await refetch();
+    setAutoFetchEnabled(false);
+  };
+
+  const handleRevertReceipt = async (record) => {
+    await mutateRevertReceipt(record.receipt_id);
+    await queryClient.invalidateQueries({
+      queryKey: ["allReceipts", "allHistoryPayments"],
+    });
     setAutoFetchEnabled(true);
     await handleSearch();
     await refetch();
@@ -233,6 +256,9 @@ export const PaymentLogic = () => {
       console.log("Cantidad");
       await mutateEditHistoryPaymentAmount(data);
     }
+    await queryClient.invalidateQueries({
+      queryKey: ["allReceipts", "allHistoryPayments"],
+    });
     await handleSearch();
     await refetch();
     cancel(); // Restablece el estado de edición
@@ -243,6 +269,7 @@ export const PaymentLogic = () => {
     showExtensionModal: showExtensionModal,
     handlePayReceipt: handlePayReceipt,
     handleCancelReceipt: handleCancelReceipt,
+    handleRevertReceipt: handleRevertReceipt,
     edit: edit,
     cancel: cancel,
     handleSave: handleSave,
