@@ -93,6 +93,9 @@ export const useUpdateAvatarCouch = () => {
     mutationFn: changeUserAvatar,
     onSuccess: async () => {
       console.log("Mutación exitosa");
+      const errorMessage =
+        error.message ||
+        "No se ha podido actualizar correctamente el registro.";
       toastNotify({
         type: "success",
         message: "Registro actualizado",
