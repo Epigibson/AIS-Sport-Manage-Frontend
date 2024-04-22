@@ -359,7 +359,7 @@ export const PaymentColumns = ({
     },
   },
   {
-    title: "Cancelar",
+    title: "Revertir / Cancelar",
     dataIndex: "receipt_id",
     key: "receipt_id",
     align: "center",
