@@ -42,7 +42,7 @@ export const packageFormFields = [
   {
     name: "business_policy",
     label: "Politica de Negocio",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "checkbox",
     tooltip:
       "Selecciona esta opción para aplicar el descuento de mitad de precio del paquete si se inscribe despues del dia 15 del mes.",
