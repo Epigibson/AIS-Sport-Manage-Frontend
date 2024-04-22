@@ -171,11 +171,11 @@ export const PaymentLogic = () => {
 
   const handlePayReceipt = async (record) => {
     await mutateUpdate(record.receipt_id);
+    setAutoFetchEnabled(true);
+    await handleSearch();
     await queryClient.invalidateQueries({
       queryKey: ["allReceipts", "allHistoryPayments"],
     });
-    setAutoFetchEnabled(true);
-    await handleSearch();
     await refetch();
     setAutoFetchEnabled(false);
   };
