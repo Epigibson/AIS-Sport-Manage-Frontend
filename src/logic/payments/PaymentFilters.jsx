@@ -8,7 +8,6 @@ const { RangePicker } = DatePicker;
 export const PaymentFilters = ({
   setShowFilters,
   showFilters,
-  handleUserChange,
   handleAthleteChange,
   handleDateChange,
   dateRange,
@@ -166,7 +165,6 @@ export const PaymentFilters = ({
 PaymentFilters.propTypes = {
   setShowFilters: PropTypes.func,
   showFilters: PropTypes.bool,
-  handleUserChange: PropTypes.func,
   handleAthleteChange: PropTypes.func,
   isLoading: PropTypes.bool,
   filterOption: PropTypes.func,
@@ -176,4 +174,6 @@ PaymentFilters.propTypes = {
   handleChangePaymentMethod: PropTypes.func,
   handleSearch: PropTypes.func,
   handleResetFilters: PropTypes.func,
+  handleDateChange: PropTypes.func,
+  dateRange: PropTypes.array,
 };
