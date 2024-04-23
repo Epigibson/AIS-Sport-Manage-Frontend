@@ -17,3 +17,22 @@
 .text-style::-webkit-scrollbar {
     display: none;
 }
+
+/* Estilos para el botón de confirmación */
+.ant-popover .ant-btn-primary {
+    background-color: blue; /* Color de fondo */
+    border-color: blue; /* Color del borde */
+}
+
+.ant-popover .ant-btn:hover {
+    background-color: darkblue; /* Color de fondo más oscuro para el hover */
+    border-color: darkblue; /* Color de borde a juego */
+}
+
+/* Estilos para el botón de cancelación */
+.ant-popover .ant-btn:not(.ant-btn-primary) {
+    background-color: #eaeaea; /* Color de fondo */
+    color: #011325; /* Color del texto */
+    border-color: gray; /* Color del borde */
+}
+

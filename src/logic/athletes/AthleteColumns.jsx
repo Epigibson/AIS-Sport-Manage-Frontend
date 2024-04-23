@@ -1,15 +1,22 @@
 import { Button, Popconfirm, Space, Tag, Typography } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
 import { EyeFilled } from "@ant-design/icons";
+import { filterByName, filterByNameTutors } from "../../utils/FilterUtils.jsx";
+import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
 
 const { Text } = Typography;
 
 export const AthleteColumns = ({
+  // onDelete,
   onEdit,
-  onDelete,
+  handleChangeStatus,
   onCancel,
   handleImageLoaded,
   navigate,
+  nameSearchProps,
+  phoneSearchProps,
+  statusSearchProps,
+  tuitionSearchProps,
 }) => [
   {
     title: "Avatar",
@@ -38,7 +45,7 @@ export const AthleteColumns = ({
     key: "tuition",
     align: "center",
     width: 100,
-    searchable: true, // Esta columna será buscable
+    ...tuitionSearchProps,
     render: (_, record) => {
       if (record?.tuition) {
         return <Tag color={"cyan"}>{record?.tuition}</Tag>;
@@ -53,8 +60,8 @@ export const AthleteColumns = ({
     key: "name",
     align: "center",
     width: 150,
-    searchable: true, // Esta columna será buscable
-    render: (text) => <a>{text}</a>,
+    ...nameSearchProps,
+    render: (_, record) => <a>{record.name}</a>,
   },
   {
     title: "Nombre del Tutor",
@@ -62,7 +69,7 @@ export const AthleteColumns = ({
     key: "tutors",
     align: "center",
     width: 200,
-    searchable: true, // Esta columna será buscable
+    ...useColumnSearchProps("tutors", filterByNameTutors, "Tutor"),
     render: (_, record) =>
       record.tutors ? (
         record.tutors?.map((tutors) => (
@@ -89,90 +96,29 @@ export const AthleteColumns = ({
         <Tag>Sin Tutor</Tag>
       ),
   },
-  // {
-  //   title: "Nombre del Tutor 2",
-  //   dataIndex: "tutors_name_two",
-  //   key: "tutors_name_two",
-  //   align: "center",
-  //   width: 200,
-  //   searchable: true, // Esta columna será buscable
-  //   render: (text) => {
-  //     if (text) {
-  //       return <Tag color={"blue"}>{text}</Tag>;
-  //     } else {
-  //       return <Tag color={"default"}>Sin Tutor</Tag>;
-  //     }
-  //   },
-  // },
-  // {
-  //   title: "Email de Contacto",
-  //   dataIndex: "email",
-  //   key: "email",
-  //   align: "center",
-  //   width: 200,
-  //   searchable: true, // Esta columna será buscable
-  // },
-  // {
-  //   title: "Edad",
-  //   dataIndex: "age",
-  //   key: "age",
-  //   align: "center",
-  //   width: 100,
-  // },
   {
     title: "Celular",
     dataIndex: "phone",
     key: "phone",
     align: "center",
     width: 150,
-    searchable: true, // Esta columna será buscable
-    render: (_, record) =>
-      record.tutors ? (
-        record.tutors?.map((tutors) => (
-          <div
-            key={tutors?._id}
-            className={"flex flex-col justify-center items-center gap-1"}
-          >
-            {/*<Button*/}
-            {/*  onClick={() => navigate("/asignacion_de_grupos")}*/}
-            {/*  icon={<EyeFilled />}*/}
-            {/*  type="primary"*/}
-            {/*  shape="circle"*/}
-            {/*  size={"middle"}*/}
-            {/*  title={"Editar"}*/}
-            {/*  style={{ backgroundColor: "#fcba03" }}*/}
-            {/*  key={group?._id}*/}
-            {/*/>*/}
-            <Text color="blue" key={tutors?._id}>
-              {tutors.phone}
-            </Text>
-          </div>
-        ))
+    ...phoneSearchProps,
+    render: (phone) =>
+      phone ? (
+        <Text color="blue" key={phone}>
+          {phone}
+        </Text>
       ) : (
         <Text>Sin Celular</Text>
       ),
   },
-  // {
-  //   title: "Celular 2",
-  //   dataIndex: "phone",
-  //   key: "phone",
-  //   align: "center",
-  //   width: 150,
-  //   searchable: true, // Esta columna será buscable
-  // },
-  // {
-  //   title: "Genero",
-  //   dataIndex: "gender",
-  //   key: "gender",
-  //   align: "center",
-  //   width: 100,
-  // },
   {
     title: "Estatus",
     key: "status",
     dataIndex: "status",
     align: "center",
     width: 100,
+    ...statusSearchProps,
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -182,23 +128,27 @@ export const AthleteColumns = ({
     },
   },
   {
-    title: "Paquete",
+    title: "Membresías",
     key: "products_which_inscribed",
     dataIndex: "products_which_inscribed",
     align: "center",
     width: 200,
-    render: (products_which_inscribed) => {
-      // console.log("Packages", products_which_inscribed);
-      if (products_which_inscribed && products_which_inscribed.length > 0) {
-        return products_which_inscribed.map((product) => (
+    searchable: true,
+    ...useColumnSearchProps(
+      "products_which_inscribed",
+      filterByName,
+      "Membresia",
+    ),
+    render: (products_which_inscribed) =>
+      products_which_inscribed && products_which_inscribed.length > 0 ? (
+        products_which_inscribed.map((product) => (
           <Tag key={product.id} color={"cyan"}>
-            {product.name} {/* Aquí muestras el valor del producto */}
+            {product.name}
           </Tag>
-        ));
-      } else {
-        return <Tag color={"volcano"}>Sin Paquete</Tag>;
-      }
-    },
+        ))
+      ) : (
+        <Tag color={"volcano"}>Sin Paquete</Tag>
+      ),
   },
   {
     title: "Grupos",
@@ -218,21 +168,6 @@ export const AthleteColumns = ({
         Administrar
       </Button>
     ),
-    // record.groups && record.groups.length > 0 ? (
-    //   record.groups?.map((group) => (
-    //     <div
-    //       key={group?._id}
-    //       className={"flex flex-col justify-center items-center gap-1"}
-    //     >
-    //
-    //       <Tag color="blue" key={group?._id}>
-    //         {group.name}
-    //       </Tag>
-    //     </div>
-    //   ))
-    // ) : (
-    //   <Tag>Sin Grupos</Tag>
-    // ),
   },
   {
     title: "Acciones",
@@ -251,16 +186,25 @@ export const AthleteColumns = ({
           Editar
         </Button>
         <Popconfirm
-          title="Eliminar grupo"
-          description="Estas seguro de eliminar el registro?"
-          onConfirm={() => onDelete(record)}
+          title={record.status ? "Inactivar atleta" : "Activar Atleta"}
+          description={
+            record.status
+              ? "Estas seguro de inactivar al atleta?"
+              : "Estas seguro de activar al atleta?"
+          }
+          onConfirm={() => handleChangeStatus(record)}
           onCancel={onCancel}
           okText="Si"
           cancelText="No"
-          okType={"default"}
+          okType={"primary"}
         >
-          <Button size={"middle"} type={"primary"} danger>
-            Borrar
+          <Button
+            size={"middle"}
+            type={"primary"}
+            className={record.status ? "bg-red-500" : "bg-primary-700"}
+            danger={!!record.status}
+          >
+            {record.status ? "Inactivar" : "Activar"}
           </Button>
         </Popconfirm>
       </Space>

@@ -70,53 +70,53 @@ select:focus {
     color: #979797;
 }
 
-.fader > div {
-    background-color: rgba(210, 105, 30, 0.4);
-}
+/*.fader > div {*/
+/*    background-color: rgba(210, 105, 30, 0.4);*/
+/*}*/
 
-.fader2 > div {
-    background-color: rgba(0, 167, 235, 0.33);
-}
+/*.fader2 > div {*/
+/*    background-color: rgba(0, 167, 235, 0.33);*/
+/*}*/
 
-.fader3 > div {
-    background-color: rgba(141, 33, 75, 0.27);
-}
+/*.fader3 > div {*/
+/*    background-color: rgba(141, 33, 75, 0.27);*/
+/*}*/
 
-[type='text'],
-[type='email'],
-[type='url'],
-[type='password'],
-[type='number'],
-[type='date'],
-[type='datetime-local'],
-[type='month'],
-[type='search'],
-[type='tel'],
-[type='time'],
-[type='week'],
-[multiple],
-textarea,
-select .ant-input {
-    /*box-sizing: border-box !important;*/
-    /*margin: 0 !important;*/
-    /*padding: 4px 1px !important;*/
-    /*color: rgba(0, 0, 0, 0.88) !important;*/
-    /*font-size: 14px !important;*/
-    /*line-height: 1.5714285714285714 !important;*/
-    /*list-style: none !important;*/
-    /*font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;*/
-    /*position: relative !important;*/
-    /*display: inline-block !important;*/
-    /*width: 100% !important;*/
-    /*min-width: 0 !important;*/
-    /*!*background-color: #ffffff !important;*!*/
-    /*background-image: none !important;*/
-    /*border-width: 1px !important;*/
-    /*border-style: solid !important;*/
-    /*border-color: #d9d9d9 !important;*/
-    /*border-radius: 6px !important;*/
-    /*transition: all 0.2s !important;*/
-}
+/*[type='text'],*/
+/*[type='email'],*/
+/*[type='url'],*/
+/*[type='password'],*/
+/*[type='number'],*/
+/*[type='date'],*/
+/*[type='datetime-local'],*/
+/*[type='month'],*/
+/*[type='search'],*/
+/*[type='tel'],*/
+/*[type='time'],*/
+/*[type='week'],*/
+/*[multiple],*/
+/*textarea,*/
+/*select .ant-input {*/
+/*box-sizing: border-box !important;*/
+/*margin: 0 !important;*/
+/*padding: 4px 1px !important;*/
+/*color: rgba(0, 0, 0, 0.88) !important;*/
+/*font-size: 14px !important;*/
+/*line-height: 1.5714285714285714 !important;*/
+/*list-style: none !important;*/
+/*font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;*/
+/*position: relative !important;*/
+/*display: inline-block !important;*/
+/*width: 100% !important;*/
+/*min-width: 0 !important;*/
+/*!*background-color: #ffffff !important;*!*/
+/*background-image: none !important;*/
+/*border-width: 1px !important;*/
+/*border-style: solid !important;*/
+/*border-color: #d9d9d9 !important;*/
+/*border-radius: 6px !important;*/
+/*transition: all 0.2s !important;*/
+/*}*/
 
 .ant-select-selection-search-input,
 .ant-input-affix-wrapper .ant-input {

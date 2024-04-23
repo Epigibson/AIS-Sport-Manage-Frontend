@@ -39,16 +39,16 @@ export const athleteFormFields = [
   //   rules: [{ required: true, message: "Por favor ingrese un email" }],
   //   inputType: "input",
   // },
-  {
-    name: "status",
-    label: "Estatus",
-    rules: [{ required: true, message: "Por favor ingrese una estatus" }],
-    inputType: "select",
-    options: [
-      { label: "Activo", value: true },
-      { label: "Inactivo", value: false },
-    ],
-  },
+  // {
+  //   name: "status",
+  //   label: "Estatus",
+  //   rules: [{ required: true, message: "Por favor ingrese una estatus" }],
+  //   inputType: "select",
+  //   options: [
+  //     { label: "Activo", value: true },
+  //     { label: "Inactivo", value: false },
+  //   ],
+  // },
   {
     name: "age",
     label: "Edad",

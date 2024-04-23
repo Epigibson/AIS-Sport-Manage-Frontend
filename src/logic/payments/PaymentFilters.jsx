@@ -43,7 +43,7 @@ export const PaymentFilters = ({
               style={{ width: "100%" }}
               showSearch
               allowClear={true}
-              placeholder="Usuario"
+              placeholder="Atleta"
               optionFilterProp="children"
               onChange={handleAthleteChange}
               loading={isLoading}

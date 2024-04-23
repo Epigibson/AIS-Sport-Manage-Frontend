@@ -45,6 +45,17 @@ export const updateAthlete = async (data) => {
   }
 };
 
+export const updateAthleteStatus = async (data) => {
+  try {
+    const response = await apiClient.put(`/athletes/status/${data}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
 export const deleteAthlete = async (data) => {
   try {
     const response = await apiClient.delete(`/athletes/${data}`);
