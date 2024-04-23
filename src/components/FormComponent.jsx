@@ -21,6 +21,7 @@ import PropTypes from "prop-types";
 import { getAllAthletes } from "../api/AtheleService.jsx";
 // import { prepareInitialValues } from "./PrepareInitialValues.jsx";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import "./FormStyle.css";
 
 const { Option } = Select;
 const { useBreakpoint } = Grid;
@@ -255,6 +256,7 @@ export const FormComponent = ({
                 format="HH:mm a"
                 placeholder={["Inicio", "Fin"]}
                 className="rounded-md py-0.5 my-0 border-gray-300"
+                variant={"filled"}
                 use24Hours
                 onChange={(dates, dateStrings) => {
                   // Aquí puedes manejar el cambio, por ahora solo lo imprimiré

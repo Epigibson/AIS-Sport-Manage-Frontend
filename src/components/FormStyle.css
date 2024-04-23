@@ -1,0 +1,10 @@
+/* Estilos para el botón de OK en el RangePicker */
+.ant-picker-ok {
+    background-color: blue; /* Color de fondo */
+    border-color: blue; /* Color del borde */
+}
+
+.ant-picker-ok:hover {
+    background-color: darkblue; /* Color de fondo más oscuro para el hover */
+    border-color: darkblue; /* Color de borde a juego */
+}

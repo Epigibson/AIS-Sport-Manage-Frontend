@@ -4,6 +4,7 @@ import { getAllGroups } from "../../api/GroupService.jsx";
 import { Button, Form, Grid, message, Row } from "antd";
 import { useState } from "react";
 import {
+  useChangeAthleteStatus,
   useChangeAvatar,
   useCreateAthlete,
   useDeleteAthlete,
@@ -17,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllPackages } from "../../api/ProductService.jsx";
+import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -26,6 +28,7 @@ export const AthleteLogic = () => {
   const queryClient = useQueryClient();
   const { mutateCreate } = useCreateAthlete();
   const { mutateUpdate } = useUpdateAthlete();
+  const { mutateUpdateStatus } = useChangeAthleteStatus();
   const { mutateDelete } = useDeleteAthlete();
   const [form] = Form.useForm();
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
@@ -59,9 +62,8 @@ export const AthleteLogic = () => {
       athlete.groups?.includes(group._id),
     );
 
-    // Use filter to ensure all conditions are checked and map to transform the structure.
-    const tutorsData = usersData?.filter(
-      (user) => user.athletes.includes(athlete._id), // simplified condition, adjust as needed
+    const tutorsData = usersData?.filter((user) =>
+      user.athletes.includes(athlete._id),
     );
 
     const packages = packagesData
@@ -76,19 +78,20 @@ export const AthleteLogic = () => {
         name: packageObject.product_name,
       }));
 
-    // Check if tutorsData has elements before accessing
-    const firstTutor = tutorsData && tutorsData.length > 0 ? tutorsData[0] : {};
+    // Only access tutor details if at least one tutor is found
+    const firstTutor =
+      tutorsData && tutorsData.length > 0 ? tutorsData[0] : null;
 
     return {
       ...athlete,
-      groups: athleteGroups,
-      tutors: tutorsData,
-      tutors_name_one: firstTutor.tutors_name_one,
-      tutors_name_two: firstTutor.tutors_name_two,
-      email: firstTutor.email,
-      phone: firstTutor.phone,
-      mobile: firstTutor.mobile,
-      products_which_inscribed: packages,
+      groups: athleteGroups, // Athlete's groups
+      tutors: tutorsData, // All tutors data
+      tutors_name_one: firstTutor?.tutors_name_one, // Safely access tutor properties
+      tutors_name_two: firstTutor?.tutors_name_two,
+      email: firstTutor?.email,
+      phone: firstTutor?.phone,
+      mobile: firstTutor?.mobile,
+      products_which_inscribed: packages, // Enriched packages data
     };
   });
 
@@ -135,6 +138,11 @@ export const AthleteLogic = () => {
     setIsModalVisible(true);
   };
 
+  const handleChangeStatus = async (record) => {
+    setModalContext("delete");
+    await mutateUpdateStatus(record.athlete_id);
+  };
+
   const handleDelete = async (record) => {
     setModalContext("delete");
     await mutateDelete(record.athlete_id);
@@ -164,6 +172,19 @@ export const AthleteLogic = () => {
     }
   };
 
+  const nameSearchProps = useColumnSearchProps("name", "athlete", "Nombre");
+  const phoneSearchProps = useColumnSearchProps("phone", "athlete", "Celular");
+  const statusSearchProps = useColumnSearchProps(
+    "status",
+    "athlete",
+    "Estatus",
+  );
+  const tuitionSearchProps = useColumnSearchProps(
+    "tuition",
+    "athlete",
+    "Matricula",
+  );
+
   const columns = AthleteColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
@@ -172,6 +193,11 @@ export const AthleteLogic = () => {
     setSelectedRecord,
     screen: screen,
     navigate,
+    nameSearchProps,
+    phoneSearchProps,
+    statusSearchProps,
+    tuitionSearchProps,
+    handleChangeStatus,
   });
 
   if (isLoading) return <LoaderIconUtils />;
