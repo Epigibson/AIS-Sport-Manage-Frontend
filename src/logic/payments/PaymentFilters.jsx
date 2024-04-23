@@ -1,12 +1,17 @@
-import { Button, Col, Divider, Row, Select, Space } from "antd";
+import { Button, Col, DatePicker, Divider, Row, Select, Space } from "antd";
 import { ArrowDownOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
+
+const { RangePicker } = DatePicker;
 
 export const PaymentFilters = ({
   setShowFilters,
   showFilters,
   handleUserChange,
   handleAthleteChange,
+  handleDateChange,
+  dateRange,
   isLoading,
   filterOption,
   athletesData,
@@ -37,6 +42,28 @@ export const PaymentFilters = ({
           justify={"center"}
           className={"mb-6"}
         >
+          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+            <RangePicker
+              size="small"
+              placeholder={["Inicio", "Fin"]}
+              style={{ width: "100%" }}
+              format="DD-MM-YYYY"
+              ranges={{
+                Hoy: [dayjs(), dayjs()],
+                "Este Mes": [dayjs().startOf("month"), dayjs().endOf("month")],
+                "Esta Semana": [dayjs().startOf("week"), dayjs().endOf("week")],
+              }}
+              onChange={handleDateChange}
+              value={
+                dateRange.length === 2
+                  ? [
+                      dayjs(dateRange[0], "YYYY-MM-DD HH:mm"),
+                      dayjs(dateRange[1], "YYYY-MM-DD HH:mm"),
+                    ]
+                  : []
+              }
+            />
+          </Col>
           <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
             <Select
               size={"small"}

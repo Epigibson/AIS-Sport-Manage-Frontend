@@ -36,6 +36,8 @@ export const PaymentLogic = () => {
   const [editingKey, setEditingKey] = useState("");
   const [editingValue, setEditingValue] = useState("");
   const [editingAmount, setEditingAmount] = useState("");
+  const [dateRange, setDateRange] = useState([]);
+  const [start = undefined, end = undefined] = dateRange || [];
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
   const { mutateUpdate } = usePayReceipt();
@@ -58,6 +60,8 @@ export const PaymentLogic = () => {
       statusPayFilter,
       paymentTypeFilter,
       paymentMethodFilter,
+      dateRange.length > 0 ? dateRange[0] : undefined,
+      dateRange.length > 1 ? dateRange[1] : undefined,
     ],
     queryFn: () =>
       getAllHistoryPayments({
@@ -66,6 +70,8 @@ export const PaymentLogic = () => {
         status_pay: statusPayFilter,
         payment_type: paymentTypeFilter,
         payment_method: paymentMethodFilter,
+        init_date: dateRange[0],
+        end_date: dateRange[1],
       }),
     enabled: autoFetchEnabled,
   });
@@ -204,9 +210,19 @@ export const PaymentLogic = () => {
 
   const filterOption = (input, option) => option.search.includes(input);
 
-  // Asegúrate de incluir esta parte dentro de tu componente
+  const handleDateChange = (dates, dateStrings) => {
+    if (dates) {
+      const formattedDates = dates.map((date) =>
+        date.format("YYYY-MM-DD HH:mm"),
+      );
+      setDateRange(formattedDates);
+    } else {
+      setDateRange([]);
+    }
+  };
+
   const handleUserChange = async (value, option) => {
-    await setUserFilter(option.key); // Opcional, si quieres guardar también el nombre del usuario seleccionado
+    await setUserFilter(option.key);
   };
 
   const handleAthleteChange = async (value) => {
@@ -293,6 +309,8 @@ export const PaymentLogic = () => {
         filterOption={filterOption}
         handleUserChange={handleUserChange}
         handleAthleteChange={handleAthleteChange}
+        dateRange={dateRange}
+        handleDateChange={handleDateChange}
         handleResetFilters={handleResetFilters}
         isLoading={isLoading}
       />

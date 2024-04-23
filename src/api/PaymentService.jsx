@@ -6,6 +6,10 @@ export const getAllHistoryPayments = async (options = {}) => {
     const queryParams = new URLSearchParams();
 
     // Añadir parámetros a la consulta solo si están presentes
+    if (options.init_date && options.end_date) {
+      queryParams.append("init_date", options.init_date);
+      queryParams.append("end_date", options.end_date);
+    }
     if (options.user) {
       queryParams.append("user", options.user);
     }
