@@ -376,7 +376,7 @@ export const PaymentLogic = () => {
           >
             <Statistic
               title="Pendiente"
-              value={parseMoney(totals.paid)}
+              value={parseMoney(totals.pending)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />
           </Card>
@@ -389,7 +389,7 @@ export const PaymentLogic = () => {
           >
             <Statistic
               title="Pagado"
-              value={parseMoney(totals.pending)}
+              value={parseMoney(totals.paid)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />
           </Card>
