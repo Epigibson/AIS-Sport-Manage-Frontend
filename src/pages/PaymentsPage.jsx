@@ -5,8 +5,8 @@ import "../logic/payments/PaymentsStyle.css";
 
 export const PaymentsPage = () => {
   return (
-    <SideBarLayout>
-      <MainContainerLayout title={"Control de Pagos"} overflowY={"hidden"}>
+    <SideBarLayout title={"Control de Pagos"}>
+      <MainContainerLayout overflowY={"hidden"}>
         <PaymentLogic />
       </MainContainerLayout>
     </SideBarLayout>

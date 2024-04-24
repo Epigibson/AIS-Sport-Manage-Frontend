@@ -1,16 +1,26 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Divider, Grid, Layout, Menu, theme } from "antd";
+import {
+  Button,
+  Divider,
+  Grid,
+  Layout,
+  Menu,
+  Row,
+  theme,
+  Typography,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from "../../assets/logo-be.png";
 import PropTypes from "prop-types";
-import { clearTokens, getToken } from "../../utils/tokenUtils.jsx";
+import { clearTokens } from "../../utils/tokenUtils.jsx";
 import { MenuItems } from "./MenuItems.jsx";
 
+const { Title } = Typography;
 const { Header, Sider, Footer, Content } = Layout;
 const { useBreakpoint } = Grid;
 
-export const SideBarLayout = ({ children }) => {
+export const SideBarLayout = ({ children, title }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [openKeys, setOpenKeys] = useState(() => {
     // Intenta leer los keys de los menús abiertos desde localStorage
@@ -49,7 +59,7 @@ export const SideBarLayout = ({ children }) => {
 
   const logout = () => {
     clearTokens();
-    const tokens = getToken();
+    // const tokens = getToken();
     // console.log(tokens);
     navigate("/");
   };
@@ -115,21 +125,28 @@ export const SideBarLayout = ({ children }) => {
       </Sider>
       <Layout>
         <Header
+          title={title}
           style={{
             padding: 0,
             background: colorBgContainer,
           }}
         >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
-          />
+          <Row className="flex w-full items-center justify-between">
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64,
+              }}
+            />
+            <Title level={3} className="text-center flex-1">
+              {title}
+            </Title>
+            <div style={{ width: 64, height: 64 }} />
+          </Row>
         </Header>
         <Content
           style={{
@@ -153,4 +170,5 @@ export const SideBarLayout = ({ children }) => {
 
 SideBarLayout.propTypes = {
   children: PropTypes.node, // 'node' cubre cualquier cosa que pueda ser renderizada: números, strings, elementos o fragmentos
+  title: PropTypes.string,
 };

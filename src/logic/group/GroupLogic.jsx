@@ -159,7 +159,7 @@ export const GroupLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
-
+    record.couch = record.couch._id;
     // Convertir fechas ISO a objetos de Moment.js antes de establecer los valores
     if (record.schedule && record.schedule.length === 2) {
       const startISO = record.schedule[0];
@@ -172,10 +172,10 @@ export const GroupLogic = () => {
         ...record,
         schedule: [startMoment, endMoment], // Asegúrate de que 'schedule' en tu formulario espera un arreglo
       };
-
+      console.log("VALORES", record);
       form.setFieldsValue(recordWithMoment);
     } else {
-      // Si no hay valores de 'schedule', o no están completos, maneja ese caso aquí.
+      console.log("VALORES", record);
       form.setFieldsValue(record);
     }
     setSelectedRecord(record);

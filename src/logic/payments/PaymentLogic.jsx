@@ -18,7 +18,7 @@ import {
   useUpdatePaymentMethod,
 } from "./PaymentLogicMutations.jsx";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
-import { Form } from "antd";
+import { Card, Col, Form, Row, Statistic } from "antd";
 import { PaymentExtensionFields } from "./PaymentExtensionFields.jsx";
 
 export const PaymentLogic = () => {
@@ -37,7 +37,7 @@ export const PaymentLogic = () => {
   const [editingValue, setEditingValue] = useState("");
   const [editingAmount, setEditingAmount] = useState("");
   const [dateRange, setDateRange] = useState([]);
-  const [start = undefined, end = undefined] = dateRange || [];
+  // const [start = undefined, end = undefined] = dateRange || [];
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
   const { mutateUpdate } = usePayReceipt();
@@ -128,6 +128,45 @@ export const PaymentLogic = () => {
       }; // Añade la información del grupo al objeto de usuario
     },
   );
+
+  const getTotal = () => {
+    let total = 0;
+    historyPaymentData?.forEach((payment) => {
+      total += payment.amount;
+    });
+    return total;
+  };
+
+  const getAmountsByStatus = () => {
+    const totals = {
+      pending: 0,
+      paid: 0,
+      cancelled: 0,
+      created: 0,
+    };
+
+    historyPaymentData?.forEach((payment) => {
+      switch (payment.status) {
+        case "Pendiente":
+          totals.pending += payment.amount;
+          break;
+        case "Pagado":
+          totals.paid += payment.amount;
+          break;
+        case "Cancelado":
+          totals.cancelled += payment.amount;
+          break;
+        case "Creado":
+          totals.pending += payment.amount;
+          break;
+        default:
+          totals.total += payment.amount;
+          break; // Handle unexpected status or do nothing
+      }
+    });
+
+    return totals;
+  };
 
   const showReceipts = (record) => {
     // console.log("DATA DE EL RECIBO SELECCIONADO", record.receipt);
@@ -296,8 +335,79 @@ export const PaymentLogic = () => {
     setEditingAmount: setEditingAmount,
   });
 
+  const totals = getAmountsByStatus();
+  const total = getTotal();
+
+  const parseMoney = (money) => {
+    const parsedMoney = parseFloat(money).toLocaleString("es-MX", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return `$${parsedMoney} MXN`;
+  };
+
   return (
     <>
+      <Row
+        gutter={[16, 16]}
+        wrap={true}
+        align={"middle"}
+        justify={"center"}
+        className={"mb-6"}
+      >
+        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Card
+            className={
+              "mt-3 shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"
+            }
+          >
+            <Statistic
+              title="Total"
+              value={parseMoney(total)}
+              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+            />
+          </Card>
+        </Col>
+        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Card
+            className={
+              "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-yellow-200"
+            }
+          >
+            <Statistic
+              title="Pendiente"
+              value={parseMoney(totals.paid)}
+              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+            />
+          </Card>
+        </Col>
+        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Card
+            className={
+              "mt-3 shadow-md bg-gradient-to-r from-yellow-100 to-green-200"
+            }
+          >
+            <Statistic
+              title="Pagado"
+              value={parseMoney(totals.pending)}
+              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+            />
+          </Card>
+        </Col>
+        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Card
+            className={
+              "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-red-200"
+            }
+          >
+            <Statistic
+              title="Cancelado"
+              value={parseMoney(totals.cancelled)}
+              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+            />
+          </Card>
+        </Col>
+      </Row>
       <PaymentFilters
         showFilters={showFilters}
         setShowFilters={setShowFilters}

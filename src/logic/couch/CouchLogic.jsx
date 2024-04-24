@@ -85,6 +85,7 @@ export const CouchLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
+    record.groups = record.groups.map((groupObject) => groupObject._id);
     form.setFieldsValue(record);
     setSelectedRecord(record);
     setIsModalVisible(true);
