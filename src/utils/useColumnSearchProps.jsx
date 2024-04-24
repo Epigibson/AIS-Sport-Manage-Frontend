@@ -7,6 +7,7 @@ export const useColumnSearchProps = (
   dataIndex,
   filterFunctionOrProperty,
   fieldName,
+  filterType,
 ) => {
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef(null);
@@ -26,16 +27,27 @@ export const useColumnSearchProps = (
   const onFilter = (value, record) => {
     const lowerValue = value.toLowerCase();
 
-    if (dataIndex === "status") {
-      const statusValue = record[dataIndex] ? "activo" : "inactivo";
-      return statusValue.includes(lowerValue);
+    switch (filterType) {
+      case "array": {
+        const filteredItems = filterFunctionOrProperty(
+          lowerValue,
+          record[dataIndex],
+        );
+        if (filteredItems.length > 0) {
+          record[dataIndex] = filteredItems; // Actualiza temporalmente el array para mostrar solo los elementos filtrados
+          return true;
+        }
+        return false;
+      }
+      case "text":
+      default: {
+        if (isFilterFunction) {
+          return filterFunctionOrProperty(value, record[dataIndex]);
+        }
+        const recordValue = record[dataIndex] || "";
+        return recordValue.toString().toLowerCase().includes(lowerValue);
+      }
     }
-    if (isFilterFunction) {
-      return filterFunctionOrProperty(value, record[dataIndex]);
-    }
-    // Suponiendo que dataIndex directamente apunta a la propiedad que queremos filtrar
-    const recordValue = record[dataIndex] || "";
-    return recordValue.toString().toLowerCase().includes(value.toLowerCase());
   };
 
   return {

@@ -1,7 +1,10 @@
 import { Button, Popconfirm, Space, Tag, Typography } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
 import { EyeFilled } from "@ant-design/icons";
-import { filterByName, filterByNameTutors } from "../../utils/FilterUtils.jsx";
+import {
+  filterByNameInArray,
+  filterByNameTutors,
+} from "../../utils/FilterUtils.jsx";
 import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
 
 const { Text } = Typography;
@@ -136,8 +139,9 @@ export const AthleteColumns = ({
     searchable: true,
     ...useColumnSearchProps(
       "products_which_inscribed",
-      filterByName,
+      filterByNameInArray,
       "Membresia",
+      "array",
     ),
     render: (products_which_inscribed) =>
       products_which_inscribed && products_which_inscribed.length > 0 ? (

@@ -9,3 +9,9 @@ export const filterByNameTutors = (value, record) => {
     element.tutors_name_one.toLowerCase().includes(value.toLowerCase()),
   );
 };
+
+export const filterByNameInArray = (value, record) => {
+  return record.filter((product) =>
+    product.name.toLowerCase().includes(value.toLowerCase()),
+  );
+};
