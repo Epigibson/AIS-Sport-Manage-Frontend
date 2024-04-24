@@ -65,94 +65,96 @@ export const FormComponent = ({
   });
 
   const [selectOptions, setSelectOptions] = useState({});
+  const [selectedValues, setSelectedValues] = useState({});
+  const [selectedObjects, setSelectedObjects] = useState({});
   const handleImageLoaded = (file) => {
     setProfileImage(file);
   };
-
-  // Dentro de tu componente FormComponent, justo después de inicializar tus estados y cargas de datos.
 
   const [dependentFieldsVisibility, setDependentFieldsVisibility] = useState(
     {},
   );
 
   useEffect(() => {
-    // const unsubscribe = form.getFieldValue((value, allValues) => {
-    // Tu lógica aquí para actualizar la visibilidad basada en `allValues`
-    // });
-
-    // Actualizar la visibilidad inicialmente
+    console.log("Selected Values Updated:", selectedObjects);
+    const newSelectOptions = {};
     const visibility = {};
     formFields.forEach((field) => {
+      let options = [];
       if (field.dependencies) {
         const dependentValue = form.getFieldValue(field.dependencies.fieldName);
         visibility[field.name] = dependentValue === field.dependencies.value;
       } else {
         visibility[field.name] = true; // Si no tiene dependencias, es siempre visible
       }
+      if (Array.isArray(field.optionsSource)) {
+        options = field.optionsSource.map((option) => ({
+          label: option,
+          value: option,
+        }));
+      } else if (typeof field.optionsSource === "string") {
+        // Opciones dinámicas basadas en la fuente de datos especificada
+        const dataSource = {
+          categories: categories || [],
+          couches: couches || [],
+          groups: groups || [],
+          users: users || [],
+          athletes: athletes || [],
+          products: (packages || []).filter(
+            (p) => p.product_name !== "Inscripcion",
+          ),
+        }[field.optionsSource];
+
+        if (field.dependentOn) {
+          // Manejo de dependencias basado en los objetos seleccionados
+          const selectedObject = selectedObjects[field.dependentOn.field];
+          if (selectedObject && selectedObject[field.dependentOn.relatedKey]) {
+            const filterIds = selectedObject[field.dependentOn.relatedKey];
+            options = dataSource
+              .filter((item) => filterIds.includes(item._id))
+              .map((item) => ({
+                label:
+                  item.tutors_name_one ||
+                  item.tutors_name_two ||
+                  item.name ||
+                  item.username ||
+                  item.product_name,
+                value: item._id,
+              }));
+          }
+        } else {
+          // No hay dependencias, usa todos los datos disponibles
+          options = dataSource.map((option) => ({
+            label:
+              option.tutors_name_one ||
+              option.tutors_name_two ||
+              option.name ||
+              option.username ||
+              option.product_name,
+            value: option._id,
+          }));
+        }
+      } else if (field.options) {
+        // Opciones estáticas definidas en el campo
+        options = field.options;
+      }
+
+      newSelectOptions[field.name] = options;
     });
     setDependentFieldsVisibility(visibility);
-
-    return () => {
-      // Aquí no es necesario desuscribirse, pero si tuvieras una suscripción, la lógica iría aquí.
-    };
-  }, [form, formFields]);
-
-  useEffect(() => {
-    // Prepara opciones para campos select basados en optionsSource
-    const newSelectOptions = {};
-    formFields.forEach((field) => {
-      if (
-        field.inputType === "select" ||
-        field.inputType === "multipleSelect"
-      ) {
-        if (field.optionsSource === "categories") {
-          newSelectOptions[field.name] = categories?.map((c) => ({
-            label: c.name,
-            value: c._id,
-          }));
-        } else if (field.optionsSource === "couches") {
-          newSelectOptions[field.name] = couches?.map((c) => ({
-            label: c.name,
-            value: c._id,
-          }));
-        } else if (field.optionsSource === "groups") {
-          newSelectOptions[field.name] = groups?.map((c) => ({
-            label: c.name,
-            value: c._id,
-          }));
-        } else if (field.optionsSource === "products") {
-          // Filtra los productos para excluir aquellos con product_name igual a "inscription"
-          const filteredPackages = packages?.filter(
-            (p) => p.product_name !== "Inscripcion",
-          );
-          newSelectOptions[field.name] = filteredPackages?.map((c) => ({
-            label: c.product_name,
-            value: c._id,
-          }));
-        } else if (field.optionsSource === "users") {
-          newSelectOptions[field.name] = users?.map((c) => ({
-            label: `${c.username} : (${c.email})`,
-            value: c._id,
-          }));
-        } else if (field.optionsSource === "athletes") {
-          newSelectOptions[field.name] = athletes?.map((c) => ({
-            label: `${c.tuition} : (${c.name})`,
-            value: c._id,
-          }));
-        } else if (Array.isArray(field.optionsSource)) {
-          // Nuevo caso para opciones estáticas
-          newSelectOptions[field.name] = field.optionsSource.map((option) => ({
-            label: option, // Usar el valor como etiqueta
-            value: option, // Y como valor
-          }));
-        } else if (field.options) {
-          // Directamente usar opciones estáticas definidas en formFields
-          newSelectOptions[field.name] = field.options;
-        }
-      }
-    });
     setSelectOptions(newSelectOptions);
-  }, [formFields, categories, couches, groups, users, packages, athletes]);
+  }, [
+    selectedObjects,
+    form,
+    formFields,
+    categories,
+    couches,
+    groups,
+    users,
+    packages,
+    athletes,
+    selectedValues,
+  ]); // Dependencias del efecto
 
   // const initialValues = prepareInitialValues(formFields);
 
@@ -165,8 +167,9 @@ export const FormComponent = ({
       autoComplete={"on"}
       // initialValues={initialValues}
       onValuesChange={(_, allValues) => {
-        // Aquí actualizas la visibilidad de los campos basada en allValues
+        const updatedSelectedObjects = { ...selectedObjects };
         const visibility = {};
+
         formFields.forEach((field) => {
           if (field.dependencies) {
             visibility[field.name] =
@@ -175,8 +178,27 @@ export const FormComponent = ({
           } else {
             visibility[field.name] = true;
           }
+
+          // Actualizar el objeto completo para campos select
+          if (field.inputType === "select" && field.optionsSource) {
+            const dataSource = {
+              users: users,
+              athletes: athletes,
+              // Otros dataSources según sea necesario
+            }[field.optionsSource];
+
+            const selectedItem = dataSource?.find(
+              (item) => item._id === allValues[field.name],
+            );
+            if (selectedItem) {
+              updatedSelectedObjects[field.name] = selectedItem;
+            }
+          }
         });
+
         setDependentFieldsVisibility(visibility);
+        setSelectedValues(allValues); // Actualiza todos los valores seleccionados
+        setSelectedObjects(updatedSelectedObjects); // Actualiza los objetos seleccionados
       }}
     >
       {formFields.map((field) => {
@@ -229,6 +251,7 @@ export const FormComponent = ({
             {field.inputType === "select" && (
               <Select
                 className={"text-left"}
+                size={"middle"}
                 placeholder={`-- Seleccionar ${field.label} --`}
               >
                 {selectOptions[field.name]?.map((option, index) => (

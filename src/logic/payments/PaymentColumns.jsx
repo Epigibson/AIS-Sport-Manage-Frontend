@@ -1,7 +1,9 @@
 import {
   Button,
+  Col,
   InputNumber,
   Popconfirm,
+  Row,
   Select,
   Space,
   Tag,
@@ -10,6 +12,7 @@ import {
 } from "antd";
 import "./PaymentsStyle.css";
 import {
+  BulbFilled,
   CheckCircleFilled,
   ClockCircleFilled,
   EditFilled,
@@ -367,61 +370,84 @@ export const PaymentColumns = ({
     render: (_, record) => {
       return (
         <Space>
-          <Tooltip title={"Pago Reveretido"}>
-            <ExclamationCircleFilled
-              color={"yellow"}
-              className={"mr-1 text-yellow-500"}
-              hidden={!record.reverted || record.status === "Cancelado"}
-            />
-          </Tooltip>
-          <div className={"flex flex-row items-center justify-center"}>
-            <Popconfirm
-              title={
-                record.status !== "Pagado" || record.status === "Cancelado"
-                  ? "Cancelar Pago"
-                  : "Revertir Pago"
-              }
-              description={
-                record.status !== "Pagado" || record.status === "Cancelado"
-                  ? `Estas seguro de cancelar el recibo?`
-                  : `Estas seguro de revertir el pago?`
-              }
-              onConfirm={
-                record.status === "Pagado"
-                  ? () => handleRevertReceipt(record)
-                  : record.status !== "Pagado"
-                    ? () => handleCancelReceipt(record)
-                    : handleRevertReceipt(record)
-              }
-              okText="Si"
-              cancelText="No"
-              wrapClassName="mi-popconfirm-especifico"
-            >
-              <Button
-                disabled={record.status === "Cancelado"}
-                danger={
-                  record.status !== "Pagado" || record.status === "Cancelado"
-                }
-                type={"primary"}
-                className="flex flex-row items-center justify-center"
-                style={
-                  record.status === "Pagado"
-                    ? { backgroundColor: "#ffc979" }
-                    : null
-                }
-                size={"middle"}
-              >
-                {record.status !== "Pagado" || record.status === "Cancelado" ? (
-                  <StopOutlined />
-                ) : (
-                  <RollbackOutlined
-                    className={"text-yellow-600"}
-                    twoToneColor={"#525b6b"}
-                  />
-                )}
-              </Button>
-            </Popconfirm>
-          </div>
+          <Row
+            gutter={[16, 16]}
+            wrap={true}
+            align={"middle"}
+            justify={"center"}
+            className={"mb-6"}
+          >
+            <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
+              <Tooltip title={"Pago Reveretido"}>
+                <ExclamationCircleFilled
+                  color={"yellow"}
+                  className={"mr-1 text-yellow-500"}
+                  hidden={!record.reverted || record.status === "Cancelado"}
+                />
+              </Tooltip>
+            </Col>
+
+            <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
+              <div className={"flex flex-row items-center justify-center"}>
+                <Popconfirm
+                  title={
+                    record.status !== "Pagado" || record.status === "Cancelado"
+                      ? "Cancelar Pago"
+                      : "Revertir Pago"
+                  }
+                  description={
+                    record.status !== "Pagado" || record.status === "Cancelado"
+                      ? `Estas seguro de cancelar el recibo?`
+                      : `Estas seguro de revertir el pago?`
+                  }
+                  onConfirm={
+                    record.status === "Pagado"
+                      ? () => handleRevertReceipt(record)
+                      : record.status !== "Pagado"
+                        ? () => handleCancelReceipt(record)
+                        : handleRevertReceipt(record)
+                  }
+                  okText="Si"
+                  cancelText="No"
+                  wrapClassName="mi-popconfirm-especifico"
+                >
+                  <Button
+                    disabled={record.status === "Cancelado"}
+                    danger={
+                      record.status !== "Pagado" ||
+                      record.status === "Cancelado"
+                    }
+                    type={"primary"}
+                    className="flex flex-row items-center justify-center"
+                    style={
+                      record.status === "Pagado"
+                        ? { backgroundColor: "#ffc979" }
+                        : null
+                    }
+                    size={"middle"}
+                  >
+                    {record.status !== "Pagado" ||
+                    record.status === "Cancelado" ? (
+                      <StopOutlined />
+                    ) : (
+                      <RollbackOutlined
+                        className={"text-yellow-600"}
+                        twoToneColor={"#525b6b"}
+                      />
+                    )}
+                  </Button>
+                </Popconfirm>
+              </div>
+            </Col>
+            <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
+              <Tooltip title={"Pago Manual"}>
+                <BulbFilled
+                  className={"bg-gray-300 mr-1 text-yellow-300 rounded-full"}
+                  hidden={!record.is_manual}
+                />
+              </Tooltip>
+            </Col>
+          </Row>
         </Space>
       );
     },

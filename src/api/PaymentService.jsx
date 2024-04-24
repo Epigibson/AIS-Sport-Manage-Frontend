@@ -35,6 +35,18 @@ export const getAllHistoryPayments = async (options = {}) => {
   }
 };
 
+export const createPayment = async (data) => {
+  try {
+    console.log("Metodo de Pago", data);
+    const response = await apiClient.post(`/history_payment/`, data);
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
 export const updatePaymentMethod = async (data) => {
   try {
     console.log("Metodo de Pago", data);

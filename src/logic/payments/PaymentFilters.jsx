@@ -19,6 +19,7 @@ export const PaymentFilters = ({
   handleChangePaymentMethod,
   handleSearch,
   handleResetFilters,
+  showCreateModal,
 }) => {
   return (
     <>
@@ -154,6 +155,16 @@ export const PaymentFilters = ({
               </Button>
             </Space.Compact>
           </Col>
+          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+            <Button
+              style={{ width: "70%" }}
+              onClick={showCreateModal}
+              type="primary"
+              className={"bg-primary-700"}
+            >
+              Crear Pago
+            </Button>
+          </Col>
         </Row>
       ) : (
         <></>
@@ -176,4 +187,5 @@ PaymentFilters.propTypes = {
   handleResetFilters: PropTypes.func,
   handleDateChange: PropTypes.func,
   dateRange: PropTypes.array,
+  showCreateModal: PropTypes.func,
 };

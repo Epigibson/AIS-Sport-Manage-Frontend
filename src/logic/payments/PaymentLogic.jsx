@@ -11,6 +11,7 @@ import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
   useCancelReceipt,
+  useCreatePayment,
   useEditPaymentHistoryAmount,
   useEditPaymentHistoryExtension,
   usePayReceipt,
@@ -20,11 +21,14 @@ import {
 import { getAllAthletes } from "../../api/AtheleService.jsx";
 import { Card, Col, Form, Row, Statistic } from "antd";
 import { PaymentExtensionFields } from "./PaymentExtensionFields.jsx";
+import { PaymentFormFields } from "./PaymentFormFields.jsx";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isExtensionModalVisible, setIsExtensionModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [formCreate] = Form.useForm();
   const [selectedReceipt, setSelectedReceipt] = useState({});
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [userFilter, setUserFilter] = useState("");
@@ -37,15 +41,8 @@ export const PaymentLogic = () => {
   const [editingValue, setEditingValue] = useState("");
   const [editingAmount, setEditingAmount] = useState("");
   const [dateRange, setDateRange] = useState([]);
-  // const [start = undefined, end = undefined] = dateRange || [];
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
-  const { mutateUpdate } = usePayReceipt();
-  const { mutateUpdateCancelReceipt } = useCancelReceipt();
-  const { mutateRevertReceipt } = useRevertReceipt();
-  const { mutateEditHistoryPaymentExtension } =
-    useEditPaymentHistoryExtension();
-  const { mutateEditHistoryPaymentAmount } = useEditPaymentHistoryAmount();
   const queryClient = useQueryClient();
   const {
     data: historyPaymentData,
@@ -108,6 +105,14 @@ export const PaymentLogic = () => {
   };
 
   const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
+  const { mutateUpdate } = usePayReceipt(handleSearch);
+  const { mutateUpdateCancelReceipt } = useCancelReceipt(handleSearch);
+  const { mutateRevertReceipt } = useRevertReceipt(handleSearch);
+  const { mutateEditHistoryPaymentExtension } =
+    useEditPaymentHistoryExtension(handleSearch);
+  const { mutateEditHistoryPaymentAmount } =
+    useEditPaymentHistoryAmount(handleSearch);
+  const { mutateCreate } = useCreatePayment(handleSearch);
 
   const enrichedHistoryPaymentsData = historyPaymentData?.map(
     (historyPayment) => {
@@ -168,6 +173,10 @@ export const PaymentLogic = () => {
     return totals;
   };
 
+  const showCreateModal = () => {
+    setIsCreateModalVisible(true);
+  };
+
   const showReceipts = (record) => {
     // console.log("DATA DE EL RECIBO SELECCIONADO", record.receipt);
     setSelectedReceipt([record.receipt]);
@@ -187,6 +196,10 @@ export const PaymentLogic = () => {
     setIsExtensionModalVisible(false);
   };
 
+  const handleCloseCreateModal = () => {
+    setIsCreateModalVisible(false);
+  };
+
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };
@@ -202,49 +215,37 @@ export const PaymentLogic = () => {
   if (isLoading) return <LoaderIconUtils />;
   if (isError) return <h1>Error...</h1>;
 
+  const handleCreatePayment = async () => {
+    const values = await formCreate.validateFields();
+    await mutateCreate(values);
+    formCreate.resetFields();
+    setIsCreateModalVisible(false);
+  };
+
   const handleEditExtension = async () => {
     const values = await form.validateFields();
     values.history_payment_id = selectedPayment.history_payment_id;
-    // console.log("Datos", values);
     await mutateEditHistoryPaymentExtension(values);
-    await handleSearch();
     form.resetFields();
     setIsExtensionModalVisible(false);
-    // console.log("Aumentado correctamente");
-    // alert("Aumentado correctamente"); // Agrega esta línea para mostrar un mensaje de alerta al usuario
   };
 
   const handlePayReceipt = async (record) => {
     await mutateUpdate(record.receipt_id);
-    setAutoFetchEnabled(true);
     await handleSearch();
-    await queryClient.invalidateQueries({
-      queryKey: ["allReceipts", "allHistoryPayments"],
-    });
     await refetch();
-    setAutoFetchEnabled(false);
   };
 
   const handleCancelReceipt = async (record) => {
     await mutateUpdateCancelReceipt(record.receipt_id);
-    await queryClient.invalidateQueries({
-      queryKey: ["allReceipts", "allHistoryPayments"],
-    });
-    setAutoFetchEnabled(true);
     await handleSearch();
     await refetch();
-    setAutoFetchEnabled(false);
   };
 
   const handleRevertReceipt = async (record) => {
     await mutateRevertReceipt(record.receipt_id);
-    await queryClient.invalidateQueries({
-      queryKey: ["allReceipts", "allHistoryPayments"],
-    });
-    setAutoFetchEnabled(true);
     await handleSearch();
     await refetch();
-    setAutoFetchEnabled(false);
   };
 
   const filterOption = (input, option) => option.search.includes(input);
@@ -310,6 +311,10 @@ export const PaymentLogic = () => {
     if (field === "amount") {
       console.log("Cantidad");
       await mutateEditHistoryPaymentAmount(data);
+    }
+    if (field === "create") {
+      console.log("Creando");
+      await mutateCreate(record);
     }
     await queryClient.invalidateQueries({
       queryKey: ["allReceipts", "allHistoryPayments"],
@@ -423,6 +428,15 @@ export const PaymentLogic = () => {
         handleDateChange={handleDateChange}
         handleResetFilters={handleResetFilters}
         isLoading={isLoading}
+        showCreateModal={showCreateModal}
+      />
+      <ModalComponent
+        form={formCreate}
+        formFields={PaymentFormFields}
+        onOk={handleCreatePayment}
+        title={"Crear Recibo"}
+        onOpen={isCreateModalVisible}
+        onClose={handleCloseCreateModal}
       />
       <ModalComponent
         form={form}
