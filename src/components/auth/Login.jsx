@@ -2,9 +2,12 @@ import { useAuth } from "../../hooks/AuthContext/useAuth.jsx";
 import { useEffect } from "react";
 import logo from "/src/assets/logo-be.png";
 import { Button, Input } from "antd";
+import { useNavigate } from "react-router-dom";
+import { getToken } from "../../utils/tokenUtils.jsx";
 
 export const Login = () => {
   const { loginHandler, isLoading } = useAuth();
+  const navigate = useNavigate();
   const onFinish = async (event) => {
     event.preventDefault(); // Evita el comportamiento predeterminado de envío del formulario
     const formData = new FormData(event.target);
@@ -15,8 +18,11 @@ export const Login = () => {
   };
 
   useEffect(() => {
-    // console.log(getToken());
-  }, []);
+    const token = getToken();
+    if (token !== null) {
+      navigate("/home"); // Redirige a la página de inicio si ya está autenticado
+    }
+  }, [navigate]);
 
   return (
     <section className="bg-[#001529] dark:bg-gray-900 h-screen">
