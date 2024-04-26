@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   changeAvatar,
   createAthlete,
@@ -8,8 +8,7 @@ import {
 } from "../../api/AtheleService.jsx";
 import { toastNotify } from "../../utils/ToastNotify.jsx";
 
-export const useCreateAthlete = () => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+export const useCreateAthlete = (onSuccessCallback) => {
   const {
     mutate: mutateCreate,
     isSuccess,
@@ -20,7 +19,7 @@ export const useCreateAthlete = () => {
     mutationFn: createAthlete,
     onSuccess: async () => {
       console.log("Mutación exitosa");
-      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
+      onSuccessCallback();
     },
     onError: (error) => {
       console.error("Error en la mutación", error);
@@ -32,8 +31,7 @@ export const useCreateAthlete = () => {
   return { mutateCreate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useUpdateAthlete = () => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+export const useUpdateAthlete = (onSuccessCallback) => {
   const {
     mutate: mutateUpdate,
     isSuccess,
@@ -43,8 +41,7 @@ export const useUpdateAthlete = () => {
   } = useMutation({
     mutationFn: updateAthlete,
     onSuccess: async () => {
-      console.log("Mutación exitosa");
-      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
+      onSuccessCallback();
       toastNotify({
         type: "success",
         message: "Registro actualizado",
@@ -69,8 +66,7 @@ export const useUpdateAthlete = () => {
   return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useChangeAthleteStatus = () => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+export const useChangeAthleteStatus = (onSuccessCallback) => {
   const {
     mutate: mutateUpdateStatus,
     isSuccess,
@@ -80,8 +76,7 @@ export const useChangeAthleteStatus = () => {
   } = useMutation({
     mutationFn: updateAthleteStatus,
     onSuccess: async () => {
-      console.log("Mutación exitosa");
-      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
+      onSuccessCallback();
       toastNotify({
         type: "success",
         message: "Registro actualizado",
@@ -89,7 +84,6 @@ export const useChangeAthleteStatus = () => {
       });
     },
     onError: (error) => {
-      console.error("Error en la mutación", error);
       const errorMessage =
         error.message ||
         "No se ha podido actualizar correctamente el registro.";
@@ -106,8 +100,7 @@ export const useChangeAthleteStatus = () => {
   return { mutateUpdateStatus, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useDeleteAthlete = () => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+export const useDeleteAthlete = (onSuccessCallback) => {
   const {
     mutate: mutateDelete,
     isSuccess,
@@ -117,8 +110,7 @@ export const useDeleteAthlete = () => {
   } = useMutation({
     mutationFn: deleteAthlete,
     onSuccess: async () => {
-      console.log("Mutación exitosa");
-      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
+      onSuccessCallback();
       toastNotify({
         type: "success",
         message: "Registro eliminado",
@@ -126,7 +118,6 @@ export const useDeleteAthlete = () => {
       });
     },
     onError: (error) => {
-      console.error("Error en la mutación", error);
       const errorMessage =
         error.message ||
         "No se ha podido actualizar correctamente el registro.";
@@ -140,8 +131,7 @@ export const useDeleteAthlete = () => {
   return { mutateDelete, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useChangeAvatar = () => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+export const useChangeAvatar = (onSuccessCallback) => {
   const {
     mutateAsync: mutateUpdateAvatar,
     isSuccess,
@@ -151,10 +141,8 @@ export const useChangeAvatar = () => {
     reset,
   } = useMutation({
     mutationFn: changeAvatar,
-    onSuccess: async (data) => {
-      console.log("Mutación exitosa", data);
-      await queryClient.invalidateQueries({ queryKey: ["allAthletes"] }); // Invalidar la consulta "allPackages"
-      // window.location.href = data?.init_point;
+    onSuccess: async () => {
+      onSuccessCallback();
       toastNotify({
         type: "success",
         message: "Avatar actualizado correctamente.",

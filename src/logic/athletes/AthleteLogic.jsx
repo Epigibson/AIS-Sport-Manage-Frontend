@@ -1,8 +1,9 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { TablesComponent } from "../../components/TablesComponent.jsx";
-import { getAllGroups } from "../../api/GroupService.jsx";
-import { Button, Form, Grid, message, Row } from "antd";
-import { useState } from "react";
+// noinspection UnresolvedVariable
+import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {TablesComponent} from "../../components/TablesComponent.jsx";
+import {getAllGroups} from "../../api/GroupService.jsx";
+import {Button, Form, Grid, message, Row} from "antd";
+import {useState} from "react";
 import {
   useChangeAthleteStatus,
   useChangeAvatar,
@@ -10,16 +11,16 @@ import {
   useDeleteAthlete,
   useUpdateAthlete,
 } from "./AthleteLogicMutations.jsx";
-import { ModalComponent } from "../../components/ModalComponent.jsx";
-import { athleteFormFields } from "./AthleteFormFields.jsx";
-import { AthleteColumns } from "./AthleteColumns.jsx";
-import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
-import { useNavigate } from "react-router-dom";
-import { getAllAthletes } from "../../api/AtheleService.jsx";
-import { getAllUsers } from "../../api/UserService.jsx";
-import { getAllPackages } from "../../api/ProductService.jsx";
-import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
-import dayjs from "dayjs";
+import {ModalComponent} from "../../components/ModalComponent.jsx";
+import {athleteFormFields} from "./AthleteFormFields.jsx";
+import {AthleteColumns} from "./AthleteColumns.jsx";
+import {LoaderIconUtils} from "../../utils/LoaderIconUtils.jsx";
+import {useNavigate} from "react-router-dom";
+import {getAllAthletes} from "../../api/AtheleService.jsx";
+import {getAllUsers} from "../../api/UserService.jsx";
+import {getAllPackages} from "../../api/ProductService.jsx";
+import {useColumnSearchProps} from "../../utils/useColumnSearchProps.jsx";
+import {prepareRecord} from "../../utils/FieldsComposerUtils.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -27,10 +28,6 @@ export const AthleteLogic = () => {
   const navigate = useNavigate();
   const screen = useBreakpoint();
   const queryClient = useQueryClient();
-  const { mutateCreate } = useCreateAthlete();
-  const { mutateUpdate } = useUpdateAthlete();
-  const { mutateUpdateStatus } = useChangeAthleteStatus();
-  const { mutateDelete } = useDeleteAthlete();
   const [form] = Form.useForm();
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -96,12 +93,16 @@ export const AthleteLogic = () => {
     };
   });
 
-  // console.log("enrichedUsersData", enrichedUsersData);
+  const handleSearch = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["allAthletes"],
+    });
+  };
 
-  // const showModal = () => {
-  //   setIsModalVisible(true);
-  //   setModalContext("create");
-  // };
+  const { mutateCreate } = useCreateAthlete(handleSearch);
+  const { mutateUpdate } = useUpdateAthlete(handleSearch);
+  const { mutateUpdateStatus } = useChangeAthleteStatus(handleSearch);
+  const { mutateDelete } = useDeleteAthlete(handleSearch);
 
   const handleCancel = () => {
     setModalContext("");
@@ -109,36 +110,30 @@ export const AthleteLogic = () => {
     setIsModalVisible(false);
   };
 
-  const handleSubmit = async () => {
-    const values = await form.validateFields();
-    if (modalContext === "edit") {
-      // console.log("SE EDITA");
-      console.log("VER SI CAMBIA", values);
-      // console.log("VER QUE TRAE", selectedRecord);
-      await mutateUpdate({ ...values, athlete_id: selectedRecord.athlete_id });
-    }
-    if (modalContext === "create") {
-      // console.log("SE CREA");
-      // console.log("VER SI CAMBIA", values);
-      await mutateCreate(values);
-    }
+  const handleCleanAfterCreateOrEdit = async () => {
     form.resetFields();
     setModalContext("");
     setSelectedRecord(null);
     setIsModalVisible(false);
-    await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
+  };
+
+  const handleSubmit = async () => {
+    const values = await form.validateFields();
+    if (modalContext === "edit") {
+      await mutateUpdate({ ...values, athlete_id: selectedRecord.athlete_id });
+    }
+    if (modalContext === "create") {
+      await mutateCreate(values);
+    }
+    form.resetFields();
+    await handleCleanAfterCreateOrEdit();
   };
 
   const handleEdit = (record) => {
     setModalContext("edit");
-    record.products_which_inscribed = record.products_which_inscribed.map(
-      (packageObject) => packageObject.id,
-    );
-    if (record?.start_date) {
-      record.start_date = dayjs(record.start_date);
-    }
-    form.setFieldsValue(record);
-    setSelectedRecord(record);
+    const preparedRecord = prepareRecord(record);
+    form.setFieldsValue(preparedRecord);
+    setSelectedRecord(preparedRecord);
     setIsModalVisible(true);
   };
 
@@ -153,7 +148,6 @@ export const AthleteLogic = () => {
   };
 
   const cancel = () => {
-    // console.log(e);
     message.error("Click on No").then((e) => e);
   };
 

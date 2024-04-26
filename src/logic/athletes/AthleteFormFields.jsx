@@ -87,7 +87,7 @@ export const athleteFormFields = [
   {
     name: "products_which_inscribed",
     label: "Paquete",
-    rules: [{ required: true, message: "El paquete es requerido" }],
+    rules: [{ required: false, message: "El paquete es requerido" }],
     inputType: "multipleSelect",
     optionsSource: "products", // Utiliza un identificador para las opciones
   },
