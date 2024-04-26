@@ -93,8 +93,14 @@ export const InscriptionFormFields = [
   {
     name: "products",
     label: "Paquete",
-    rules: [{ required: true, message: "El paquete es requerido" }],
+    rules: [{ required: false, message: "El paquete es requerido" }],
     inputType: "multipleSelect",
     optionsSource: "products", // Utiliza un identificador para las opciones
+  },
+  {
+    name: "start_date",
+    label: "Fecha de Inicio",
+    rules: [{ required: false, message: "El paquete es requerido" }],
+    inputType: "datePicker",
   },
 ];

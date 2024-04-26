@@ -155,6 +155,26 @@ export const AthleteColumns = ({
       ),
   },
   {
+    title: "Fecha de Inicio",
+    dataIndex: "start_date",
+    key: "start_date",
+    align: "center",
+    width: 100,
+    render: (start_date) => {
+      if (start_date) {
+        const date = new Date(start_date);
+        const formattedDate = [
+          `0${date.getDate()}`.slice(-2),
+          `0${date.getMonth() + 1}`.slice(-2),
+          date.getFullYear(),
+        ].join("/");
+        return <Tag color={"blue"}>{formattedDate}</Tag>;
+      } else {
+        return <Tag>Sin especificar</Tag>;
+      }
+    },
+  },
+  {
     title: "Grupos",
     key: "groups",
     dataIndex: "groups",

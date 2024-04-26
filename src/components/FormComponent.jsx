@@ -288,7 +288,11 @@ export const FormComponent = ({
               />
             )}
             {field.inputType === "datePicker" && (
-              <DatePicker placeholder={field.label} value={field.name} />
+              <DatePicker
+                className={"text-left w-full"}
+                placeholder={field.label}
+                value={field.name}
+              />
             )}
           </Form.Item>
         );
