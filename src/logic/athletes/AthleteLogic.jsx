@@ -19,6 +19,7 @@ import { getAllAthletes } from "../../api/AtheleService.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllPackages } from "../../api/ProductService.jsx";
 import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
+import dayjs from "dayjs";
 
 const { useBreakpoint } = Grid;
 
@@ -133,6 +134,9 @@ export const AthleteLogic = () => {
     record.products_which_inscribed = record.products_which_inscribed.map(
       (packageObject) => packageObject.id,
     );
+    if (record?.start_date) {
+      record.start_date = dayjs(record.start_date);
+    }
     form.setFieldsValue(record);
     setSelectedRecord(record);
     setIsModalVisible(true);

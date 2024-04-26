@@ -154,4 +154,10 @@ export const athleteFormFields = [
     rules: [{ required: false, message: "El nombre del tutor 2 es requerido" }],
     inputType: "input", // Indica el tipo de control de entrada
   },
+  {
+    name: "start_date",
+    label: "Fecha de Inicio",
+    rules: [{ required: false, message: "El nombre del tutor 2 es requerido" }],
+    inputType: "datePicker", // Indica el tipo de control de entrada
+  },
 ];
