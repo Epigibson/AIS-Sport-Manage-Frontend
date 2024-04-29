@@ -315,6 +315,36 @@ export const PaymentColumns = ({
     },
   },
   {
+    title: "Mes Correspondiente",
+    dataIndex: "period_month",
+    key: "period_month",
+    align: "center",
+    width: 100,
+    render: (period_month) => {
+      if (period_month) {
+        const date = new Date(period_month);
+        const monthNames = [
+          "Enero",
+          "Febrero",
+          "Marzo",
+          "Abril",
+          "Mayo",
+          "Junio",
+          "Julio",
+          "Agosto",
+          "Septiembre",
+          "Octubre",
+          "Noviembre",
+          "Diciembre",
+        ];
+        const formattedMonthName = monthNames[date.getMonth()];
+        return <Text>{formattedMonthName}</Text>;
+      } else {
+        return <Text>No pagado</Text>;
+      }
+    },
+  },
+  {
     title: "Pago",
     dataIndex: "receipt_id",
     key: "receipt_id",

@@ -292,6 +292,7 @@ export const FormComponent = ({
                 className={"text-left w-full"}
                 placeholder={field.label}
                 value={field.name}
+                picker={field.picker ? field.picker : "date"}
               />
             )}
           </Form.Item>

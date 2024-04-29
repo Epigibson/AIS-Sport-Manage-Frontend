@@ -42,11 +42,12 @@ export const PaymentFilters = ({
           justify={"center"}
           className={"mb-6"}
         >
-          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Col xs={24} sm={12} md={10} lg={6} xl={4}>
             <RangePicker
               size="small"
               placeholder={["Inicio", "Fin"]}
               style={{ width: "100%" }}
+              showTime={{ format: "HH:mm" }}
               format="DD-MM-YYYY"
               ranges={{
                 Hoy: [dayjs(), dayjs()],
@@ -64,7 +65,7 @@ export const PaymentFilters = ({
               }
             />
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Col xs={24} sm={12} md={10} lg={6} xl={4}>
             <Select
               size={"small"}
               style={{ width: "100%" }}
@@ -86,7 +87,7 @@ export const PaymentFilters = ({
               )}
             />
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Col xs={24} sm={12} md={10} lg={6} xl={4}>
             <Select
               size={"small"}
               style={{ width: "100%" }}
@@ -99,10 +100,11 @@ export const PaymentFilters = ({
                 { value: "Pendiente", label: "Pendiente" },
                 { value: "Pagado", label: "Pagado" },
                 { value: "Vencido", label: "Vencido" },
+                { value: "Cancelado", label: "Cancelado" },
               ]}
             />
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+          <Col xs={24} sm={12} md={10} lg={6} xl={4}>
             <Select
               size={"small"}
               style={{ width: "100%" }}
@@ -116,8 +118,12 @@ export const PaymentFilters = ({
               ]}
             />
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-            <Space.Compact block style={{ width: "100%" }}>
+          <Col xs={24} sm={12} md={10} lg={6} xl={4}>
+            <Space.Compact
+              block
+              style={{ width: "100%" }}
+              className={"items-center"}
+            >
               <Select
                 size={"small"}
                 className="w-2/5 lg:w-full"
@@ -153,18 +159,18 @@ export const PaymentFilters = ({
               >
                 Limpiar Filtros
               </Button>
+              <Button
+                size={"small"}
+                style={{ width: "100%" }}
+                onClick={showCreateModal}
+                type="primary"
+                className={"ml-2 bg-primary-700"}
+              >
+                Crear Pago
+              </Button>
             </Space.Compact>
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-            <Button
-              style={{ width: "70%" }}
-              onClick={showCreateModal}
-              type="primary"
-              className={"bg-primary-700"}
-            >
-              Crear Pago
-            </Button>
-          </Col>
+          <Col xs={24} sm={12} md={10} lg={6} xl={4}></Col>
         </Row>
       ) : (
         <></>
