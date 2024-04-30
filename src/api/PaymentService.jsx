@@ -100,3 +100,39 @@ export const editHistoryPaymentAmount = async (data) => {
     throw new Error(errorMessage);
   }
 };
+
+export const editHistoryPaymentLimitDate = async (data) => {
+  try {
+    console.log("Metodo de Pago", data);
+    // Construye los parámetros de consulta correctamente
+    const queryParams = new URLSearchParams({
+      limit_date: data.limit_date,
+    }).toString();
+    const response = await apiClient.put(
+      `/history_payment/limit_date/${data.history_payment_id}?${queryParams}`,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
+export const editHistoryPaymentPeriodMonth = async (data) => {
+  try {
+    console.log("Metodo de Pago", data);
+    // Construye los parámetros de consulta correctamente
+    const queryParams = new URLSearchParams({
+      period_month: data.period_month,
+    }).toString();
+    const response = await apiClient.put(
+      `/history_payment/period_month/${data.history_payment_id}?${queryParams}`,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};

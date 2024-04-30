@@ -1,6 +1,7 @@
 import {
   Button,
   Col,
+  DatePicker,
   InputNumber,
   Popconfirm,
   Row,
@@ -20,6 +21,7 @@ import {
   RollbackOutlined,
   StopOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const { Text, Link } = Typography;
 
@@ -29,11 +31,18 @@ export const PaymentColumns = ({
   handlePayReceipt,
   handleCancelReceipt,
   handleRevertReceipt,
-  editingKey,
-  editingValue,
+  editingKeyPaymentMethod,
+  editingKeyAmount,
+  editingKeyLimitDate,
+  editingKeyPeriodMonth,
+  editingPaymentMethod,
   editingAmount,
-  setEditingValue,
+  editingLimitDate,
+  editingPeriodMonth,
+  setEditingPaymentMethod,
   setEditingAmount,
+  setEditingLimitDate,
+  setEditingPeriodMonth,
   edit,
   cancel,
   handleSave,
@@ -111,7 +120,7 @@ export const PaymentColumns = ({
     align: "center",
     width: 250,
     render: (_, record) =>
-      editingKey === record._id ? (
+      editingKeyAmount === record._id ? (
         <span>
           <InputNumber
             value={editingAmount}
@@ -160,9 +169,9 @@ export const PaymentColumns = ({
                     color={record.extension ? "blue" : "gray"}
                   >
                     <EditFilled
-                      onClick={() => edit(record)}
+                      onClick={() => edit(record, "amount")}
                       size="small"
-                      disabled={editingKey !== ""}
+                      disabled={editingAmount !== ""}
                     >
                       Editar
                     </EditFilled>
@@ -199,13 +208,13 @@ export const PaymentColumns = ({
     editable: true,
     width: 200,
     render: (_, record) =>
-      editingKey === record._id ? ( // Asumimos que usas _id como identificador único
+      editingKeyPaymentMethod === record._id ? ( // Asumimos que usas _id como identificador único
         <span>
           <Select
-            value={editingValue}
+            value={editingPaymentMethod}
             size={"small"}
             style={{ width: "100%" }}
-            onChange={(value) => setEditingValue(value)}
+            onChange={(value) => setEditingPaymentMethod(value)}
           >
             <Select.Option value="Transferencia">Transferencia</Select.Option>
             <Select.Option value="Efectivo">Efectivo</Select.Option>
@@ -230,9 +239,9 @@ export const PaymentColumns = ({
           <Tag color="blue">{record.payment_method || "No especificado"}</Tag>
           {record.status !== "Pagado" && record.status !== "Cancelado" ? (
             <EditFilled
-              onClick={() => edit(record)}
+              onClick={() => edit(record, "payment_method")}
               size="small"
-              disabled={editingKey !== ""}
+              disabled={editingPaymentMethod !== ""}
             >
               Editar
             </EditFilled>
@@ -262,37 +271,75 @@ export const PaymentColumns = ({
     key: "limit_date",
     align: "center",
     width: 150,
-    render: (limit_date, record) => {
-      // console.log(limit_date);
-      const date = new Date(limit_date);
-      const formattedDate = [
-        `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
-        `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
-        date.getFullYear(), // Año completo
-      ].join("/"); // Junta los componentes con guiones
-      return (
-        <div>
-          <Text className={"mr-1"}>{formattedDate}</Text>
-          <Link
-            onClick={() => showExtensionModal(record)}
-            hidden={record.status === "Pagado" || record.status === "Cancelado"}
-          >
-            <Tooltip
-              title={
-                record.extension !== "" || null
-                  ? `Prorroga: ${record.extension}`
-                  : "Especificar Prorroga"
-              }
-              color={record.extension ? "blue" : "gray"}
+    render: (_, record) =>
+      editingKeyLimitDate === record._id ? (
+        <span>
+          <DatePicker
+            value={dayjs(editingLimitDate)}
+            onChange={(value) => setEditingLimitDate(value)}
+          />
+          <Space.Compact className={"mt-2"}>
+            <Button
+              onClick={() => handleSave(record, "limit_date")}
+              size="small"
+              style={{ marginRight: 8 }}
+              success
             >
-              <ClockCircleFilled
-                className={record.extension === "" ? "text-gray-500" : ""}
-              />
-            </Tooltip>
-          </Link>
+              Guardar
+            </Button>
+            <Button onClick={cancel} danger size="small">
+              Cancelar
+            </Button>
+          </Space.Compact>
+        </span>
+      ) : (
+        <div>
+          {(() => {
+            const date = new Date(record.limit_date);
+            const formattedDate = [
+              `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
+              `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
+              date.getFullYear(), // Año completo
+            ].join("/"); // Junta los componentes con guiones
+
+            return (
+              <div>
+                <Link
+                  onClick={() => edit(record, "limit_date")}
+                  size="small"
+                  disabled={editingLimitDate !== ""}
+                  className={"mr-1"}
+                >
+                  <Tag color={"geekblue"}>
+                    {formattedDate ? formattedDate : "Sin datos"}
+                  </Tag>
+                </Link>
+                <Link
+                  onClick={() => showExtensionModal(record)}
+                  size="small"
+                  disabled={editingKeyLimitDate !== ""}
+                  hidden={
+                    record.status === "Pagado" || record.status === "Cancelado"
+                  }
+                >
+                  <Tooltip
+                    title={
+                      record.extension !== "" || null
+                        ? `Prorroga: ${record.extension}`
+                        : "Especificar Prorroga"
+                    }
+                    color={record.extension ? "blue" : "gray"}
+                  >
+                    <ClockCircleFilled
+                      className={record.extension === "" ? "text-gray-500" : ""}
+                    />
+                  </Tooltip>
+                </Link>
+              </div>
+            );
+          })()}
         </div>
-      );
-    },
+      ),
   },
   {
     title: "Fecha de Pago",
@@ -319,30 +366,87 @@ export const PaymentColumns = ({
     dataIndex: "period_month",
     key: "period_month",
     align: "center",
-    width: 100,
-    render: (period_month) => {
-      if (period_month) {
-        const date = new Date(period_month);
-        const monthNames = [
-          "Enero",
-          "Febrero",
-          "Marzo",
-          "Abril",
-          "Mayo",
-          "Junio",
-          "Julio",
-          "Agosto",
-          "Septiembre",
-          "Octubre",
-          "Noviembre",
-          "Diciembre",
-        ];
-        const formattedMonthName = monthNames[date.getMonth()];
-        return <Text>{formattedMonthName}</Text>;
-      } else {
-        return <Text>No pagado</Text>;
-      }
-    },
+    width: 200,
+    render: (period_month, record) =>
+      editingKeyPeriodMonth === record._id ? ( // Asumimos que usas _id como identificador único
+        <span>
+          <DatePicker
+            value={editingPeriodMonth}
+            picker={"month"}
+            size={"small"}
+            style={{ width: "100%" }}
+            onChange={(value) => setEditingPeriodMonth(value)}
+          />
+
+          <Space.Compact className={"mt-2"}>
+            <Button
+              onClick={() => handleSave(record, "period_month")}
+              size="small"
+              style={{ marginRight: 8 }}
+              success
+            >
+              Guardar
+            </Button>
+            <Button onClick={cancel} danger size="small">
+              Cancelar
+            </Button>
+          </Space.Compact>
+        </span>
+      ) : (
+        <div>
+          {(() => {
+            if (period_month) {
+              const date = new Date(period_month);
+              const monthNames = [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre",
+              ];
+              const formattedMonthName = monthNames[date.getMonth()];
+              if (record.status !== "Pagado" || record.status === "Cancelado") {
+                return (
+                  <>
+                    <Tag color={"purple"}>{formattedMonthName}</Tag>
+                    <EditFilled
+                      className={"ml-2"}
+                      onClick={() => edit(record, "period_month")}
+                      size="small"
+                      disabled={editingPeriodMonth !== ""}
+                    >
+                      Editar
+                    </EditFilled>
+                  </>
+                );
+              } else {
+                return <Tag color={"purple"}>{formattedMonthName}</Tag>;
+              }
+            } else {
+              return (
+                <>
+                  <Text>No especificado</Text>;
+                  <EditFilled
+                    className={"ml-2"}
+                    onClick={() => edit(record, "period_month")}
+                    size="small"
+                    disabled={editingPeriodMonth !== ""}
+                  >
+                    Editar
+                  </EditFilled>
+                </>
+              );
+            }
+          })()}
+        </div>
+      ),
   },
   {
     title: "Pago",

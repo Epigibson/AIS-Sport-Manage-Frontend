@@ -8,6 +8,8 @@ import {
   createPayment,
   editHistoryPaymentAmount,
   editHistoryPaymentExtension,
+  editHistoryPaymentLimitDate,
+  editHistoryPaymentPeriodMonth,
   updatePaymentMethod,
 } from "../../api/PaymentService.jsx";
 import { toastNotify } from "../../utils/ToastNotify.jsx";
@@ -257,7 +259,6 @@ export const useEditPaymentHistoryExtension = (onSuccessCallback) => {
 };
 
 export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateEditHistoryPaymentAmount,
     isSuccess,
@@ -267,19 +268,14 @@ export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
   } = useMutation({
     mutationFn: editHistoryPaymentAmount,
     onSuccess: async () => {
-      console.log("Mutación exitosa");
       onSuccessCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
         description: "Se ha actualizado la cantidad de pago correctamente.",
       });
-      await queryClient.invalidateQueries({
-        queryKey: ["allReceipts", "allHistoryPayments"],
-      }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
-      console.error("Error en la mutación", error);
       const errorMessage =
         error.message ||
         "No se ha podido actualizar correctamente el registro.";
@@ -295,6 +291,87 @@ export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
   });
   return {
     mutateEditHistoryPaymentAmount,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  }; // Asegúrate de devolver estos valores desde tu hook
+};
+
+export const useEditPaymentHistoryLimitDate = (onSuccessCallback) => {
+  const {
+    mutate: mutateEditHistoryPaymentLimitDate,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  } = useMutation({
+    mutationFn: editHistoryPaymentLimitDate,
+    onSuccess: async () => {
+      onSuccessCallback();
+      toastNotify({
+        type: "success",
+        message: "Exito!.",
+        description: "Se ha actualizado la fecha limite de pago correctamente.",
+      });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message ||
+        "No se ha podido actualizar correctamente el registro.";
+      toastNotify({
+        type: "error",
+        message: "Accion no realizada!.",
+        description: errorMessage,
+      });
+    },
+    onSettled: () => {
+      reset();
+    },
+  });
+  return {
+    mutateEditHistoryPaymentLimitDate,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  }; // Asegúrate de devolver estos valores desde tu hook
+};
+
+export const useEditPaymentHistoryPeriodMonth = (onSuccessCallback) => {
+  const {
+    mutate: mutateEditHistoryPaymentPeriodMonth,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  } = useMutation({
+    mutationFn: editHistoryPaymentPeriodMonth,
+    onSuccess: async () => {
+      onSuccessCallback();
+      toastNotify({
+        type: "success",
+        message: "Exito!.",
+        description:
+          "Se ha actualizado el mes correspondiente de pago correctamente.",
+      });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message ||
+        "No se ha podido actualizar correctamente el registro.";
+      toastNotify({
+        type: "error",
+        message: "Accion no realizada!.",
+        description: errorMessage,
+      });
+    },
+    onSettled: () => {
+      reset();
+    },
+  });
+  return {
+    mutateEditHistoryPaymentPeriodMonth,
     isSuccess,
     isError,
     error,

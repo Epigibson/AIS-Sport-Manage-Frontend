@@ -14,6 +14,8 @@ import {
   useCreatePayment,
   useEditPaymentHistoryAmount,
   useEditPaymentHistoryExtension,
+  useEditPaymentHistoryLimitDate,
+  useEditPaymentHistoryPeriodMonth,
   usePayReceipt,
   useRevertReceipt,
   useUpdatePaymentMethod,
@@ -22,6 +24,7 @@ import { getAllAthletes } from "../../api/AtheleService.jsx";
 import { Card, Col, Form, Row, Statistic } from "antd";
 import { PaymentExtensionFields } from "./PaymentExtensionFields.jsx";
 import { PaymentFormFields } from "./PaymentFormFields.jsx";
+import dayjs from "dayjs";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -37,12 +40,18 @@ export const PaymentLogic = () => {
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
   const [showFilters, setShowFilters] = useState(true);
-  const [editingKey, setEditingKey] = useState("");
-  const [editingValue, setEditingValue] = useState("");
+  const [editingKeyPaymentMethod, setEditingKeyPaymentMethod] = useState("");
+  const [editingKeyAmount, setEditingKeyAmount] = useState("");
+  const [editingKeyLimitDate, setEditingKeyLimitDate] = useState("");
+  const [editingKeyPeriodMonth, setEditingKeyPeriodMonth] = useState("");
+  const [editingPaymentMethod, setEditingPaymentMethod] = useState("");
   const [editingAmount, setEditingAmount] = useState("");
+  const [editingLimitDate, setEditingLimitDate] = useState("");
+  const [editingPeriodMonth, setEditingPeriodMonth] = useState("");
   const [dateRange, setDateRange] = useState([]);
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
+  const [enrichedDataReady, setEnrichedDataReady] = useState(false);
   const queryClient = useQueryClient();
   const {
     data: historyPaymentData,
@@ -90,29 +99,36 @@ export const PaymentLogic = () => {
 
   useEffect(() => {
     console.log("AUTOFETCH", autoFetchEnabled);
+    if (
+      historyPaymentData &&
+      usersData &&
+      athletesData &&
+      receiptsData &&
+      !enrichedDataReady
+    ) {
+      setEnrichedDataReady(true);
+    }
     if (historyPaymentData && firstCharge <= 0) {
       setFirstCharge(firstCharge + 2);
     } else {
       setAutoFetchEnabled(false);
     }
-  }, [historyPaymentData, firstCharge, autoFetchEnabled]);
+  }, [
+    historyPaymentData,
+    receiptsData,
+    enrichedDataReady,
+    usersData,
+    athletesData,
+    firstCharge,
+    autoFetchEnabled,
+  ]);
 
   const handleSearch = async () => {
     await queryClient.invalidateQueries({
-      queryKey: ["allReceipts", "allHistoryPayments"],
+      queryKey: ["allReceipts", "allHistoryPayments", "allAthletes"],
     });
     await refetch();
   };
-
-  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
-  const { mutateUpdate } = usePayReceipt(handleSearch);
-  const { mutateUpdateCancelReceipt } = useCancelReceipt(handleSearch);
-  const { mutateRevertReceipt } = useRevertReceipt(handleSearch);
-  const { mutateEditHistoryPaymentExtension } =
-    useEditPaymentHistoryExtension(handleSearch);
-  const { mutateEditHistoryPaymentAmount } =
-    useEditPaymentHistoryAmount(handleSearch);
-  const { mutateCreate } = useCreatePayment(handleSearch);
 
   const enrichedHistoryPaymentsData = historyPaymentData?.map(
     (historyPayment) => {
@@ -133,6 +149,20 @@ export const PaymentLogic = () => {
       }; // Añade la información del grupo al objeto de usuario
     },
   );
+
+  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
+  const { mutateUpdate } = usePayReceipt(handleSearch);
+  const { mutateUpdateCancelReceipt } = useCancelReceipt(handleSearch);
+  const { mutateRevertReceipt } = useRevertReceipt(handleSearch);
+  const { mutateEditHistoryPaymentExtension } =
+    useEditPaymentHistoryExtension(handleSearch);
+  const { mutateEditHistoryPaymentAmount } =
+    useEditPaymentHistoryAmount(handleSearch);
+  const { mutateCreate } = useCreatePayment(handleSearch);
+  const { mutateEditHistoryPaymentLimitDate } =
+    useEditPaymentHistoryLimitDate(handleSearch);
+  const { mutateEditHistoryPaymentPeriodMonth } =
+    useEditPaymentHistoryPeriodMonth(handleSearch);
 
   const getTotal = () => {
     let total = 0;
@@ -222,6 +252,14 @@ export const PaymentLogic = () => {
     setIsCreateModalVisible(false);
   };
 
+  // const handleEditLimitDate = async () => {
+  //   const values = await form.validateFields();
+  //   values.history_payment_id = selectedPayment.history_payment_id;
+  //   await mutateEditHistoryPaymentAmount(values);
+  //   form.resetFields();
+  //   setIsModalVisible(false);
+  // };
+
   const handleEditExtension = async () => {
     const values = await form.validateFields();
     values.history_payment_id = selectedPayment.history_payment_id;
@@ -250,7 +288,7 @@ export const PaymentLogic = () => {
 
   const filterOption = (input, option) => option.search.includes(input);
 
-  const handleDateChange = (dates, dateStrings) => {
+  const handleDateChange = (dates) => {
     if (dates) {
       const formattedDates = dates.map((date) =>
         date.format("YYYY-MM-DD HH:mm"),
@@ -285,24 +323,40 @@ export const PaymentLogic = () => {
     // console.log(`selected ${value}`);
   };
 
-  const edit = (record) => {
-    setEditingKey(record._id); // Usamos _id como clave de edición, ajusta según tu data
-    setEditingValue(record.payment_method);
-    setEditingAmount(record.amount);
+  const edit = (record, type) => {
+    if (type === "payment_method") {
+      setEditingKeyPaymentMethod(record._id);
+      setEditingPaymentMethod(record.payment_method);
+    } else if (type === "amount") {
+      setEditingKeyAmount(record._id);
+      setEditingAmount(record.amount);
+    } else if (type === "limit_date") {
+      setEditingKeyLimitDate(record._id);
+      setEditingLimitDate(dayjs(record.limit_date));
+    } else if (type === "period_month") {
+      setEditingKeyPeriodMonth(record._id);
+      setEditingPeriodMonth(dayjs(record.period_month));
+    }
   };
 
   const cancel = () => {
-    setEditingKey("");
-    setEditingValue("");
+    setEditingKeyPaymentMethod("");
+    setEditingKeyLimitDate("");
+    setEditingKeyPeriodMonth("");
+    setEditingKeyAmount("");
+    setEditingPaymentMethod("");
     setEditingAmount("");
+    setEditingLimitDate("");
+    setEditingKeyPeriodMonth("");
   };
 
   const handleSave = async (record, field) => {
-    // console.log("Guardando", record.history_payment_id, editingValue);
     const data = {
       history_payment_id: record.history_payment_id,
-      payment_method: editingValue,
+      payment_method: editingPaymentMethod,
       amount: editingAmount,
+      limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
+      period_month: dayjs(editingPeriodMonth).format("YYYY-MM-DD HH:mm"),
     };
     if (field === "payment_method") {
       console.log("Metodo de pago");
@@ -312,13 +366,18 @@ export const PaymentLogic = () => {
       console.log("Cantidad");
       await mutateEditHistoryPaymentAmount(data);
     }
+    if (field === "limit_date") {
+      console.log("Fecha Limite");
+      await mutateEditHistoryPaymentLimitDate(data);
+    }
+    if (field === "period_month") {
+      console.log("Mes Correspondiente");
+      await mutateEditHistoryPaymentPeriodMonth(data);
+    }
     if (field === "create") {
-      console.log("Creando");
+      await console.log("Creando");
       await mutateCreate(record);
     }
-    await queryClient.invalidateQueries({
-      queryKey: ["allReceipts", "allHistoryPayments"],
-    });
     await handleSearch();
     await refetch();
     cancel(); // Restablece el estado de edición
@@ -333,11 +392,18 @@ export const PaymentLogic = () => {
     edit: edit,
     cancel: cancel,
     handleSave: handleSave,
-    editingKey: editingKey,
-    editingValue: editingValue,
+    editingKeyPaymentMethod: editingKeyPaymentMethod,
+    editingKeyAmount: editingKeyAmount,
+    editingKeyLimitDate: editingKeyLimitDate,
+    editingKeyPeriodMonth: editingKeyPeriodMonth,
+    editingPaymentMethod: editingPaymentMethod,
     editingAmount: editingAmount,
-    setEditingValue: setEditingValue,
+    editingLimitDate: editingLimitDate,
+    editingPeriodMonth: editingPeriodMonth,
+    setEditingPaymentMethod: setEditingPaymentMethod,
     setEditingAmount: setEditingAmount,
+    setEditingLimitDate: setEditingLimitDate,
+    setEditingPeriodMonth: setEditingPeriodMonth,
   });
 
   const totals = getAmountsByStatus();
@@ -454,7 +520,12 @@ export const PaymentLogic = () => {
         onClose={handleCloseModal}
       />
       <>
-        <TablesComponent data={enrichedHistoryPaymentsData} columns={columns} />
+        {enrichedDataReady && (
+          <TablesComponent
+            data={enrichedHistoryPaymentsData}
+            columns={columns}
+          />
+        )}
       </>
     </>
   );
