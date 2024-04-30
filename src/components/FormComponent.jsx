@@ -22,6 +22,7 @@ import { getAllAthletes } from "../api/AtheleService.jsx";
 // import { prepareInitialValues } from "./PrepareInitialValues.jsx";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import "./FormStyle.css";
+import dayjs from "dayjs";
 
 const { Option } = Select;
 const { useBreakpoint } = Grid;
@@ -34,6 +35,7 @@ export const FormComponent = ({
   handleClose,
   setProfileImage,
   isLogin,
+  confirmLoading,
 }) => {
   const screen = useBreakpoint();
   const { data: categories } = useQuery({
@@ -290,8 +292,13 @@ export const FormComponent = ({
             {field.inputType === "datePicker" && (
               <DatePicker
                 className={"text-left w-full"}
+                // defaultValue={dayjs(new Date(), "YYYY-MM-DD")}
                 placeholder={field.label}
-                value={field.name}
+                value={
+                  field.name !== undefined
+                    ? field.name
+                    : dayjs(new Date(), "YYYY-MM-DD")
+                }
                 picker={field.picker ? field.picker : "date"}
               />
             )}
@@ -304,6 +311,7 @@ export const FormComponent = ({
           size={"middle"}
           className="bg-primary-700 mx-3"
           htmlType="submit"
+          loading={confirmLoading}
         >
           {isLogin ? "Ingresar" : "Guardar"}
         </Button>
@@ -328,4 +336,6 @@ FormComponent.propTypes = {
   handleClose: PropTypes.func,
   setProfileImage: PropTypes.func,
   isLogin: PropTypes.any,
+  confirmLoading: PropTypes.bool,
+  // ...
 };

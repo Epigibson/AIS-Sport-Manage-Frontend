@@ -82,3 +82,35 @@ export const changeAvatar = async (data) => {
     throw new Error(errorMessage);
   }
 };
+
+export const assignMembershipToAthlete = async (data) => {
+  const { membership_id, athlete_id } = data;
+  const queryParams = new URLSearchParams();
+  queryParams.append("membership_id", membership_id);
+  try {
+    const response = await apiClient.put(
+      `/athletes/assign_membership/${athlete_id}?${queryParams}`,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
+export const removeMembershipFromAthlete = async (data) => {
+  const { membership_id, athlete_id } = data;
+  const queryParams = new URLSearchParams();
+  queryParams.append("membership_id", membership_id);
+  try {
+    const response = await apiClient.put(
+      `/athletes/remove_membership/${athlete_id}?${queryParams}`,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};

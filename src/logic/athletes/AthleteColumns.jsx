@@ -175,7 +175,7 @@ export const AthleteColumns = ({
     },
   },
   {
-    title: "Grupos",
+    title: "Administrar",
     key: "groups",
     dataIndex: "groups",
     align: "center",
@@ -183,7 +183,7 @@ export const AthleteColumns = ({
     render: (_, record) => (
       <Button
         className={"bg-primary-700"}
-        onClick={() => navigate(`/asignacion_de_grupos/${record.athlete_id}`)} // Asegúrate de que `record.key` es el ID del usuario
+        onClick={() => navigate(`/atleta/${record.athlete_id}`)} // Asegúrate de que `record.key` es el ID del usuario
         icon={<EyeFilled />}
         type="primary"
         shape="round"

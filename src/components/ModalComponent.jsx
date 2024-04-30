@@ -18,6 +18,7 @@ export const ModalComponent = ({
   buttonModal,
   textButtonModal,
   external,
+  confirmLoading,
 }) => {
   // console.log(buttonModal, textButtonModal); // Verifica que se reciban las props
   const screen = useBreakpoint();
@@ -27,6 +28,7 @@ export const ModalComponent = ({
       open={onOpen}
       onCancel={onClose}
       footer={false}
+      confirmLoading={confirmLoading}
       width={screen.xs ? "300px" : "80%"}
     >
       {external === true ? (
@@ -35,6 +37,7 @@ export const ModalComponent = ({
             type={"primary"}
             className={"bg-primary-700"}
             onClick={() => buttonModal(dataTable)}
+            loading={confirmLoading}
           >
             {textButtonModal}
           </Button>
@@ -49,6 +52,7 @@ export const ModalComponent = ({
           handleSubmit={onOk}
           handleClose={onClose}
           setProfileImage={setProfileImage}
+          confirmLoading={confirmLoading}
         />
       ) : null}
       {dataTable != null && dataTableColumns != null ? (
@@ -71,4 +75,6 @@ ModalComponent.propTypes = {
   buttonModal: PropTypes.func,
   textButtonModal: PropTypes.string,
   external: PropTypes.bool,
+  confirmLoading: PropTypes.bool,
+  // ...
 };

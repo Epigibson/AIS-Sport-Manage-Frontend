@@ -47,10 +47,22 @@ export const PaymentFilters = ({
               size="small"
               placeholder={["Inicio", "Fin"]}
               style={{ width: "100%" }}
-              showTime={{ format: "HH:mm" }}
+              // showTime={{ format: "HH:mm" }}
               format="DD-MM-YYYY"
               ranges={{
-                Hoy: [dayjs(), dayjs()],
+                "Ultimos 7 Dias": [
+                  dayjs().startOf("day").subtract(7, "days"),
+                  dayjs().endOf("day"),
+                ],
+                "Ultimos 30 Dias": [
+                  dayjs().startOf("day").subtract(30, "days"),
+                  dayjs().endOf("day"),
+                ],
+                Ayer: [
+                  dayjs().startOf("day").subtract(1, "days"),
+                  dayjs().endOf("day").subtract(1, "days"),
+                ],
+                Hoy: [dayjs().startOf("day"), dayjs().endOf("day")],
                 "Este Mes": [dayjs().startOf("month"), dayjs().endOf("month")],
                 "Esta Semana": [dayjs().startOf("week"), dayjs().endOf("week")],
               }}

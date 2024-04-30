@@ -51,7 +51,6 @@ export const PaymentLogic = () => {
   const [dateRange, setDateRange] = useState([]);
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
-  const [enrichedDataReady, setEnrichedDataReady] = useState(false);
   const queryClient = useQueryClient();
   const {
     data: historyPaymentData,
@@ -97,47 +96,28 @@ export const PaymentLogic = () => {
     queryFn: getAllReceipts,
   });
 
-  useEffect(() => {
-    console.log("AUTOFETCH", autoFetchEnabled);
-    if (
-      historyPaymentData &&
-      usersData &&
-      athletesData &&
-      receiptsData &&
-      !enrichedDataReady
-    ) {
-      setEnrichedDataReady(true);
-    }
-    if (historyPaymentData && firstCharge <= 0) {
-      setFirstCharge(firstCharge + 2);
-    } else {
-      setAutoFetchEnabled(false);
-    }
-  }, [
-    historyPaymentData,
-    receiptsData,
-    enrichedDataReady,
-    usersData,
-    athletesData,
-    firstCharge,
-    autoFetchEnabled,
-  ]);
-
   const handleSearch = async () => {
     await queryClient.invalidateQueries({
-      queryKey: ["allReceipts", "allHistoryPayments", "allAthletes"],
+      queryKey: [
+        "allReceipts",
+        "allHistoryPayments",
+        "allAthletes",
+        "allUsers",
+      ],
     });
     await refetch();
   };
 
-  const enrichedHistoryPaymentsData = historyPaymentData?.map(
-    (historyPayment) => {
-      const user = usersData?.find((user) => user._id === historyPayment.user); // Ajusta según la estructura de tus datos
+  const enrichedHistoryPaymentsData = () => {
+    return historyPaymentData?.map((historyPayment) => {
+      const user = usersData?.find(
+        (user) => user?._id === historyPayment?.user,
+      ); // Ajusta según la estructura de tus datos
       const athlete = athletesData?.find(
-        (athlete) => athlete._id === historyPayment.athlete,
+        (athlete) => athlete?._id === historyPayment?.athlete,
       );
       const receipt = receiptsData?.find(
-        (receipt) => receipt._id === historyPayment.receipt_id,
+        (receipt) => receipt?._id === historyPayment?.receipt_id,
       ); // Ajusta según la estructura de tus datos
       return {
         ...historyPayment,
@@ -147,22 +127,59 @@ export const PaymentLogic = () => {
         limit_date: receipt?.limit_date,
         updated_at: receipt?.updated_at,
       }; // Añade la información del grupo al objeto de usuario
-    },
-  );
+    });
+  };
 
-  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
-  const { mutateUpdate } = usePayReceipt(handleSearch);
-  const { mutateUpdateCancelReceipt } = useCancelReceipt(handleSearch);
-  const { mutateRevertReceipt } = useRevertReceipt(handleSearch);
-  const { mutateEditHistoryPaymentExtension } =
-    useEditPaymentHistoryExtension(handleSearch);
-  const { mutateEditHistoryPaymentAmount } =
-    useEditPaymentHistoryAmount(handleSearch);
-  const { mutateCreate } = useCreatePayment(handleSearch);
-  const { mutateEditHistoryPaymentLimitDate } =
-    useEditPaymentHistoryLimitDate(handleSearch);
+  useEffect(() => {
+    console.log("AUTOFETCH", autoFetchEnabled);
+    if (historyPaymentData && firstCharge <= 0) {
+      setFirstCharge(firstCharge + 2);
+    } else {
+      setAutoFetchEnabled(false);
+    }
+  }, [
+    historyPaymentData,
+    receiptsData,
+    usersData,
+    athletesData,
+    firstCharge,
+    autoFetchEnabled,
+  ]);
+
+  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
+  const { mutateUpdate } = usePayReceipt(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
+  const { mutateUpdateCancelReceipt } = useCancelReceipt(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
+  const { mutateRevertReceipt } = useRevertReceipt(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
+  const { mutateEditHistoryPaymentExtension } = useEditPaymentHistoryExtension(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
+  const { mutateEditHistoryPaymentAmount } = useEditPaymentHistoryAmount(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
+  const { mutateCreate } = useCreatePayment(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
+  const { mutateEditHistoryPaymentLimitDate } = useEditPaymentHistoryLimitDate(
+    handleSearch,
+    enrichedHistoryPaymentsData,
+  );
   const { mutateEditHistoryPaymentPeriodMonth } =
-    useEditPaymentHistoryPeriodMonth(handleSearch);
+    useEditPaymentHistoryPeriodMonth(handleSearch, enrichedHistoryPaymentsData);
 
   const getTotal = () => {
     let total = 0;
@@ -378,8 +395,6 @@ export const PaymentLogic = () => {
       await console.log("Creando");
       await mutateCreate(record);
     }
-    await handleSearch();
-    await refetch();
     cancel(); // Restablece el estado de edición
   };
 
@@ -520,12 +535,10 @@ export const PaymentLogic = () => {
         onClose={handleCloseModal}
       />
       <>
-        {enrichedDataReady && (
-          <TablesComponent
-            data={enrichedHistoryPaymentsData}
-            columns={columns}
-          />
-        )}
+        <TablesComponent
+          data={enrichedHistoryPaymentsData()}
+          columns={columns}
+        />
       </>
     </>
   );

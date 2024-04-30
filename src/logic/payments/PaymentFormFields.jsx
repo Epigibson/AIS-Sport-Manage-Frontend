@@ -50,14 +50,14 @@ export const PaymentFormFields = [
   },
   {
     name: "period_month",
-    label: "Mes",
+    label: "Recibo correspondiente al mes de:",
     rules: [{ required: true, message: "Ingresa el concepto." }],
     inputType: "datePicker",
     picker: "month",
   },
   {
     name: "period_year",
-    label: "Año",
+    label: "Del año:",
     rules: [{ required: true, message: "Ingresa el concepto." }],
     inputType: "datePicker",
     picker: "year",

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAthleteByUuid } from "../../api/AtheleService.jsx";
 import error from "eslint-plugin-react/lib/util/error.js";
 import { useParams } from "react-router-dom";
-import { Button, Card, Form, Image, Row } from "antd";
+import { Button, Card, Form, Row } from "antd";
 import { GroupsFromAthletesColumns } from "./GroupsFromAthletesColumns.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
@@ -98,14 +98,6 @@ export const GroupAssignLogic = () => {
 
   return (
     <Card loading={isLoading}>
-      <Image
-        className={"rounded-full"}
-        src={currentAthlete?.avatar}
-        width={100}
-      ></Image>
-      <h1 className={"text-center text-lg font-bold"}>
-        {currentAthlete?.name}
-      </h1>
       <Row justify={"end"} className={"overflow-hidden"}>
         <Button
           className={"bg-primary-700 mb-3"}

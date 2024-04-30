@@ -14,7 +14,7 @@ import {
 } from "../../api/PaymentService.jsx";
 import { toastNotify } from "../../utils/ToastNotify.jsx";
 
-export const useCreatePayment = (onSuccessCallback) => {
+export const useCreatePayment = (onSuccessCallback, onRefreshCallback) => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateCreate,
@@ -26,6 +26,7 @@ export const useCreatePayment = (onSuccessCallback) => {
     mutationFn: createPayment,
     onSuccess: async () => {
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
@@ -53,7 +54,7 @@ export const useCreatePayment = (onSuccessCallback) => {
   return { mutateCreate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const usePayReceipt = (onSuccessCallback) => {
+export const usePayReceipt = (onSuccessCallback, onRefreshCallback) => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateUpdate,
@@ -65,6 +66,7 @@ export const usePayReceipt = (onSuccessCallback) => {
     mutationFn: payReceipt,
     onSuccess: async () => {
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
@@ -93,7 +95,7 @@ export const usePayReceipt = (onSuccessCallback) => {
   return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useCancelReceipt = (onSuccessCallback) => {
+export const useCancelReceipt = (onSuccessCallback, onRefreshCallback) => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateUpdateCancelReceipt,
@@ -106,6 +108,7 @@ export const useCancelReceipt = (onSuccessCallback) => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
@@ -133,7 +136,7 @@ export const useCancelReceipt = (onSuccessCallback) => {
   return { mutateUpdateCancelReceipt, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useRevertReceipt = (onSuccessCallback) => {
+export const useRevertReceipt = (onSuccessCallback, onRefreshCallback) => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
   const {
     mutate: mutateRevertReceipt,
@@ -146,6 +149,7 @@ export const useRevertReceipt = (onSuccessCallback) => {
     onSuccess: async () => {
       console.log("Mutación exitosa");
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
@@ -172,8 +176,10 @@ export const useRevertReceipt = (onSuccessCallback) => {
   return { mutateRevertReceipt, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useUpdatePaymentMethod = (onSuccessCallback) => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+export const useUpdatePaymentMethod = (
+  onSuccessCallback,
+  onRefreshCallback,
+) => {
   const {
     mutate: mutateUpdatePaymentMethod,
     isSuccess,
@@ -183,19 +189,15 @@ export const useUpdatePaymentMethod = (onSuccessCallback) => {
   } = useMutation({
     mutationFn: updatePaymentMethod,
     onSuccess: async () => {
-      console.log("Mutación exitosa");
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
         description: "Se ha actualizado el metodo de pago correctamente.",
       });
-      await queryClient.invalidateQueries({
-        queryKey: ["allReceipts", "allHistoryPayments"],
-      }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
-      console.error("Error en la mutación", error);
       const errorMessage =
         error.message ||
         "No se ha podido actualizar correctamente el registro.";
@@ -212,8 +214,10 @@ export const useUpdatePaymentMethod = (onSuccessCallback) => {
   return { mutateUpdatePaymentMethod, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryExtension = (onSuccessCallback) => {
-  const queryClient = useQueryClient(); // Obtener el cliente de react-query
+export const useEditPaymentHistoryExtension = (
+  onSuccessCallback,
+  onRefreshCallback,
+) => {
   const {
     mutate: mutateEditHistoryPaymentExtension,
     isSuccess,
@@ -223,19 +227,15 @@ export const useEditPaymentHistoryExtension = (onSuccessCallback) => {
   } = useMutation({
     mutationFn: editHistoryPaymentExtension,
     onSuccess: async () => {
-      console.log("Mutación exitosa");
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
         description: "Se ha actualizado la prorroga de pago correctamente.",
       });
-      await queryClient.invalidateQueries({
-        queryKey: ["allReceipts", "allHistoryPayments"],
-      }); // Invalidar la consulta "allPackages"
     },
     onError: (error) => {
-      console.error("Error en la mutación", error);
       const errorMessage =
         error.message ||
         "No se ha podido actualizar correctamente el registro.";
@@ -258,7 +258,10 @@ export const useEditPaymentHistoryExtension = (onSuccessCallback) => {
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
+export const useEditPaymentHistoryAmount = (
+  onSuccessCallback,
+  onRefreshCallback,
+) => {
   const {
     mutate: mutateEditHistoryPaymentAmount,
     isSuccess,
@@ -269,6 +272,7 @@ export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
     mutationFn: editHistoryPaymentAmount,
     onSuccess: async () => {
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
@@ -298,7 +302,10 @@ export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryLimitDate = (onSuccessCallback) => {
+export const useEditPaymentHistoryLimitDate = (
+  onSuccessCallback,
+  onRefreshCallback,
+) => {
   const {
     mutate: mutateEditHistoryPaymentLimitDate,
     isSuccess,
@@ -309,6 +316,7 @@ export const useEditPaymentHistoryLimitDate = (onSuccessCallback) => {
     mutationFn: editHistoryPaymentLimitDate,
     onSuccess: async () => {
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
@@ -338,7 +346,10 @@ export const useEditPaymentHistoryLimitDate = (onSuccessCallback) => {
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryPeriodMonth = (onSuccessCallback) => {
+export const useEditPaymentHistoryPeriodMonth = (
+  onSuccessCallback,
+  onRefreshCallback,
+) => {
   const {
     mutate: mutateEditHistoryPaymentPeriodMonth,
     isSuccess,
@@ -349,6 +360,7 @@ export const useEditPaymentHistoryPeriodMonth = (onSuccessCallback) => {
     mutationFn: editHistoryPaymentPeriodMonth,
     onSuccess: async () => {
       onSuccessCallback();
+      onRefreshCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",

@@ -73,9 +73,11 @@ export const PaymentColumns = ({
     render: (athlete) =>
       athlete ? (
         <div className={"overflow-x-hidden"}>
-          <Tag color={"blue"} className={"text-style mb-2"}>
-            <Text className="text-style">{athlete.name}</Text>
-          </Tag>
+          <Tooltip title={athlete.name} color={"blue"}>
+            <Tag color={"blue"} className={"text-style mb-2"}>
+              <Text className="text-style">{athlete.name}</Text>
+            </Tag>
+          </Tooltip>
         </div>
       ) : (
         <span>Sin Usuario</span>
@@ -102,12 +104,16 @@ export const PaymentColumns = ({
     key: "receipt",
     align: "center",
     width: 150,
-    render: (receipt) =>
-      receipt && receipt.receipt_package_name ? (
+    render: (_, record) =>
+      record?.receipt && record?.receipt.receipt_package_name ? (
         <div className={"overflow-x-hidden text-center"}>
-          <Tag color={"cyan"} className={"text-style mb-2"}>
-            <Text className="text-style">{receipt?.receipt_package_name}</Text>
-          </Tag>
+          <Tooltip title={record?.receipt?.receipt_package_name} color={"cyan"}>
+            <Tag color={"cyan"} className={"text-style mb-2"}>
+              <Text className="text-style">
+                {record?.receipt?.receipt_package_name}
+              </Text>
+            </Tag>
+          </Tooltip>
         </div>
       ) : (
         <Tag>Sin datos</Tag>
@@ -275,7 +281,8 @@ export const PaymentColumns = ({
       editingKeyLimitDate === record._id ? (
         <span>
           <DatePicker
-            value={dayjs(editingLimitDate)}
+            value={dayjs(editingLimitDate, "DD/MM/YYYY")}
+            format={"DD/MM/YYYY"}
             onChange={(value) => setEditingLimitDate(value)}
           />
           <Space.Compact className={"mt-2"}>

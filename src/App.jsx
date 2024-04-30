@@ -16,6 +16,7 @@ import { PaymentsPage } from "./pages/PaymentsPage.jsx";
 import { ProtectedRoute } from "./utils/ProtectedRoute.jsx";
 import { AuthProvider } from "./hooks/AuthContext/AuthProvider.jsx";
 import { GroupAssignPage } from "./pages/GroupAssignPage.jsx";
+import { IndividualAthletePage } from "./pages/IndividualAthletePage.jsx";
 
 const App = () => {
   return (
@@ -32,6 +33,10 @@ const App = () => {
           <Route
             path="/asignacion_de_grupos/:athleteId"
             element={<GroupAssignPage />}
+          />
+          <Route
+            path="/atleta/:athleteId"
+            element={<IndividualAthletePage />}
           />
           <Route path="/paquetes" element={<PackagesPage />} />
           <Route path="/adeudos" element={<DebtorsPage />} />
