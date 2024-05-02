@@ -53,8 +53,6 @@ export const AthleteLogic = () => {
     queryFn: getAllPackages,
   });
 
-  const { mutateUpdateAvatar } = useChangeAvatar();
-
   const enrichedUsersData = athletesData?.map((athlete) => {
     const athleteGroups = groupsData?.filter((group) =>
       athlete.groups?.includes(group._id),
@@ -103,6 +101,7 @@ export const AthleteLogic = () => {
   const { mutateUpdate } = useUpdateAthlete(handleSearch);
   const { mutateUpdateStatus } = useChangeAthleteStatus(handleSearch);
   const { mutateDelete } = useDeleteAthlete(handleSearch);
+  const { mutateUpdateAvatar } = useChangeAvatar(handleSearch);
 
   const handleCancel = () => {
     setModalContext("");
@@ -166,7 +165,7 @@ export const AthleteLogic = () => {
       // console.log("DATA", data);
       await mutateUpdateAvatar(data);
     } catch (error) {
-      console.error("Error al guardar la imagen:", error);
+      console.log("Error al guardar la imagen:", error);
     }
   };
 

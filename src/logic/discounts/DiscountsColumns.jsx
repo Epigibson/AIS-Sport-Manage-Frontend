@@ -36,17 +36,17 @@ export const DiscountsColumns = ({ onEdit, onDelete, onCancel }) => [
       return <div>{discount_percentage} %</div>;
     },
   },
-  {
-    title: "Porcentaje en monto",
-    dataIndex: "discount_amount",
-    key: "discount_amount",
-    align: "center",
-    render: (discount_amount) =>
-      new Intl.NumberFormat("es-MX", {
-        style: "currency",
-        currency: "MXN",
-      }).format(discount_amount),
-  },
+  // {
+  //   title: "Porcentaje en monto",
+  //   dataIndex: "discount_amount",
+  //   key: "discount_amount",
+  //   align: "center",
+  //   render: (discount_amount) =>
+  //     new Intl.NumberFormat("es-MX", {
+  //       style: "currency",
+  //       currency: "MXN",
+  //     }).format(discount_amount),
+  // },
   {
     title: "Codigo de Descuento",
     dataIndex: "discount_code",
