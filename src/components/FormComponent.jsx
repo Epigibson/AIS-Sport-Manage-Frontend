@@ -85,7 +85,31 @@ export const FormComponent = ({
       let options = [];
       if (field.dependencies) {
         const dependentValue = form.getFieldValue(field.dependencies.fieldName);
-        visibility[field.name] = dependentValue === field.dependencies.value;
+        const dataSource = {
+          categories: categories || [],
+          couches: couches || [],
+          groups: groups || [],
+          users: users || [],
+          athletes: athletes || [],
+          products: (packages || []).filter(
+            (p) => p.product_name !== "Inscripcion",
+          ),
+        }[field.optionsSource];
+
+        const selectedItem = dataSource?.find(
+          (item) => item._id === dependentValue,
+        );
+        if (selectedItem) {
+          const updatedValues = {
+            ...selectedValues,
+            [field.name]: selectedItem[field.dependencies.relatedKey],
+          };
+          setSelectedValues(updatedValues);
+          form.setFieldsValue(updatedValues);
+        }
+        visibility[field.name] =
+          dependentValue === field.dependencies.value ||
+          field.dependencies.relatedKey;
       } else {
         visibility[field.name] = true; // Si no tiene dependencias, es siempre visible
       }

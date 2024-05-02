@@ -102,6 +102,7 @@ export const AvatarComponent = ({ onImageLoaded, existingImageUrl }) => {
         beforeUpload={beforeUpload}
         onChange={handleChange}
         customRequest={({ file, onSuccess }) => {
+          console.info(file);
           // Simula inmediatamente un éxito. Esto previene la carga automática.
           setTimeout(() => {
             onSuccess("ok");

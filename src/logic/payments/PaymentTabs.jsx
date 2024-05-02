@@ -1,6 +1,6 @@
 import { PaymentLogic } from "./PaymentLogic.jsx";
 
-export const paymentTabItems = ({}) => [
+export const paymentTabItems = () => [
   {
     key: "1",
     label: "Todos",

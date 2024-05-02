@@ -17,6 +17,7 @@ import { ProtectedRoute } from "./utils/ProtectedRoute.jsx";
 import { AuthProvider } from "./hooks/AuthContext/AuthProvider.jsx";
 import { GroupAssignPage } from "./pages/GroupAssignPage.jsx";
 import { IndividualAthletePage } from "./pages/IndividualAthletePage.jsx";
+import { DiscountsPage } from "./pages/DiscountsPage.jsx";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
             element={<IndividualAthletePage />}
           />
           <Route path="/paquetes" element={<PackagesPage />} />
+          <Route path="/descuentos" element={<DiscountsPage />} />
           <Route path="/adeudos" element={<DebtorsPage />} />
           <Route path="/analiticas" element={<AnalyticsPage />} />
           <Route path="/pago/fallo" element={<PaymentFailedPage />} />

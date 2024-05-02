@@ -8,7 +8,6 @@ import logoImage from "../../assets/logo-be.png";
 export const LoginOld = () => {
   const { loginHandler } = useAuth();
   const isLogin = true;
-  const appName = "Be+";
   const logo = logoImage;
   const [form] = Form.useForm();
 

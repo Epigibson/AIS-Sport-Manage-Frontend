@@ -6,7 +6,6 @@ export const CouchColumns = ({
   onDelete,
   onCancel,
   handleImageLoaded,
-  screen,
 }) => [
   {
     title: "Avatar",
