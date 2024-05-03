@@ -37,7 +37,7 @@ export const getAllHistoryPayments = async (options = {}) => {
 
 export const createPayment = async (data) => {
   try {
-    console.log("Metodo de Pago", data);
+    // console.log("Metodo de Pago", data);
     const response = await apiClient.post(`/history_payment/`, data);
     return response.data;
   } catch (error) {
@@ -49,7 +49,7 @@ export const createPayment = async (data) => {
 
 export const updatePaymentMethod = async (data) => {
   try {
-    console.log("Metodo de Pago", data);
+    // console.log("Metodo de Pago", data);
     // Construye los parámetros de consulta correctamente
     const queryParams = new URLSearchParams({
       payment_method: data.payment_method,
@@ -67,7 +67,7 @@ export const updatePaymentMethod = async (data) => {
 
 export const editHistoryPaymentExtension = async (data) => {
   try {
-    console.log("Metodo de Pago", data);
+    // console.log("Metodo de Pago", data);
     // Construye los parámetros de consulta correctamente
     const queryParams = new URLSearchParams({
       extension: data.extension,
@@ -85,7 +85,7 @@ export const editHistoryPaymentExtension = async (data) => {
 
 export const editHistoryPaymentAmount = async (data) => {
   try {
-    console.log("Metodo de Pago", data);
+    // console.log("Metodo de Pago", data);
     // Construye los parámetros de consulta correctamente
     const queryParams = new URLSearchParams({
       amount: data.amount,
@@ -103,7 +103,7 @@ export const editHistoryPaymentAmount = async (data) => {
 
 export const editHistoryPaymentLimitDate = async (data) => {
   try {
-    console.log("Metodo de Pago", data);
+    // console.log("Metodo de Pago", data);
     // Construye los parámetros de consulta correctamente
     const queryParams = new URLSearchParams({
       limit_date: data.limit_date,
@@ -121,13 +121,31 @@ export const editHistoryPaymentLimitDate = async (data) => {
 
 export const editHistoryPaymentPeriodMonth = async (data) => {
   try {
-    console.log("Metodo de Pago", data);
+    // console.log("Metodo de Pago", data);
     // Construye los parámetros de consulta correctamente
     const queryParams = new URLSearchParams({
       period_month: data.period_month,
     }).toString();
     const response = await apiClient.put(
       `/history_payment/period_month/${data.history_payment_id}?${queryParams}`,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
+export const addHistoryPaymentDiscountCode = async (data) => {
+  try {
+    // console.log("Codigo de descuento", data);
+    // Construye los parámetros de consulta correcta`mente
+    const queryParams = new URLSearchParams({
+      discount_code: data.discount_code,
+    }).toString();
+    const response = await apiClient.put(
+      `/history_payment/discount_code/${data.history_payment_id}?${queryParams}`,
     );
     return response.data;
   } catch (error) {

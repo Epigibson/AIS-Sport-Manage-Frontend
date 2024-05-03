@@ -38,12 +38,12 @@ export const DiscountsFormFields = [
     rules: [{ required: true }],
     inputType: "number", // Indica el tipo de control de entrada
   },
-  {
-    name: "discount_amount",
-    label: "Porcentaje en Monto",
-    rules: [{ required: true }],
-    inputType: "number",
-  },
+  // {
+  //   name: "discount_amount",
+  //   label: "Porcentaje en Monto",
+  //   rules: [{ required: true }],
+  //   inputType: "number",
+  // },
   {
     name: "discount_code",
     label: "Codigo de Descuento",

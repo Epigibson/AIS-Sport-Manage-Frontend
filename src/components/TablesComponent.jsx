@@ -8,6 +8,7 @@ export const TablesComponent = ({
   columns,
   modifiedTable,
   headerFixed,
+  loading,
 }) => {
   return (
     <div className={"w-full"}>
@@ -16,6 +17,7 @@ export const TablesComponent = ({
         columns={columns}
         dataSource={data}
         size={"small"}
+        loading={loading}
         className={modifiedTable ? "my-dark-table" : ""}
         pagination={modifiedTable ? false : { pageSize: 10 }}
         scroll={{
@@ -32,4 +34,5 @@ TablesComponent.propTypes = {
   columns: PropTypes.any,
   headerFixed: PropTypes.bool,
   modifiedTable: PropTypes.any,
+  loading: PropTypes.bool,
 };

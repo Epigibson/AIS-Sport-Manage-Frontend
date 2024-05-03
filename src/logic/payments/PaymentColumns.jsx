@@ -2,6 +2,7 @@ import {
   Button,
   Col,
   DatePicker,
+  Input,
   InputNumber,
   Popconfirm,
   Row,
@@ -31,18 +32,24 @@ export const PaymentColumns = ({
   handlePayReceipt,
   handleCancelReceipt,
   handleRevertReceipt,
+
   editingKeyPaymentMethod,
   editingKeyAmount,
   editingKeyLimitDate,
   editingKeyPeriodMonth,
+  editingKeyDiscountCode,
+
   editingPaymentMethod,
   editingAmount,
   editingLimitDate,
   editingPeriodMonth,
+  editingDiscountCode,
+
   setEditingPaymentMethod,
   setEditingAmount,
   setEditingLimitDate,
   setEditingPeriodMonth,
+  setEditingDiscountCode,
   edit,
   cancel,
   handleSave,
@@ -248,6 +255,50 @@ export const PaymentColumns = ({
               onClick={() => edit(record, "payment_method")}
               size="small"
               disabled={editingPaymentMethod !== ""}
+            >
+              Editar
+            </EditFilled>
+          ) : null}
+        </div>
+      ),
+  },
+  {
+    title: "Cupon de Descuento",
+    dataIndex: "discount_code",
+    key: "discount_code",
+    align: "center",
+    width: 200,
+    render: (_, record) =>
+      editingKeyDiscountCode === record._id ? ( // Asumimos que usas _id como identificador único
+        <span>
+          <Input
+            value={editingDiscountCode}
+            style={{ height: 30 }}
+            onChange={(value) => setEditingDiscountCode(value.target.value)}
+          />
+          <Space.Compact className={"mt-2"}>
+            <Button
+              onClick={() => handleSave(record, "discount_code")}
+              size="small"
+              style={{ marginRight: 8 }}
+            >
+              Guardar
+            </Button>
+            <Button onClick={cancel} danger size="small">
+              Cancelar
+            </Button>
+          </Space.Compact>
+        </span>
+      ) : (
+        <div>
+          <Tag color={record.discount_code_is_applied ? "green" : "cyan"}>
+            {record.discount_code_is_applied ? "Cupon aplicado" : "Sin cupon"}
+          </Tag>
+          {record.status !== "Pagado" && record.status !== "Cancelado" ? (
+            <EditFilled
+              onClick={() => edit(record, "discount_code")}
+              size="small"
+              hidden={record.discount_code_is_applied}
             >
               Editar
             </EditFilled>

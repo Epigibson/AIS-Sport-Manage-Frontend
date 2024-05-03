@@ -78,7 +78,7 @@ export const FormComponent = ({
   );
 
   useEffect(() => {
-    console.log("Selected Values Updated:", selectedObjects);
+    // console.log("Selected Values Updated:", selectedObjects);
     const newSelectOptions = {};
     const visibility = {};
     formFields.forEach((field) => {
@@ -187,11 +187,17 @@ export const FormComponent = ({
   return (
     <Form
       form={form}
+      labelCol={{ span: 6 }}
+      labelAlign={"left"}
+      wrapperCol={{ span: 18 }}
       layout={isLogin ? "vertical" : "horizontal"}
       onFinish={() => handleSubmit("create")}
-      size={"small"}
+      size={!screen.xs ? "middle" : "small"}
       autoComplete={"on"}
-      // initialValues={initialValues}
+      labelWrap={true}
+      style={{
+        maxWidth: 600,
+      }}
       onValuesChange={(_, allValues) => {
         const updatedSelectedObjects = { ...selectedObjects };
         const visibility = {};
@@ -234,11 +240,9 @@ export const FormComponent = ({
         return (
           <Form.Item
             hidden={field.hidden}
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
             key={field.name}
             name={field.name}
-            label={!screen.xs ? field.label : ""}
+            label={field.label}
             rules={field.rules}
             valuePropName={
               field.inputType === "checkbox" ? "checked" : undefined
@@ -277,7 +281,6 @@ export const FormComponent = ({
             {field.inputType === "select" && (
               <Select
                 className={"text-left"}
-                size={"middle"}
                 placeholder={`-- Seleccionar ${field.label} --`}
               >
                 {selectOptions[field.name]?.map((option, index) => (
@@ -307,10 +310,9 @@ export const FormComponent = ({
                 className="rounded-md py-0.5 my-0 border-gray-300"
                 variant={"filled"}
                 use24Hours
-                onChange={(dates, dateStrings) => {
-                  // Aquí puedes manejar el cambio, por ahora solo lo imprimiré
-                  console.log(dates, dateStrings);
-                }}
+                // onChange={(dates, dateStrings) => {
+                //   console.log(dates, dateStrings);
+                // }}
               />
             )}
             {field.inputType === "datePicker" && (
@@ -332,20 +334,13 @@ export const FormComponent = ({
       <Form.Item wrapperCol={{ span: 24 }} className={"text-center"}>
         <Button
           type={"primary"}
-          size={"middle"}
           className="bg-primary-700 mx-3"
           htmlType="submit"
           loading={confirmLoading}
         >
           {isLogin ? "Ingresar" : "Guardar"}
         </Button>
-        <Button
-          size={"middle"}
-          type={"primary"}
-          onClick={handleClose}
-          hidden={isLogin}
-          danger
-        >
+        <Button type={"primary"} onClick={handleClose} hidden={isLogin} danger>
           Cancelar
         </Button>
       </Form.Item>
