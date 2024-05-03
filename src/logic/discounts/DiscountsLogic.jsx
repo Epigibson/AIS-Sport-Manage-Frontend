@@ -130,7 +130,7 @@ export const DiscountsLogic = () => {
           type={"primary"}
           onClick={showModal}
         >
-          Crear nueva membresía
+          Crear nuevo descuento
         </Button>
       </Row>
       <ModalComponent
