@@ -17,15 +17,13 @@ export const MainContainerLayout = ({
   // console.log("DATA DE USUARIO EN EL MAIN", athletes);
 
   return (
-    <>
-      <div
-        className={`h-dvh text-center text-xl  ${background || ""}`}
-        style={{ overflowY: overflowY, height: "min-content" }}
-      >
-        {title}
-        {children}
-      </div>
-    </>
+    <div
+      className={`min-h-dvh text-center text-xl  ${background || ""}`}
+      style={{ overflowY: overflowY, height: "min-content" }}
+    >
+      {title}
+      {children}
+    </div>
   );
 };
 
