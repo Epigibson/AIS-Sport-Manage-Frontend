@@ -1,0 +1,23 @@
+#success-button {
+    background: #1e7e4a;
+    color: white;
+    border: 1px solid #1e7e4a;
+}
+
+#success-button:hover {
+    background-color: #42bb7b;
+    border: 1px solid #42bb7b;
+
+}
+
+#cancel-button {
+    background: #ea4747;
+    color: white;
+    border: 1px solid #ea4747;
+}
+
+#cancel-button:hover {
+    background-color: #ff6565;
+    border: 1px solid #ff6565;
+
+}

@@ -18,6 +18,8 @@ import { AuthProvider } from "./hooks/AuthContext/AuthProvider.jsx";
 import { GroupAssignPage } from "./pages/GroupAssignPage.jsx";
 import { IndividualAthletePage } from "./pages/IndividualAthletePage.jsx";
 import { DiscountsPage } from "./pages/DiscountsPage.jsx";
+import { ConfigurationPage } from "./pages/ConfigurationPage.jsx";
+import { MovementsPage } from "./pages/MovementsPage.jsx";
 
 const App = () => {
   return (
@@ -42,6 +44,8 @@ const App = () => {
           <Route path="/paquetes" element={<PackagesPage />} />
           <Route path="/descuentos" element={<DiscountsPage />} />
           <Route path="/adeudos" element={<DebtorsPage />} />
+          <Route path="/configuracion" element={<ConfigurationPage />} />
+          <Route path="/movimientos" element={<MovementsPage />} />
           <Route path="/analiticas" element={<AnalyticsPage />} />
           <Route path="/pago/fallo" element={<PaymentFailedPage />} />
           <Route path="/pago/pendiente" element={<PaymentPendingPage />} />

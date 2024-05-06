@@ -19,8 +19,8 @@ export const MainContainerLayout = ({
   return (
     <>
       <div
-        className={`h-svh text-center text-xl  ${background || ""}`}
-        style={{ overflowY: overflowY, height: "" }}
+        className={`h-dvh text-center text-xl  ${background || ""}`}
+        style={{ overflowY: overflowY, height: "min-content" }}
       >
         {title}
         {children}

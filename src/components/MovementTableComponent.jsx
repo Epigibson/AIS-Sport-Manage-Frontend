@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import "./TablesStyle.css";
 
-export const TablesComponent = ({
+export const MovementTablesComponent = ({
   data,
   columns,
   modifiedTable,
@@ -19,7 +19,7 @@ export const TablesComponent = ({
         size={"small"}
         loading={loading}
         className={modifiedTable ? "my-dark-table" : ""}
-        pagination={modifiedTable ? false : { pageSize: 15 }}
+        pagination={modifiedTable ? false : { pageSize: 50 }}
         scroll={{
           x: 1200,
           y: headerFixed ? 800 : "100%",
@@ -29,7 +29,7 @@ export const TablesComponent = ({
   );
 };
 
-TablesComponent.propTypes = {
+MovementTablesComponent.propTypes = {
   data: PropTypes.any,
   columns: PropTypes.any,
   headerFixed: PropTypes.bool,

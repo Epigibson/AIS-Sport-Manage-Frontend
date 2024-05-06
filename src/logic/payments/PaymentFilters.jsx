@@ -68,7 +68,7 @@ export const PaymentFilters = ({
               }}
               onChange={handleDateChange}
               value={
-                dateRange.length === 2
+                dateRange?.length === 2
                   ? [
                       dayjs(dateRange[0], "YYYY-MM-DD HH:mm"),
                       dayjs(dateRange[1], "YYYY-MM-DD HH:mm"),
@@ -91,10 +91,10 @@ export const PaymentFilters = ({
               options={athletesData?.map((athlete) =>
                 // console.log("ATLETAAAAA", athlete),
                 ({
-                  value: athlete._id,
-                  key: athlete._id,
-                  label: <span>{athlete.name}</span>,
-                  search: athlete.name.toLowerCase(), // Este campo se usará para el filtrado
+                  value: athlete?._id,
+                  key: athlete?._id,
+                  label: <span>{athlete?.name}</span>,
+                  search: athlete?.name.toLowerCase(), // Este campo se usará para el filtrado
                 }),
               )}
             />

@@ -39,7 +39,7 @@ export const PaymentReceiptColumns = [
       if (type === "inscription") {
         return <Tag color={"green"}>Inscripción</Tag>;
       } else {
-        return <Tag color={"blue"}>{type.toUpperCase()}</Tag>;
+        return <Tag color={"blue"}>{type?.toUpperCase()}</Tag>;
       }
     }, // Ajusta "receipt_type" según tu modelo de datos
   },

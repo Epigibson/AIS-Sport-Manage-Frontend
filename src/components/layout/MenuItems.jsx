@@ -1,8 +1,10 @@
 import {
+  ControlFilled,
   CopyrightOutlined,
   DollarCircleOutlined,
   GroupOutlined,
   HomeFilled,
+  InteractionOutlined,
   LogoutOutlined,
   PercentageOutlined,
   ProductFilled,
@@ -75,14 +77,21 @@ export const MenuItems = [
     label: "Usuarios con Adeudos",
     path: "/adeudos",
   },
-  // {
-  //   key: "9",
-  //   icon: <ExpandAltOutlined />,
-  //   label: "Panel de Analiticas",
-  //   path: "/analiticas",
-  // },
   {
     key: "10",
+    icon: <ControlFilled />,
+    label: "Configuracion",
+    path: "/configuracion",
+    searchable: true,
+  },
+  {
+    key: "11",
+    icon: <InteractionOutlined />,
+    label: "Movimientos",
+    path: "/movimientos",
+  },
+  {
+    key: "12",
     icon: <LogoutOutlined />,
     label: "Cerrar Sesion",
     function: "logout",

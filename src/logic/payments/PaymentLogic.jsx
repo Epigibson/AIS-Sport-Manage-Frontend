@@ -54,8 +54,7 @@ export const PaymentLogic = () => {
   const [dateRange, setDateRange] = useState([]);
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
-  const [enrichedHistoryPaymentsData, setEnrichedHistoryPaymentsData] =
-    useState({});
+  // const [enrichedHistoryPaymentsData, setEnrichedHistoryPaymentsData] = useState({});
   const queryClient = useQueryClient();
   const {
     data: historyPaymentData,
@@ -128,29 +127,27 @@ export const PaymentLogic = () => {
     await refetchReceipts();
   };
 
-  useEffect(() => {
-    setEnrichedHistoryPaymentsData(
-      historyPaymentData?.map((historyPayment) => {
-        const user = usersData?.find(
-          (user) => user?._id === historyPayment?.user,
-        ); // Ajusta según la estructura de tus datos
-        const athlete = athletesData?.find(
-          (athlete) => athlete?._id === historyPayment?.athlete,
-        );
-        const receipt = receiptsData?.find(
-          (receipt) => receipt?._id === historyPayment?.receipt_id,
-        ); // Ajusta según la estructura de tus datos
-        return {
-          ...historyPayment,
-          user,
-          athlete,
-          receipt,
-          limit_date: receipt?.limit_date,
-          updated_at: receipt?.updated_at,
-        }; // Añade la información del grupo al objeto de usuario
-      }),
-    );
-  }, [receiptsData, historyPaymentData, usersData, athletesData]);
+  const enrichedHistoryPaymentsData = historyPaymentData?.map(
+    (historyPayment) => {
+      const user = usersData?.find(
+        (user) => user?._id === historyPayment?.user,
+      ); // Ajusta según la estructura de tus datos
+      const athlete = athletesData?.find(
+        (athlete) => athlete?._id === historyPayment?.athlete,
+      );
+      const receipt = receiptsData?.find(
+        (receipt) => receipt?._id === historyPayment?.receipt_id,
+      ); // Ajusta según la estructura de tus datos
+      return {
+        ...historyPayment,
+        user,
+        athlete,
+        receipt,
+        limit_date: receipt?.limit_date,
+        updated_at: receipt?.updated_at,
+      }; // Añade la información del grupo al objeto de usuario
+    },
+  );
 
   useEffect(() => {
     // console.log("AUTOFETCH", autoFetchEnabled);
@@ -263,7 +260,8 @@ export const PaymentLogic = () => {
     setPaymentMethodFilter("");
   };
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading)
+    return <LoaderIconUtils />;
   if (isError) return <h1>Error...</h1>;
 
   const handleCreatePayment = async () => {
@@ -307,11 +305,11 @@ export const PaymentLogic = () => {
     await refetch();
   };
 
-  const filterOption = (input, option) => option.search.includes(input);
+  const filterOption = (input, option) => option?.search?.includes(input);
 
   const handleDateChange = (dates) => {
     if (dates) {
-      const formattedDates = dates.map((date) =>
+      const formattedDates = dates?.map((date) =>
         date.format("YYYY-MM-DD HH:mm"),
       );
       setDateRange(formattedDates);
@@ -346,20 +344,20 @@ export const PaymentLogic = () => {
 
   const edit = (record, type) => {
     if (type === "payment_method") {
-      setEditingKeyPaymentMethod(record._id);
-      setEditingPaymentMethod(record.payment_method);
+      setEditingKeyPaymentMethod(record?._id);
+      setEditingPaymentMethod(record?.payment_method);
     } else if (type === "amount") {
-      setEditingKeyAmount(record._id);
-      setEditingAmount(record.amount);
+      setEditingKeyAmount(record?._id);
+      setEditingAmount(record?.amount);
     } else if (type === "limit_date") {
-      setEditingKeyLimitDate(record._id);
-      setEditingLimitDate(dayjs(record.limit_date));
+      setEditingKeyLimitDate(record?._id);
+      setEditingLimitDate(dayjs(record?.limit_date));
     } else if (type === "period_month") {
-      setEditingKeyPeriodMonth(record._id);
-      setEditingPeriodMonth(dayjs(record.period_month));
+      setEditingKeyPeriodMonth(record?._id);
+      setEditingPeriodMonth(dayjs(record?.period_month));
     } else if (type === "discount_code") {
-      setEditingKeyDiscountCode(record._id);
-      setEditingDiscountCode(record.discount_code);
+      setEditingKeyDiscountCode(record?._id);
+      setEditingDiscountCode(record?.discount_code);
     }
   };
 
@@ -378,7 +376,7 @@ export const PaymentLogic = () => {
 
   const handleSave = async (record, field) => {
     const data = {
-      history_payment_id: record.history_payment_id,
+      history_payment_id: record?.history_payment_id,
       payment_method: editingPaymentMethod,
       amount: editingAmount,
       limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
@@ -477,7 +475,7 @@ export const PaymentLogic = () => {
           >
             <Statistic
               title="Pendiente"
-              value={parseMoney(totals.pending)}
+              value={parseMoney(totals?.pending)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />
           </Card>
@@ -490,7 +488,7 @@ export const PaymentLogic = () => {
           >
             <Statistic
               title="Pagado"
-              value={parseMoney(totals.paid)}
+              value={parseMoney(totals?.paid)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />
           </Card>
@@ -503,7 +501,7 @@ export const PaymentLogic = () => {
           >
             <Statistic
               title="Cancelado"
-              value={parseMoney(totals.cancelled)}
+              value={parseMoney(totals?.cancelled)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />
           </Card>

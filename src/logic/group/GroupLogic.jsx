@@ -159,7 +159,7 @@ export const GroupLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
-    record.couch = record.couch._id;
+    record.couch = record.couch?._id;
     // Convertir fechas ISO a objetos de Moment.js antes de establecer los valores
     if (record.schedule && record.schedule.length === 2) {
       const startISO = record.schedule[0];

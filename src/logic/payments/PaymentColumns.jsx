@@ -64,7 +64,7 @@ export const PaymentColumns = ({
       athlete ? (
         <>
           <Tag color={"blue"} className={"mb-2"}>
-            <Text>{athlete.tuition}</Text>
+            <Text>{athlete?.tuition}</Text>
           </Tag>
         </>
       ) : (
@@ -80,9 +80,9 @@ export const PaymentColumns = ({
     render: (athlete) =>
       athlete ? (
         <div className={"overflow-x-hidden"}>
-          <Tooltip title={athlete.name} color={"blue"}>
+          <Tooltip title={athlete?.name} color={"blue"}>
             <Tag color={"blue"} className={"text-style mb-2"}>
-              <Text className="text-style">{athlete.name}</Text>
+              <Text className="text-style">{athlete?.name}</Text>
             </Tag>
           </Tooltip>
         </div>
@@ -112,7 +112,7 @@ export const PaymentColumns = ({
     align: "center",
     width: 150,
     render: (_, record) =>
-      record?.receipt && record?.receipt.receipt_package_name ? (
+      record?.receipt && record?.receipt?.receipt_package_name ? (
         <div className={"overflow-x-hidden text-center"}>
           <Tooltip title={record?.receipt?.receipt_package_name} color={"cyan"}>
             <Tag color={"cyan"} className={"text-style mb-2"}>
@@ -133,7 +133,7 @@ export const PaymentColumns = ({
     align: "center",
     width: 250,
     render: (_, record) =>
-      editingKeyAmount === record._id ? (
+      editingKeyAmount === record?._id ? (
         <span>
           <InputNumber
             value={editingAmount}
@@ -159,7 +159,7 @@ export const PaymentColumns = ({
             const formattedAmount = new Intl.NumberFormat("es-MX", {
               style: "currency",
               currency: "MXN",
-            }).format(record.amount); // Asegúrate de que 'record.amount' está definido correctamente
+            }).format(record?.amount); // Asegúrate de que 'record.amount' está definido correctamente
 
             return (
               <>
@@ -168,7 +168,7 @@ export const PaymentColumns = ({
                     color={"green"}
                     className={"mr-2 text-green-500"}
                     hidden={
-                      !record.amount_updated || record.status === "Pagado"
+                      !record?.amount_updated || record?.status === "Pagado"
                     }
                   />
                 </Tooltip>
@@ -249,8 +249,8 @@ export const PaymentColumns = ({
         </span>
       ) : (
         <div>
-          <Tag color="blue">{record.payment_method || "No especificado"}</Tag>
-          {record.status !== "Pagado" && record.status !== "Cancelado" ? (
+          <Tag color="blue">{record?.payment_method || "No especificado"}</Tag>
+          {record?.status !== "Pagado" && record?.status !== "Cancelado" ? (
             <EditFilled
               onClick={() => edit(record, "payment_method")}
               size="small"
@@ -269,12 +269,12 @@ export const PaymentColumns = ({
     align: "center",
     width: 200,
     render: (_, record) =>
-      editingKeyDiscountCode === record._id ? ( // Asumimos que usas _id como identificador único
+      editingKeyDiscountCode === record?._id ? ( // Asumimos que usas _id como identificador único
         <span>
           <Input
             value={editingDiscountCode}
             style={{ height: 30 }}
-            onChange={(value) => setEditingDiscountCode(value.target.value)}
+            onChange={(value) => setEditingDiscountCode(value?.target?.value)}
           />
           <Space.Compact className={"mt-2"}>
             <Button
@@ -291,14 +291,14 @@ export const PaymentColumns = ({
         </span>
       ) : (
         <div>
-          <Tag color={record.discount_code_is_applied ? "green" : "cyan"}>
-            {record.discount_code_is_applied ? "Cupon aplicado" : "Sin cupon"}
+          <Tag color={record?.discount_code_is_applied ? "green" : "cyan"}>
+            {record?.discount_code_is_applied ? "Cupon aplicado" : "Sin cupon"}
           </Tag>
           {record.status !== "Pagado" && record.status !== "Cancelado" ? (
             <EditFilled
               onClick={() => edit(record, "discount_code")}
               size="small"
-              hidden={record.discount_code_is_applied}
+              hidden={record?.discount_code_is_applied}
             >
               Editar
             </EditFilled>
@@ -329,7 +329,7 @@ export const PaymentColumns = ({
     align: "center",
     width: 150,
     render: (_, record) =>
-      editingKeyLimitDate === record._id ? (
+      editingKeyLimitDate === record?._id ? (
         <span>
           <DatePicker
             value={dayjs(editingLimitDate, "DD/MM/YYYY")}
@@ -377,19 +377,22 @@ export const PaymentColumns = ({
                   size="small"
                   disabled={editingKeyLimitDate !== ""}
                   hidden={
-                    record.status === "Pagado" || record.status === "Cancelado"
+                    record?.status === "Pagado" ||
+                    record?.status === "Cancelado"
                   }
                 >
                   <Tooltip
                     title={
-                      record.extension !== "" || null
-                        ? `Prorroga: ${record.extension}`
+                      record?.extension !== "" || null
+                        ? `Prorroga: ${record?.extension}`
                         : "Especificar Prorroga"
                     }
-                    color={record.extension ? "blue" : "gray"}
+                    color={record?.extension ? "blue" : "gray"}
                   >
                     <ClockCircleFilled
-                      className={record.extension === "" ? "text-gray-500" : ""}
+                      className={
+                        record?.extension === "" ? "text-gray-500" : ""
+                      }
                     />
                   </Tooltip>
                 </Link>
@@ -426,7 +429,7 @@ export const PaymentColumns = ({
     align: "center",
     width: 200,
     render: (period_month, record) =>
-      editingKeyPeriodMonth === record._id ? ( // Asumimos que usas _id como identificador único
+      editingKeyPeriodMonth === record?._id ? ( // Asumimos que usas _id como identificador único
         <span>
           <DatePicker
             value={editingPeriodMonth}
@@ -525,12 +528,12 @@ export const PaymentColumns = ({
           >
             <Button
               disabled={
-                record.status === "Pagado" || record.status === "Cancelado"
+                record?.status === "Pagado" || record?.status === "Cancelado"
               }
               type={"primary"}
               className="ant-btn-custom px-2 mr-2"
               style={
-                record.status !== "Pagado" && record.status !== "Cancelado"
+                record?.status !== "Pagado" && record?.status !== "Cancelado"
                   ? { backgroundColor: "#48bb78" }
                   : {}
               }
@@ -541,7 +544,7 @@ export const PaymentColumns = ({
             </Button>
           </Popconfirm>
           <Button
-            disabled={record.status !== "Pagado"}
+            disabled={record?.status !== "Pagado"}
             type={"primary"}
             size={"small"}
             className={"bg-primary-700 px-2"}
@@ -574,7 +577,7 @@ export const PaymentColumns = ({
                 <ExclamationCircleFilled
                   color={"yellow"}
                   className={"mr-1 text-yellow-500"}
-                  hidden={!record.reverted || record.status === "Cancelado"}
+                  hidden={!record?.reverted || record?.status === "Cancelado"}
                 />
               </Tooltip>
             </Col>
@@ -583,19 +586,21 @@ export const PaymentColumns = ({
               <div className={"flex flex-row items-center justify-center"}>
                 <Popconfirm
                   title={
-                    record.status !== "Pagado" || record.status === "Cancelado"
+                    record?.status !== "Pagado" ||
+                    record?.status === "Cancelado"
                       ? "Cancelar Pago"
                       : "Revertir Pago"
                   }
                   description={
-                    record.status !== "Pagado" || record.status === "Cancelado"
+                    record?.status !== "Pagado" ||
+                    record?.status === "Cancelado"
                       ? `Estas seguro de cancelar el recibo?`
                       : `Estas seguro de revertir el pago?`
                   }
                   onConfirm={
-                    record.status === "Pagado"
+                    record?.status === "Pagado"
                       ? () => handleRevertReceipt(record)
-                      : record.status !== "Pagado"
+                      : record?.status !== "Pagado"
                         ? () => handleCancelReceipt(record)
                         : handleRevertReceipt(record)
                   }
@@ -604,22 +609,22 @@ export const PaymentColumns = ({
                   wrapClassName="mi-popconfirm-especifico"
                 >
                   <Button
-                    disabled={record.status === "Cancelado"}
+                    disabled={record?.status === "Cancelado"}
                     danger={
-                      record.status !== "Pagado" ||
-                      record.status === "Cancelado"
+                      record?.status !== "Pagado" ||
+                      record?.status === "Cancelado"
                     }
                     type={"primary"}
                     className="flex flex-row items-center justify-center"
                     style={
-                      record.status === "Pagado"
+                      record?.status === "Pagado"
                         ? { backgroundColor: "#ffc979" }
                         : null
                     }
                     size={"middle"}
                   >
-                    {record.status !== "Pagado" ||
-                    record.status === "Cancelado" ? (
+                    {record?.status !== "Pagado" ||
+                    record?.status === "Cancelado" ? (
                       <StopOutlined />
                     ) : (
                       <RollbackOutlined
@@ -635,7 +640,7 @@ export const PaymentColumns = ({
               <Tooltip title={"Pago Manual"}>
                 <BulbFilled
                   className={"bg-gray-300 mr-1 text-yellow-300 rounded-full"}
-                  hidden={!record.is_manual}
+                  hidden={!record?.is_manual}
                 />
               </Tooltip>
             </Col>
