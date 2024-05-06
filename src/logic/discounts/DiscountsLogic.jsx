@@ -86,9 +86,7 @@ export const DiscountsLogic = () => {
   };
 
   const handleDelete = async (record) => {
-    setSelectedRecord(record);
-    setModalContext("delete");
-    await handleSubmit();
+    await mutateDeleteDiscount(record.discount_id);
   };
 
   const handleCancel = () => {
@@ -108,9 +106,6 @@ export const DiscountsLogic = () => {
     }
     if (modalContext === "create") {
       await mutateCreateDiscount(values);
-    }
-    if (modalContext === "delete") {
-      await mutateDeleteDiscount(selectedRecord.discount_id);
     }
   };
 

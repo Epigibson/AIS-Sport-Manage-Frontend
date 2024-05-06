@@ -15,12 +15,6 @@ export const DiscountsFormFields = [
     //   "Selecciona esta opción para agregar la solución del ticket a la Base de Conocimientos, donde otros usuarios pueden beneficiarse de ella.",
     // Puedes omitir 'rules' si no es necesario para un campo específico
   },
-  {
-    name: "product_id",
-    label: "Membresia",
-    inputType: "select",
-    optionsSource: "products",
-  },
   // {
   //   name: "price",
   //   label: "Precio de Membresia",
@@ -61,9 +55,30 @@ export const DiscountsFormFields = [
     ],
   },
   {
+    name: "is_recurrent",
+    label: "Es recurrente",
+    inputType: "checkbox",
+    tooltip:
+      "Selecciona esta opción para agregar el producto a la lista de temporales.",
+  },
+  {
     name: "athletes",
     label: "Atletas",
     inputType: "multipleSelect",
     optionsSource: "athletes",
+    dependencies: {
+      fieldName: "is_recurrent",
+      value: true,
+    },
+  },
+  {
+    name: "product_id",
+    label: "Membresia",
+    inputType: "select",
+    optionsSource: "products",
+    dependencies: {
+      fieldName: "is_recurrent",
+      value: true,
+    },
   },
 ];
