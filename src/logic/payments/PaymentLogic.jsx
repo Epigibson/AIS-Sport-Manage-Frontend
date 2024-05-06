@@ -185,10 +185,15 @@ export const PaymentLogic = () => {
 
   const getTotal = () => {
     let total = 0;
+    let totalCanceled = 0;
     historyPaymentData?.forEach((payment) => {
-      total += payment.amount;
+      if (payment.status === "Cancelado") {
+        totalCanceled += payment.amount;
+      } else {
+        total += payment.amount;
+      }
     });
-    return total;
+    return { total: total, totalCanceled: totalCanceled };
   };
 
   const getAmountsByStatus = () => {
@@ -463,7 +468,7 @@ export const PaymentLogic = () => {
           >
             <Statistic
               title="Total"
-              value={parseMoney(total)}
+              value={parseMoney(total.total)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />
           </Card>
