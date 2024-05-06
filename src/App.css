@@ -82,6 +82,18 @@
     background-color: rgba(141, 33, 75, 0.27);
 }
 
+.ant-float-btn-primary .ant-float-btn-body {
+    background-color: #1d4ed8;
+}
+
+.ant-float-btn-primary .ant-float-btn-body:active {
+    background-color: #3b82f6;
+}
+
+.ant-float-btn-primary .ant-float-btn-body:hover {
+    background-color: #3b82f6;
+}
+
 /*[type='text'],*/
 /*[type='email'],*/
 /*[type='url'],*/

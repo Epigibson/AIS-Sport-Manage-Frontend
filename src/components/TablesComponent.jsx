@@ -11,21 +11,19 @@ export const TablesComponent = ({
   loading,
 }) => {
   return (
-    <div className={"w-full"}>
-      <Table
-        rowKey={(record) => (record._id ? record._id : record.name)}
-        columns={columns}
-        dataSource={data}
-        size={"small"}
-        loading={loading}
-        className={modifiedTable ? "my-dark-table" : ""}
-        pagination={modifiedTable ? false : { pageSize: 15 }}
-        scroll={{
-          x: 1200,
-          y: headerFixed ? 800 : "100%",
-        }}
-      />
-    </div>
+    <Table
+      rowKey={(record) => (record._id ? record._id : record.name)}
+      columns={columns}
+      dataSource={data}
+      size={"small"}
+      loading={loading}
+      className={modifiedTable ? "my-dark-table" : "mt-4"}
+      pagination={modifiedTable ? false : { pageSize: 15 }}
+      scroll={{
+        x: 1200,
+        y: headerFixed ? 800 : "100%",
+      }}
+    />
   );
 };
 

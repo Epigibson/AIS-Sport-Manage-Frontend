@@ -2,20 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-head {
-    background-color: cadetblue;
-}
+/*head {*/
+/*    background-color: cadetblue;*/
+/*}*/
 
-.h-100vh {
-    height: 100vh;
-}
+/*.h-100vh {*/
+/*    height: 100vh;*/
+/*}*/
 
-.w-100 {
-    width: 100%;
-}
+/*.w-100 {*/
+/*    width: 100%;*/
+/*}*/
 
-.pl-10em {
-    padding-inline-start: 18rem;
-    padding-top: 2em;
-    padding-bottom: 2em;
-}
+/*.pl-10em {*/
+/*    padding-inline-start: 18rem;*/
+/*    padding-top: 2em;*/
+/*    padding-bottom: 2em;*/
+/*}*/

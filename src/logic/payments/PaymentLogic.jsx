@@ -22,10 +22,11 @@ import {
   useUpdatePaymentMethod,
 } from "./PaymentLogicMutations.jsx";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
-import { Card, Col, Form, Row, Statistic } from "antd";
+import { Card, Col, FloatButton, Form, Row, Statistic } from "antd";
 import { PaymentExtensionFields } from "./PaymentExtensionFields.jsx";
 import { PaymentFormFields } from "./PaymentFormFields.jsx";
 import dayjs from "dayjs";
+import { FileAddOutlined } from "@ant-design/icons";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -547,18 +548,22 @@ export const PaymentLogic = () => {
         onOpen={isModalVisible}
         onClose={handleCloseModal}
       />
-      <>
-        <TablesComponent
-          data={enrichedHistoryPaymentsData}
-          columns={columns}
-          loading={
-            isLoading ||
-            isUsersLoading ||
-            isAthletesLoading ||
-            isReceiptsLoading
-          }
-        />
-      </>
+      <FloatButton
+        icon={<FileAddOutlined />}
+        type="primary"
+        shape="square"
+        tooltip={<div>Crear Recibo</div>}
+        onClick={showCreateModal}
+      >
+        Crear Pago
+      </FloatButton>
+      <TablesComponent
+        data={enrichedHistoryPaymentsData}
+        columns={columns}
+        loading={
+          isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading
+        }
+      />
     </>
   );
 };

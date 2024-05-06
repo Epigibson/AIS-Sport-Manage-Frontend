@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllDiscounts } from "../../api/DiscountService.jsx";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { DiscountsColumns } from "./DiscountsColumns.jsx";
-import { Button, Form, Row } from "antd";
+import { FloatButton, Form } from "antd";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { useState } from "react";
 import { DiscountsFormFields } from "./DiscountsFormFields.jsx";
@@ -15,6 +15,7 @@ import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { getAllPackages } from "../../api/ProductService.jsx";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
 import { prepareRecord } from "../../utils/FieldsComposerUtils.jsx";
+import { FileAddOutlined } from "@ant-design/icons";
 
 export const DiscountsLogic = () => {
   const [form] = Form.useForm();
@@ -124,15 +125,15 @@ export const DiscountsLogic = () => {
 
   return (
     <>
-      <Row justify={"end"} className={"overflow-hidden"}>
-        <Button
-          className={"bg-primary-700 mb-3"}
-          type={"primary"}
-          onClick={showModal}
-        >
-          Crear nuevo descuento
-        </Button>
-      </Row>
+      <FloatButton
+        icon={<FileAddOutlined />}
+        type="primary"
+        shape="square"
+        tooltip={<div>Crear Descuento</div>}
+        onClick={showModal}
+      >
+        Crear nuevo descuento
+      </FloatButton>
       <ModalComponent
         form={form}
         formFields={DiscountsFormFields}

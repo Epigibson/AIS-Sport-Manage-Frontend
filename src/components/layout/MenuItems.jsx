@@ -82,7 +82,6 @@ export const MenuItems = [
     icon: <ControlFilled />,
     label: "Configuracion",
     path: "/configuracion",
-    searchable: true,
   },
   {
     key: "11",

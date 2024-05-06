@@ -19,7 +19,6 @@ export const PaymentFilters = ({
   handleChangePaymentMethod,
   handleSearch,
   handleResetFilters,
-  showCreateModal,
 }) => {
   return (
     <>
@@ -170,15 +169,6 @@ export const PaymentFilters = ({
                 className={"ml-2 bg-primary-700"}
               >
                 Limpiar Filtros
-              </Button>
-              <Button
-                size={"small"}
-                style={{ width: "100%" }}
-                onClick={showCreateModal}
-                type="primary"
-                className={"ml-2 bg-primary-700"}
-              >
-                Crear Pago
               </Button>
             </Space.Compact>
           </Col>

@@ -3,7 +3,7 @@ import { getAllMovements } from "../../api/MovementService.jsx";
 import { MovementsColumns } from "./MovementsColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
-import { MovementTablesComponent } from "../../components/MovementTableComponent.jsx";
+import { TablesComponent } from "../../components/TablesComponent.jsx";
 
 export const MovementsLogic = () => {
   const {
@@ -49,10 +49,6 @@ export const MovementsLogic = () => {
   });
 
   return (
-    <MovementTablesComponent
-      data={movements}
-      loading={isLoading}
-      columns={columns}
-    />
+    <TablesComponent data={movements} loading={isLoading} columns={columns} />
   );
 };

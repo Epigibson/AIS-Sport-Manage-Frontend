@@ -36,13 +36,12 @@ export const SideBarLayout = ({ children, title }) => {
   } = theme.useToken();
 
   useEffect(() => {
-    if (screens.xs) {
+    if (screens.xs && openKeys.length === 0) {
       setCollapsed(true);
     } else {
       setCollapsed(false);
     }
     localStorage.setItem("openMenuKeys", JSON.stringify(openKeys));
-    // console.log(getToken());
   }, [screens, openKeys]);
 
   useEffect(() => {
