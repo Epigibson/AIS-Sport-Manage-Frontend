@@ -22,10 +22,13 @@ export const payReceipt = async (receipt_id) => {
   }
 };
 
-export const cancelReceipt = async (receipt_id) => {
+export const cancelReceipt = async (data) => {
   try {
+    const queryParams = new URLSearchParams({
+      cancel_reason: data.cancel_reason,
+    }).toString();
     const response = await apiClient.put(
-      `/receipts/cancel_receipt/${receipt_id}`,
+      `/receipts/cancel_receipt/${data.receipt_id}?${queryParams}`,
     );
     return response.data;
   } catch (error) {

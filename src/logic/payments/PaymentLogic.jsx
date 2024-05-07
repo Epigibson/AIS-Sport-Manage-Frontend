@@ -27,13 +27,16 @@ import { PaymentExtensionFields } from "./PaymentExtensionFields.jsx";
 import { PaymentFormFields } from "./PaymentFormFields.jsx";
 import dayjs from "dayjs";
 import { FileAddOutlined } from "@ant-design/icons";
+import { PaymentCancelFields } from "./PaymentCancelFields.jsx";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isExtensionModalVisible, setIsExtensionModalVisible] = useState(false);
+  const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [formCreate] = Form.useForm();
+  const [formCancel] = Form.useForm();
   const [selectedReceipt, setSelectedReceipt] = useState({});
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [userFilter, setUserFilter] = useState("");
@@ -246,6 +249,10 @@ export const PaymentLogic = () => {
     setIsExtensionModalVisible(true);
   };
 
+  const handleCloseCancelModal = () => {
+    setIsCancelModalVisible(false);
+  };
+
   const handleCloseExtensionModal = () => {
     setIsExtensionModalVisible(false);
   };
@@ -301,9 +308,17 @@ export const PaymentLogic = () => {
   };
 
   const handleCancelReceipt = async (record) => {
-    await mutateUpdateCancelReceipt(record.receipt_id);
+    setSelectedReceipt(record);
+    setIsCancelModalVisible(true);
+  };
+
+  const submitCancelReceipt = async () => {
+    const values = await formCancel.validateFields();
+    values.receipt_id = selectedReceipt.receipt_id;
+    await mutateUpdateCancelReceipt(values);
     await handleSearch();
     await refetch();
+    setIsCancelModalVisible(false);
   };
 
   const handleRevertReceipt = async (record) => {
@@ -550,6 +565,14 @@ export const PaymentLogic = () => {
         title={"Prorroga"}
         onOpen={isExtensionModalVisible}
         onClose={handleCloseExtensionModal}
+      />
+      <ModalComponent
+        form={formCancel}
+        formFields={PaymentCancelFields}
+        onOk={submitCancelReceipt}
+        title={"Cancelar Recibo"}
+        onOpen={isCancelModalVisible}
+        onClose={handleCloseCancelModal}
       />
       <ModalComponent
         dataTable={selectedReceipt}

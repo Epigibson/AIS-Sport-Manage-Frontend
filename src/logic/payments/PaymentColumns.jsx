@@ -608,31 +608,45 @@ export const PaymentColumns = ({
                   cancelText="No"
                   wrapClassName="mi-popconfirm-especifico"
                 >
-                  <Button
-                    disabled={record?.status === "Cancelado"}
-                    danger={
-                      record?.status !== "Pagado" ||
-                      record?.status === "Cancelado"
-                    }
-                    type={"primary"}
-                    className="flex flex-row items-center justify-center"
-                    style={
-                      record?.status === "Pagado"
-                        ? { backgroundColor: "#ffc979" }
+                  <Tooltip
+                    title={
+                      record?.cancel_reason
+                        ? `Motivo de cancelacion: ${record?.cancel_reason}`
                         : null
                     }
-                    size={"middle"}
+                    color={"red"}
+                    placement={"left"}
                   >
-                    {record?.status !== "Pagado" ||
-                    record?.status === "Cancelado" ? (
-                      <StopOutlined />
-                    ) : (
-                      <RollbackOutlined
-                        className={"text-yellow-600"}
-                        twoToneColor={"#525b6b"}
-                      />
-                    )}
-                  </Button>
+                    <div
+                      className={`${record?.cancel_reason ? "border-red-300 border-[2px] rounded" : ""}`}
+                    >
+                      <Button
+                        disabled={record?.status === "Cancelado"}
+                        danger={
+                          record?.status !== "Pagado" ||
+                          record?.status === "Cancelado"
+                        }
+                        type={"primary"}
+                        className={`flex flex-row items-center justify-center`}
+                        style={
+                          record?.status === "Pagado"
+                            ? { backgroundColor: "#ffc979" }
+                            : null
+                        }
+                        size={"middle"}
+                      >
+                        {record?.status !== "Pagado" ||
+                        record?.status === "Cancelado" ? (
+                          <StopOutlined />
+                        ) : (
+                          <RollbackOutlined
+                            className={"text-yellow-600"}
+                            twoToneColor={"#525b6b"}
+                          />
+                        )}
+                      </Button>
+                    </div>
+                  </Tooltip>
                 </Popconfirm>
               </div>
             </Col>
