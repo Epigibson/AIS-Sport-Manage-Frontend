@@ -280,6 +280,7 @@ export const FormComponent = ({
 
             {field.inputType === "select" && (
               <Select
+                allowClear={true}
                 className={"text-left"}
                 placeholder={`-- Seleccionar ${field.label} --`}
               >

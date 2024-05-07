@@ -61,7 +61,10 @@ export const PaymentFilters = ({
                   dayjs().startOf("day").subtract(1, "days"),
                   dayjs().endOf("day").subtract(1, "days"),
                 ],
-                Hoy: [dayjs().startOf("day"), dayjs().endOf("day")],
+                Hoy: [
+                  dayjs().startOf("day"),
+                  dayjs().endOf("day").add(1, "days"),
+                ],
                 "Este Mes": [dayjs().startOf("month"), dayjs().endOf("month")],
                 "Esta Semana": [dayjs().startOf("week"), dayjs().endOf("week")],
               }}

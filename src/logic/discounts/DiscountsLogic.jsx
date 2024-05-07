@@ -99,6 +99,8 @@ export const DiscountsLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
+      !values.athletes ? (values.athletes = []) : values.athletes;
+      !values.product_id ? (values.product_id = null) : values.athletes;
       await mutateUpdateDiscount({
         ...values,
         discount_id: selectedRecord.discount_id,

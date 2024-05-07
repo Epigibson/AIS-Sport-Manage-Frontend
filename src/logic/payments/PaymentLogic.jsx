@@ -264,6 +264,7 @@ export const PaymentLogic = () => {
     setStatusPayFilter("");
     setPaymentTypeFilter("");
     setPaymentMethodFilter("");
+    setDateRange([]);
   };
 
   if (isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading)
@@ -467,7 +468,11 @@ export const PaymentLogic = () => {
             }
           >
             <Statistic
-              title="Total"
+              title={
+                <div style={{ fontSize: 12 }}>
+                  Ingreso Estimado: Pendiente + Pagado
+                </div>
+              }
               value={parseMoney(total.total)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />

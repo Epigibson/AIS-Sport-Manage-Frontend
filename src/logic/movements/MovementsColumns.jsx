@@ -53,4 +53,27 @@ export const MovementsColumns = ({
       <Tag color="geekblue">{record.model_field_helper}</Tag>
     ),
   },
+  {
+    title: "Fecha y Hora del Movimiento",
+    dataIndex: "created_at",
+    key: "created_at",
+    align: "center",
+    render: (created_at) => {
+      const date = new Date(created_at);
+      const formattedDate = [
+        `0${date.getDate()}`.slice(-2),
+        `0${date.getMonth() + 1}`.slice(-2),
+        date.getFullYear(),
+      ].join("/");
+      const formattedTime = [
+        `0${date.getHours()}`.slice(-2),
+        `0${date.getMinutes()}`.slice(-2),
+      ].join(":");
+      return (
+        <Tag
+          color={"green"}
+        >{`Fecha: ${formattedDate} - Hora: ${formattedTime}`}</Tag>
+      );
+    },
+  },
 ];
