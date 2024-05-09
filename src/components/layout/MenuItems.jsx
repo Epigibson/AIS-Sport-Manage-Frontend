@@ -1,4 +1,5 @@
 import {
+  AccountBookOutlined,
   ControlFilled,
   CopyrightOutlined,
   DollarCircleOutlined,
@@ -91,6 +92,12 @@ export const MenuItems = [
   },
   {
     key: "12",
+    icon: <AccountBookOutlined />,
+    label: "Reportes",
+    path: "/reportes",
+  },
+  {
+    key: "13",
     icon: <LogoutOutlined />,
     label: "Cerrar Sesion",
     function: "logout",

@@ -94,6 +94,18 @@
     background-color: #3b82f6;
 }
 
+.ant-btn.css-dev-only-do-not-override-1xg9z9n.ant-btn-primary.ant-btn-sm {
+    background-color: #1d4ed8;
+}
+
+.ant-btn.css-dev-only-do-not-override-1xg9z9n.ant-btn-primary.ant-btn-sm:active {
+    background-color: #3b82f6;
+}
+
+.ant-btn.css-dev-only-do-not-override-1xg9z9n.ant-btn-primary.ant-btn-sm:hover {
+    background-color: #1d4ed8;
+}
+
 /*[type='text'],*/
 /*[type='email'],*/
 /*[type='url'],*/

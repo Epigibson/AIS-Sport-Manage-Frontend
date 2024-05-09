@@ -20,6 +20,7 @@ import { IndividualAthletePage } from "./pages/IndividualAthletePage.jsx";
 import { DiscountsPage } from "./pages/DiscountsPage.jsx";
 import { ConfigurationPage } from "./pages/ConfigurationPage.jsx";
 import { MovementsPage } from "./pages/MovementsPage.jsx";
+import { ReportsPage } from "./pages/ReportsPage.jsx";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/adeudos" element={<DebtorsPage />} />
           <Route path="/configuracion" element={<ConfigurationPage />} />
           <Route path="/movimientos" element={<MovementsPage />} />
+          <Route path="/reportes" element={<ReportsPage />} />
           <Route path="/analiticas" element={<AnalyticsPage />} />
           <Route path="/pago/fallo" element={<PaymentFailedPage />} />
           <Route path="/pago/pendiente" element={<PaymentPendingPage />} />
