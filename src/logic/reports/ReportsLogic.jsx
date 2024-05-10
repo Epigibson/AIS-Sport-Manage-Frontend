@@ -16,6 +16,7 @@ export const ReportsLogic = () => {
         items={ReportsTabItems}
         activeKey={activeTab}
         setActiveKey={setActiveTab}
+        baseRoute="/reportes"
       />
     </Card>
   );

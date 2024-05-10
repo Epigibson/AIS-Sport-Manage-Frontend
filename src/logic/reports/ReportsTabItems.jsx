@@ -1,4 +1,5 @@
 import { AthletesPaymentsReportLogic } from "./athletePayments/AthletesPaymentsReportLogic.jsx";
+import { AthletesPaidOrNotLogic } from "./athletesPaidOrNot/AthletesPaidOrNotLogic.jsx";
 
 export const ReportsTabItems = [
   {
@@ -6,10 +7,9 @@ export const ReportsTabItems = [
     label: "Atletas y Pagos",
     component: AthletesPaymentsReportLogic,
   },
-  // {
-  //     key: "2",
-  //     label: "Asignacion de Grupos",
-  //     component: GroupAssignLogic,
-  //     props: currentAthlete,
-  // },
+  {
+    key: "2",
+    label: "Relacion de Pagos de Atletas",
+    component: AthletesPaidOrNotLogic,
+  },
 ];
