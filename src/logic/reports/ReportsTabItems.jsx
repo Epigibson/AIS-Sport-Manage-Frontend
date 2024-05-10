@@ -4,12 +4,12 @@ import { AthletesPaidOrNotLogic } from "./athletesPaidOrNot/AthletesPaidOrNotLog
 export const ReportsTabItems = [
   {
     key: "1",
-    label: "Atletas y Pagos",
-    component: AthletesPaymentsReportLogic,
+    label: "Relacion de Pagos de Atletas",
+    component: AthletesPaidOrNotLogic,
   },
   {
     key: "2",
-    label: "Relacion de Pagos de Atletas",
-    component: AthletesPaidOrNotLogic,
+    label: "Atletas y Pagos",
+    component: AthletesPaymentsReportLogic,
   },
 ];
