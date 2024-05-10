@@ -1,10 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAthletesPaidOrNot } from "../../../api/ReportServce.jsx";
+import {
+  getAthletesPaidOrNot,
+  getTotalsOfMonth,
+} from "../../../api/ReportServce.jsx";
 import { LoaderIconUtils } from "../../../utils/LoaderIconUtils.jsx";
 import { TablesComponent } from "../../../components/TablesComponent.jsx";
 import { AthletesPaidOrNotColumns } from "./AthletesPaidOrNotColumns.jsx";
+import { Row } from "antd";
+import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
+import { StatisticCardsReportData } from "./StatisticCardsReportData.jsx";
+import { useResponsiveFontSize } from "../../../hooks/ResponsiveFontSize/ResponsiveFontSizeHook.jsx";
 
 export const AthletesPaidOrNotLogic = () => {
+  const fontSize = useResponsiveFontSize();
   const {
     data: athletesReportPayOrNot,
     isLoading,
@@ -13,7 +21,10 @@ export const AthletesPaidOrNotLogic = () => {
     queryKey: ["athletesReportPaidOrNot"],
     queryFn: getAthletesPaidOrNot,
   });
-
+  const { data: getTotalsOfMonthData, isError: totalsIsError } = useQuery({
+    queryKey: ["getTotalsOfMonth"],
+    queryFn: getTotalsOfMonth,
+  });
   const currentDate = new Date();
   const currentMonthIndex = currentDate.getMonth(); // Mes actual (indexado desde 0)
   const currentMonth = currentMonthIndex + 1; // Sumar 1 para obtener el mes real
@@ -34,6 +45,8 @@ export const AthletesPaidOrNotLogic = () => {
     "Noviembre",
     "Diciembre",
   ];
+
+  console.log("TOTALES DE MESES", getTotalsOfMonthData);
 
   const lastMonthName = monthNames[lastMonth - 1];
   const currentMonthName = monthNames[currentMonthIndex];
@@ -63,15 +76,40 @@ export const AthletesPaidOrNotLogic = () => {
       )
     : [];
 
+  const statisticCardsDataReportUsed = StatisticCardsReportData(
+    getTotalsOfMonthData,
+    fontSize,
+    lastMonthName,
+    currentMonthName,
+    nextMonthName,
+  );
+
   if (isLoading) return <LoaderIconUtils />;
-  if (isError) return <h1>Error</h1>;
+  if (isError || totalsIsError) return <h1>Error</h1>;
 
   return (
-    <TablesComponent
-      data={athletesReportPayOrNot} // Asegúrate de que listaDeDatos esté bien formateada
-      columns={columns}
-      loading={isLoading} // Estado de carga
-      expandable={false}
-    />
+    <>
+      <Row
+        gutter={[16, 16]}
+        wrap={true}
+        align={"middle"}
+        justify={"center"}
+        className={"mb-6"}
+      >
+        {statisticCardsDataReportUsed.map((card, index) => (
+          <StatisticCard
+            key={index}
+            statistics={card.statistics} // Pasando el array de estadísticas directamente
+            backgroundClass={card.backgroundClass} // El fondo de la tarjeta
+          />
+        ))}
+      </Row>
+      <TablesComponent
+        data={athletesReportPayOrNot} // Asegúrate de que listaDeDatos esté bien formateada
+        columns={columns}
+        loading={isLoading} // Estado de carga
+        expandable={false}
+      />
+    </>
   );
 };
