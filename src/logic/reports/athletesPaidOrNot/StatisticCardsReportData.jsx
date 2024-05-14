@@ -9,7 +9,7 @@ export const StatisticCardsReportData = (
     backgroundClass: "shadow-md bg-gradient-to-r from-cyan-50 to-purple-200",
     statistics: [
       {
-        title: "Atletas",
+        title: "",
         value: `Atletas activos: ${data?.active_athletes}`,
         fontSize: 14,
       },
