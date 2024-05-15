@@ -81,7 +81,7 @@ export const AthletesPaidOrNotColumns = (
           {record?.last_month_amount_left ? (
             <div>Total a deber: {formattedAmountLeft}</div>
           ) : null}
-          {record?.last_month_status === "Sin recibo" ? null : (
+          {record?.last_month_status === "Sin recibos" ? null : (
             <div>Total a pagado: {formattedAmountPaid}</div>
           )}
         </>
@@ -109,7 +109,7 @@ export const AthletesPaidOrNotColumns = (
           {record?.current_month_amount_left ? (
             <div>Total a deber: {formattedAmountLeft}</div>
           ) : null}
-          {record?.current_month_status === "Sin recibo" ? null : (
+          {record?.current_month_status === "Sin recibos" ? null : (
             <div>Total pagado: {formattedAmountPaid}</div>
           )}{" "}
         </>
@@ -137,7 +137,7 @@ export const AthletesPaidOrNotColumns = (
           {record?.next_month_amount_left ? (
             <div>Total a deber: {formattedAmountLeft}</div>
           ) : null}
-          {record?.next_month_status === "Sin recibo" ? null : (
+          {record?.next_month_status === "Sin recibos" ? null : (
             <div>Total pagado: {formattedAmountPaid}</div>
           )}{" "}
         </>

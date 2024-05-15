@@ -376,7 +376,9 @@ export const PaymentLogic = () => {
       setEditingLimitDate(dayjs(record?.limit_date));
     } else if (type === "period_month") {
       setEditingKeyPeriodMonth(record?._id);
-      setEditingPeriodMonth(dayjs(record?.period_month));
+      setEditingPeriodMonth(
+        record?.period_month ? dayjs(record?.period_month) : dayjs(new Date()),
+      );
     } else if (type === "discount_code") {
       setEditingKeyDiscountCode(record?._id);
       setEditingDiscountCode(record?.discount_code);
@@ -397,32 +399,44 @@ export const PaymentLogic = () => {
   };
 
   const handleSave = async (record, field) => {
-    const data = {
-      history_payment_id: record?.history_payment_id,
-      payment_method: editingPaymentMethod,
-      amount: editingAmount,
-      limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
-      period_month: dayjs(editingPeriodMonth).format("YYYY-MM-DD HH:mm"),
-      discount_code: editingDiscountCode,
-    };
     if (field === "payment_method") {
-      // console.log("Metodo de pago");
+      const data = {
+        history_payment_id: record?.history_payment_id,
+        payment_method: editingPaymentMethod,
+      };
+      console.log("Payment Method", data);
       await mutateUpdatePaymentMethod(data);
     }
     if (field === "amount") {
-      // console.log("Cantidad");
+      const data = {
+        history_payment_id: record?.history_payment_id,
+        amount: editingAmount,
+      };
+      console.log("Cantidad", data);
       await mutateEditHistoryPaymentAmount(data);
     }
     if (field === "limit_date") {
-      // console.log("Fecha Limite");
+      const data = {
+        history_payment_id: record?.history_payment_id,
+        limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
+      };
+      console.log("Limit Date", data);
       await mutateEditHistoryPaymentLimitDate(data);
     }
     if (field === "period_month") {
-      // console.log("Mes Correspondiente");
+      const data = {
+        history_payment_id: record?.history_payment_id,
+        period_month: dayjs(editingPeriodMonth).format("YYYY-MM-DD HH:mm"),
+      };
+      console.log("Period Month", data);
       await mutateEditHistoryPaymentPeriodMonth(data);
     }
     if (field === "discount_code") {
-      // await console.log("Codigo de Descuento");
+      const data = {
+        history_payment_id: record?.history_payment_id,
+        discount_code: editingDiscountCode,
+      };
+      console.log("Codigo de Descuento", data);
       await mutateAddHistoryPaymentDiscountCode(data);
     }
     cancel(); // Restablece el estado de edición

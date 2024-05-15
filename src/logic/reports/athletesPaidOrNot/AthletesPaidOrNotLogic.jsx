@@ -6,7 +6,7 @@ import {
 import { LoaderIconUtils } from "../../../utils/LoaderIconUtils.jsx";
 import { TablesComponent } from "../../../components/TablesComponent.jsx";
 import { AthletesPaidOrNotColumns } from "./AthletesPaidOrNotColumns.jsx";
-import { Row } from "antd";
+import { Col, Row } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
 import { StatisticCardsReportData } from "./StatisticCardsReportData.jsx";
 import { useResponsiveFontSize } from "../../../hooks/ResponsiveFontSize/ResponsiveFontSizeHook.jsx";
@@ -46,7 +46,7 @@ export const AthletesPaidOrNotLogic = () => {
     "Diciembre",
   ];
 
-  console.log("TOTALES DE MESES", getTotalsOfMonthData);
+  // console.log("TOTALES DE MESES", getTotalsOfMonthData);
 
   const lastMonthName = monthNames[lastMonth - 1];
   const currentMonthName = monthNames[currentMonthIndex];
@@ -97,11 +97,12 @@ export const AthletesPaidOrNotLogic = () => {
         className={"mb-6"}
       >
         {statisticCardsDataReportUsed.map((card, index) => (
-          <StatisticCard
-            key={index}
-            statistics={card.statistics} // Pasando el array de estadísticas directamente
-            backgroundClass={card.backgroundClass} // El fondo de la tarjeta
-          />
+          <Col key={index} xs={24} sm={12} md={8} lg={6}>
+            <StatisticCard
+              statistics={card.statistics} // Pasando el array de estadísticas directamente
+              backgroundClass={card.backgroundClass} // El fondo de la tarjeta
+            />
+          </Col>
         ))}
       </Row>
       <TablesComponent

@@ -18,6 +18,7 @@ export const TablesComponent = ({
   return (
     <Table
       rowKey={(record) => record._id || record.id || record.name}
+      key={(record) => record._id || record.id || record.name}
       columns={columns}
       dataSource={data}
       showSorterTooltip={{
@@ -30,6 +31,7 @@ export const TablesComponent = ({
                 return (
                   <Table
                     rowKey={(item) => item._id}
+                    key={(item) => item._id}
                     columns={nestedColumns}
                     dataSource={[record]} // Example for last month payments
                     pagination={false}
@@ -39,13 +41,13 @@ export const TablesComponent = ({
               expandRowByClick: true,
               expandIcon: ({ expanded, onExpand, record }) => {
                 return expanded ? (
-                  <PlusCircleTwoTone
+                  <MinusCircleTwoTone
                     onClick={(e) => {
                       onExpand(record, e);
                     }}
                   />
                 ) : (
-                  <MinusCircleTwoTone
+                  <PlusCircleTwoTone
                     onClick={(e) => {
                       onExpand(record, e);
                     }}

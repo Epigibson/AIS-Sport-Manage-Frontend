@@ -121,11 +121,10 @@ export const editHistoryPaymentLimitDate = async (data) => {
 
 export const editHistoryPaymentPeriodMonth = async (data) => {
   try {
-    // console.log("Metodo de Pago", data);
     // Construye los parámetros de consulta correctamente
     const queryParams = new URLSearchParams({
       period_month: data.period_month,
-    }).toString();
+    });
     const response = await apiClient.put(
       `/history_payment/period_month/${data.history_payment_id}?${queryParams}`,
     );

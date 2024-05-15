@@ -1,23 +1,23 @@
-import { Card, Col, Statistic } from "antd";
+import { Card, Statistic } from "antd";
 import PropTypes from "prop-types";
 
 export const StatisticCard = ({ statistics, backgroundClass }) => (
-  <Col xs={24} sm={12} md={10} lg={6}>
-    <Card className={`mt-3 shadow-md ${backgroundClass}`}>
-      {statistics.map((stat, index) => (
-        <Statistic
-          key={index}
-          valueStyle={{
-            fontSize: stat.fontSize,
-            fontWeight: stat.fontWeight,
-          }} // Asegúrate de pasar fontSize correctamente
-          title={stat.title}
-          value={stat.value}
-          prefix={stat.prefix}
-        />
-      ))}
-    </Card>
-  </Col>
+  // <Col xs={24} sm={12} md={8} lg={4}>
+  <Card className={`mt-3 shadow-md ${backgroundClass}`}>
+    {statistics.map((stat, index) => (
+      <Statistic
+        key={index}
+        valueStyle={{
+          fontSize: stat.fontSize,
+          fontWeight: stat.fontWeight,
+        }} // Asegúrate de pasar fontSize correctamente
+        title={stat.title}
+        value={stat.value}
+        prefix={stat.prefix}
+      />
+    ))}
+  </Card>
+  // </Col>
 );
 
 StatisticCard.propTypes = {
