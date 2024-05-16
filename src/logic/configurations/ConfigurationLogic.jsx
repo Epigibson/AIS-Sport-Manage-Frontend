@@ -51,7 +51,7 @@ export const ConfigurationLogic = () => {
 
   return (
     <div>
-      {isLoading && <LoaderIconUtils />}
+      {isLoading && <LoaderIconUtils isLoading={true} />}
       {error && <div>Error: {error.message}</div>}
       {!isLoading && !error && (
         <>

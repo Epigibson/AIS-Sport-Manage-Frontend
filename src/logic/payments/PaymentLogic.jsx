@@ -6,7 +6,7 @@ import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllReceipts } from "../../api/ReceiptsService.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
@@ -58,7 +58,7 @@ export const PaymentLogic = () => {
   const [dateRange, setDateRange] = useState([]);
   const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
   const [firstCharge, setFirstCharge] = useState(0);
-  // const [enrichedHistoryPaymentsData, setEnrichedHistoryPaymentsData] = useState({});
+  const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
   const queryClient = useQueryClient();
   const {
     data: historyPaymentData,
@@ -131,8 +131,30 @@ export const PaymentLogic = () => {
     await refetchReceipts();
   };
 
-  const enrichedHistoryPaymentsData = historyPaymentData?.map(
-    (historyPayment) => {
+  useEffect(() => {
+    if (
+      historyPaymentData &&
+      usersData &&
+      athletesData &&
+      receiptsData &&
+      isLoadingEnrichedData
+    ) {
+      setIsLoadingEnrichedData(false);
+    }
+  }, [
+    isLoadingEnrichedData,
+    historyPaymentData,
+    usersData,
+    athletesData,
+    receiptsData,
+  ]);
+
+  const enrichedHistoryPaymentsData = useMemo(() => {
+    if (!historyPaymentData || !usersData || !athletesData || !receiptsData) {
+      return [];
+    }
+
+    return historyPaymentData?.map((historyPayment) => {
       const user = usersData?.find(
         (user) => user?._id === historyPayment?.user,
       ); // Ajusta según la estructura de tus datos
@@ -150,8 +172,8 @@ export const PaymentLogic = () => {
         limit_date: receipt?.limit_date,
         updated_at: receipt?.updated_at,
       }; // Añade la información del grupo al objeto de usuario
-    },
-  );
+    });
+  }, [historyPaymentData, usersData, athletesData, receiptsData]);
 
   useEffect(() => {
     // console.log("AUTOFETCH", autoFetchEnabled);
@@ -274,24 +296,12 @@ export const PaymentLogic = () => {
     setDateRange([]);
   };
 
-  if (isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading)
-    return <LoaderIconUtils />;
-  if (isError) return <h1>Error...</h1>;
-
   const handleCreatePayment = async () => {
     const values = await formCreate.validateFields();
     await mutateCreate(values);
     formCreate.resetFields();
     setIsCreateModalVisible(false);
   };
-
-  // const handleEditLimitDate = async () => {
-  //   const values = await form.validateFields();
-  //   values.history_payment_id = selectedPayment.history_payment_id;
-  //   await mutateEditHistoryPaymentAmount(values);
-  //   form.resetFields();
-  //   setIsModalVisible(false);
-  // };
 
   const handleEditExtension = async () => {
     const values = await form.validateFields();
@@ -480,6 +490,10 @@ export const PaymentLogic = () => {
     });
     return `$${parsedMoney} MXN`;
   };
+
+  if (isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading)
+    return <LoaderIconUtils isLoading={true} />;
+  if (isError) return <h1>Error...</h1>;
 
   return (
     <>

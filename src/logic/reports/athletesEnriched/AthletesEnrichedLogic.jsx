@@ -1,20 +1,27 @@
-import { TablesComponent } from "../../../components/TablesComponent.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { getAllAthletesEnriched } from "../../../api/AtheleService.jsx";
 import { AthletesEnrichedColumns } from "./AthletesEnrichedColumns.jsx";
 import { LoaderIconUtils } from "../../../utils/LoaderIconUtils.jsx";
 import { AthletesEnrichedNestedColumns } from "./AthletesEnrichedNestedColumns.jsx";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
+import { AthletesEnrichedStatisticCards } from "./AthletesEnrichedStatisticCards.jsx";
+import { getAmountsByStatus } from "./AthletesEnrichedCalculateTotals.jsx";
 import { Button, Col, DatePicker, Row, Space } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
-import { AthletesEnrichedStatisticCards } from "./AthletesEnrichedStatisticCards.jsx";
 import { DatePresets } from "../../../utils/DatesUtils.jsx";
-import { getAmountsByStatus } from "./AthletesEnrichedCalculateTotals.jsx";
+import { TablesComponent } from "../../../components/TablesComponent.jsx";
+import { useLoading } from "../../../hooks/LoadingContext/LoadingContext.jsx";
+import { PrepareFilters } from "./AthletesEnrichedPrepareFilters.jsx";
 
 export const AthletesEnrichedLogic = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const {
+    startLoading,
+    stopLoading,
+    isLoading: globalIsLoading,
+  } = useLoading();
 
   const {
     data: athletesEnriched,
@@ -25,25 +32,29 @@ export const AthletesEnrichedLogic = () => {
     queryKey: ["athletesEnriched", { startDate, endDate }],
     queryFn: () =>
       getAllAthletesEnriched({ start_date: startDate, end_date: endDate }),
+    onSuccess: () => {
+      stopLoading();
+    },
+    onError: () => {
+      stopLoading();
+    },
   });
 
-  const prepareFilters = (data, dataIndex) => {
-    if (!data) return [];
-    const uniqueValues = Array.from(
-      new Set(data.map((item) => item[dataIndex])),
-    );
-    return uniqueValues.map((value) => ({
-      text: value.toString(),
-      value,
-    }));
-  };
+  // Solo actualizar el estado de carga cuando cambie `isLoading`
+  useEffect(() => {
+    if (isLoading) {
+      startLoading();
+    } else {
+      stopLoading();
+    }
+  }, [isLoading, startLoading, stopLoading]);
 
   const columns = useMemo(
     () =>
       athletesEnriched
         ? AthletesEnrichedColumns({
-            name: prepareFilters(athletesEnriched, "name"),
-            status: prepareFilters(athletesEnriched, "status"),
+            name: PrepareFilters(athletesEnriched, "name"),
+            status: PrepareFilters(athletesEnriched, "status"),
           })
         : [],
     [athletesEnriched],
@@ -68,43 +79,46 @@ export const AthletesEnrichedLogic = () => {
     [athletesEnriched],
   );
 
-  if (isError) return <h1>Error</h1>;
-  if (isLoading) return <LoaderIconUtils />;
-
   return (
     <>
-      <Row
-        gutter={[16, 16]}
-        wrap={true}
-        align={"middle"}
-        justify={"center"}
-        className={"mb-6"}
-      >
-        {statisticCardsDataUsed.map((card, index) => (
-          <Col key={index} xs={24} sm={12} md={8} lg={4}>
-            <StatisticCard
-              statistics={card.statistics} // Pasando el array de estadísticas directamente
-              backgroundClass={card.backgroundClass} // El fondo de la tarjeta
+      {globalIsLoading && <LoaderIconUtils isLoading={true} />}
+      {isError && <h1>Error</h1>}
+      {!globalIsLoading && !isError && (
+        <>
+          <Row
+            gutter={[16, 16]}
+            wrap={true}
+            align={"middle"}
+            justify={"center"}
+            className={"mb-6"}
+          >
+            {statisticCardsDataUsed?.map((card, index) => (
+              <Col key={index} xs={24} sm={12} md={8} lg={4}>
+                <StatisticCard
+                  statistics={card.statistics} // Pasando el array de estadísticas directamente
+                  backgroundClass={card.backgroundClass} // El fondo de la tarjeta
+                />
+              </Col>
+            ))}
+          </Row>
+          <Space direction="horizontal" size={12}>
+            <DatePicker.RangePicker
+              placeholder={["Inicio", "Fin"]}
+              presets={DatePresets}
+              onChange={onDateChange}
             />
-          </Col>
-        ))}
-      </Row>
-      <Space direction="horizontal" size={12}>
-        <DatePicker.RangePicker
-          placeholder={["Inicio", "Fin"]}
-          presets={DatePresets}
-          onChange={onDateChange}
-        />
-        <Button onClick={clearFilters}>Limpiar</Button>
-      </Space>
-      <TablesComponent
-        data={athletesEnriched}
-        loading={isLoading}
-        expandable={true}
-        columns={columns}
-        nestedColumns={nestedColumns}
-        headerFixed={true}
-      />
+            <Button onClick={clearFilters}>Limpiar</Button>
+          </Space>
+          <TablesComponent
+            data={athletesEnriched}
+            loading={isLoading}
+            expandable={true}
+            columns={columns}
+            nestedColumns={nestedColumns}
+            headerFixed={true}
+          />
+        </>
+      )}
     </>
   );
 };

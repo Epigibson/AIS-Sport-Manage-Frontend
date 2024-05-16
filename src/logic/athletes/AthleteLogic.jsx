@@ -3,7 +3,7 @@ import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {TablesComponent} from "../../components/TablesComponent.jsx";
 import {getAllGroups} from "../../api/GroupService.jsx";
 import {Button, Form, Grid, message, Row} from "antd";
-import {useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {
   useChangeAthleteStatus,
   useChangeAvatar,
@@ -32,10 +32,11 @@ export const AthleteLogic = () => {
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
+  const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
   const {
     data: athletesData,
-    isLoading,
-    isError,
+    isLoading: isAthletesLoading,
+    isError: isAthletesError,
   } = useQuery({ queryKey: ["allAthletes"], queryFn: getAllAthletes });
 
   const { data: groupsData } = useQuery({
@@ -53,43 +54,53 @@ export const AthleteLogic = () => {
     queryFn: getAllPackages,
   });
 
-  const enrichedUsersData = athletesData?.map((athlete) => {
-    const athleteGroups = groupsData?.filter((group) =>
-      athlete.groups?.includes(group._id),
-    );
+  useEffect(() => {
+    if (athletesData && groupsData && usersData && packagesData) {
+      setIsLoadingEnrichedData(false);
+    }
+  }, [athletesData, groupsData, usersData, packagesData]);
 
-    const tutorsData = usersData?.filter((user) =>
-      user.athletes.includes(athlete._id),
-    );
+  const enrichedUsersData = useMemo(() => {
+    if (!athletesData || !groupsData || !usersData || !packagesData) {
+      return [];
+    }
 
-    const packages = packagesData
-      ?.filter((packageObject) =>
-        athlete.products_which_inscribed?.some(
-          (productInscribed) => productInscribed === packageObject._id,
-        ),
-      )
-      .filter((packageObject) => packageObject.product_name !== "Inscripcion")
-      .map((packageObject) => ({
-        id: packageObject._id,
-        name: packageObject.product_name,
-      }));
+    return athletesData.map((athlete) => {
+      const athleteGroups = groupsData.filter((group) =>
+        athlete.groups?.includes(group._id),
+      );
 
-    // Only access tutor details if at least one tutor is found
-    const firstTutor =
-      tutorsData && tutorsData.length > 0 ? tutorsData[0] : null;
+      const tutorsData = usersData.filter((user) =>
+        user.athletes.includes(athlete._id),
+      );
 
-    return {
-      ...athlete,
-      groups: athleteGroups, // Athlete's groups
-      tutors: tutorsData, // All tutors data
-      tutors_name_one: firstTutor?.tutors_name_one, // Safely access tutor properties
-      tutors_name_two: firstTutor?.tutors_name_two,
-      email: firstTutor?.email,
-      phone: firstTutor?.phone,
-      mobile: firstTutor?.mobile,
-      products_which_inscribed: packages, // Enriched packages data
-    };
-  });
+      const packages = packagesData
+        .filter((packageObject) =>
+          athlete.products_which_inscribed?.some(
+            (productInscribed) => productInscribed === packageObject._id,
+          ),
+        )
+        .filter((packageObject) => packageObject.product_name !== "Inscripcion")
+        .map((packageObject) => ({
+          id: packageObject._id,
+          name: packageObject.product_name,
+        }));
+
+      const firstTutor = tutorsData.length > 0 ? tutorsData[0] : null;
+
+      return {
+        ...athlete,
+        groups: athleteGroups,
+        tutors: tutorsData,
+        tutors_name_one: firstTutor?.tutors_name_one,
+        tutors_name_two: firstTutor?.tutors_name_two,
+        email: firstTutor?.email,
+        phone: firstTutor?.phone,
+        mobile: firstTutor?.mobile,
+        products_which_inscribed: packages,
+      };
+    });
+  }, [athletesData, groupsData, usersData, packagesData]);
 
   const handleSearch = async () => {
     await queryClient.invalidateQueries({
@@ -197,8 +208,9 @@ export const AthleteLogic = () => {
     handleChangeStatus,
   });
 
-  if (isLoading) return <LoaderIconUtils />;
-  if (isError) return <h1>Error...</h1>;
+  if (isAthletesLoading || isLoadingEnrichedData)
+    return <LoaderIconUtils isLoading={true} />;
+  if (isAthletesError) return <h1>Error...</h1>;
 
   return (
     <>

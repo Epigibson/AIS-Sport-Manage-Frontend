@@ -31,7 +31,7 @@ export const IndividualAthleteLogic = () => {
     ? currentAthlete?.avatar
     : defaultImageUrl;
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (isError) return <div>Error: {error.message}</div>;
 
   return (

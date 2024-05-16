@@ -194,15 +194,15 @@ export const GroupLogic = () => {
     message.error("Click on No").then((e) => e);
   };
 
-  if (isLoading) return <LoaderIconUtils />;
-  if (isError) return <div>Error</div>;
-
   const columns = GroupColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,
     onShowMembers: showModalMembers,
   });
+
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
+  if (isError) return <div>Error</div>;
 
   return (
     <>

@@ -5,6 +5,7 @@ import { debtorsColumns } from "./DebtorsColumns.jsx";
 import { getAllDebtors } from "../../api/DebtorService.jsx";
 import "./DebtorsLogicStyle.css";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 export const DebtorsLogic = () => {
   const [modifiedTable] = useState(true);
@@ -38,7 +39,7 @@ export const DebtorsLogic = () => {
     return () => clearInterval(interval);
   }, [debtors]);
 
-  if (isLoading) return <div>Cargando información...</div>;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (isError) return <div>Error al cargar los datos...</div>;
 
   return (

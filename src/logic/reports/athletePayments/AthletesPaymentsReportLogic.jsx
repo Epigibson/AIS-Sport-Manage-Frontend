@@ -65,7 +65,7 @@ export const AthletesPaymentsReportLogic = () => {
     mesSiguiente,
   );
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (isError) return <h1>Error</h1>;
 
   return (

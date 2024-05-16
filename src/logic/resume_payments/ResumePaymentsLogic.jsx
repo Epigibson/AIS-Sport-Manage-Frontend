@@ -21,11 +21,10 @@ export const ResumePaymentsLogic = () => {
   const statisticCardsDataUsed = statisticCardsData(data, fontSize);
 
   if (isError) {
-    // console.log(error);
     return <div>Error: {error.message}</div>;
   }
   if (isPending) {
-    return <LoaderIconUtils />;
+    return <LoaderIconUtils isLoading={true} />;
   }
   if (isSuccess) {
     // console.log(data);

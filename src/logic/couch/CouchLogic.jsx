@@ -130,7 +130,7 @@ export const CouchLogic = () => {
     screen: screen,
   });
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (isError) return <div>Error...</div>;
 
   return (

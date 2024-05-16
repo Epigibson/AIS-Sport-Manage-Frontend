@@ -10,9 +10,16 @@ import { Col, Row } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
 import { StatisticCardsReportData } from "./StatisticCardsReportData.jsx";
 import { useResponsiveFontSize } from "../../../hooks/ResponsiveFontSize/ResponsiveFontSizeHook.jsx";
+import { useLoading } from "../../../hooks/LoadingContext/LoadingContext.jsx";
+import { useEffect } from "react";
 
 export const AthletesPaidOrNotLogic = () => {
   const fontSize = useResponsiveFontSize();
+  const {
+    startLoading,
+    stopLoading,
+    isLoading: globalIsLoading,
+  } = useLoading();
   const {
     data: athletesReportPayOrNot,
     isLoading,
@@ -20,8 +27,14 @@ export const AthletesPaidOrNotLogic = () => {
   } = useQuery({
     queryKey: ["athletesReportPaidOrNot"],
     queryFn: getAthletesPaidOrNot,
+    onSuccess: () => {
+      stopLoading();
+    },
+    onError: () => {
+      stopLoading();
+    },
   });
-  const { data: getTotalsOfMonthData, isError: totalsIsError } = useQuery({
+  const { data: getTotalsOfMonthData } = useQuery({
     queryKey: ["getTotalsOfMonth"],
     queryFn: getTotalsOfMonth,
   });
@@ -46,7 +59,14 @@ export const AthletesPaidOrNotLogic = () => {
     "Diciembre",
   ];
 
-  // console.log("TOTALES DE MESES", getTotalsOfMonthData);
+  // Solo actualizar el estado de carga cuando cambie `isLoading`
+  useEffect(() => {
+    if (isLoading) {
+      startLoading();
+    } else {
+      stopLoading();
+    }
+  }, [isLoading, startLoading, stopLoading]);
 
   const lastMonthName = monthNames[lastMonth - 1];
   const currentMonthName = monthNames[currentMonthIndex];
@@ -84,33 +104,36 @@ export const AthletesPaidOrNotLogic = () => {
     nextMonthName,
   );
 
-  if (isLoading) return <LoaderIconUtils />;
-  if (isError || totalsIsError) return <h1>Error</h1>;
-
   return (
     <>
-      <Row
-        gutter={[16, 16]}
-        wrap={true}
-        align={"middle"}
-        justify={"center"}
-        className={"mb-6"}
-      >
-        {statisticCardsDataReportUsed.map((card, index) => (
-          <Col key={index} xs={24} sm={12} md={8} lg={6}>
-            <StatisticCard
-              statistics={card.statistics} // Pasando el array de estadísticas directamente
-              backgroundClass={card.backgroundClass} // El fondo de la tarjeta
-            />
-          </Col>
-        ))}
-      </Row>
-      <TablesComponent
-        data={athletesReportPayOrNot} // Asegúrate de que listaDeDatos esté bien formateada
-        columns={columns}
-        loading={isLoading} // Estado de carga
-        expandable={false}
-      />
+      {globalIsLoading && <LoaderIconUtils isLoading={true} />}
+      {isError && <h1>Error</h1>}
+      {!globalIsLoading && !isError && (
+        <>
+          <Row
+            gutter={[16, 16]}
+            wrap={true}
+            align={"middle"}
+            justify={"center"}
+            className={"mb-6"}
+          >
+            {statisticCardsDataReportUsed.map((card, index) => (
+              <Col key={index} xs={24} sm={12} md={8} lg={6}>
+                <StatisticCard
+                  statistics={card.statistics} // Pasando el array de estadísticas directamente
+                  backgroundClass={card.backgroundClass} // El fondo de la tarjeta
+                />
+              </Col>
+            ))}
+          </Row>
+          <TablesComponent
+            data={athletesReportPayOrNot} // Asegúrate de que listaDeDatos esté bien formateada
+            columns={columns}
+            loading={isLoading} // Estado de carga
+            expandable={false}
+          />
+        </>
+      )}
     </>
   );
 };

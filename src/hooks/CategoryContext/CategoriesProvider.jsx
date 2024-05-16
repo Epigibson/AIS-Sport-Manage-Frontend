@@ -15,7 +15,7 @@ export const CategoriesProvider = ({ children }) => {
     queryFn: getAllCategories,
   });
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={isLoading} />;
   if (isError) return <div>Error loading categories: {error?.message}</div>;
 
   return (

@@ -84,7 +84,7 @@ export const PackageLogic = () => {
     message?.error("Click on No");
   };
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (isError) return <div>Error</div>;
 
   const columns = PackagesColumns({

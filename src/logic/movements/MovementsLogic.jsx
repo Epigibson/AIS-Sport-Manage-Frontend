@@ -38,7 +38,7 @@ export const MovementsLogic = () => {
   );
 
   if (error) return <div>Error: {error.message}</div>;
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
 
   const columns = MovementsColumns({
     typeSearchProps,

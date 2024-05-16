@@ -80,18 +80,13 @@ export const MembershipAssignLogic = () => {
     await mutateRemoveMembershipToAthlete(values);
   };
 
-  if (isLoading)
-    return (
-      <div>
-        <LoaderIconUtils />
-      </div>
-    );
-  if (isError) return <div>Error: {error.message}</div>;
-
   const columns = MembershipsFromAthletesColumns({
     onDelete: handleDelete,
     onCancel: handleCancel,
   });
+
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
+  if (isError) return <div>Error: {error.message}</div>;
 
   return (
     <Card loading={isLoading}>

@@ -119,7 +119,7 @@ export const DiscountsLogic = () => {
     onCancel: handleCancel,
   });
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (isError) return <div>{Error}</div>;
 
   return (
