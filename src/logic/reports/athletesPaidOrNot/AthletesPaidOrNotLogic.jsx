@@ -10,7 +10,7 @@ import { Col, Row } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
 import { StatisticCardsReportData } from "./StatisticCardsReportData.jsx";
 import { useResponsiveFontSize } from "../../../hooks/ResponsiveFontSize/ResponsiveFontSizeHook.jsx";
-import { useLoading } from "../../../hooks/LoadingContext/LoadingContext.jsx";
+import { useLoading } from "../../../hooks/LoadingContext/useLoading.jsx";
 import { useEffect } from "react";
 
 export const AthletesPaidOrNotLogic = () => {

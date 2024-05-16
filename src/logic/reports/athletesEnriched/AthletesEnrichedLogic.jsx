@@ -11,7 +11,7 @@ import { Button, Col, DatePicker, Row, Space } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
 import { DatePresets } from "../../../utils/DatesUtils.jsx";
 import { TablesComponent } from "../../../components/TablesComponent.jsx";
-import { useLoading } from "../../../hooks/LoadingContext/LoadingContext.jsx";
+import { useLoading } from "../../../hooks/LoadingContext/useLoading.jsx";
 import { PrepareFilters } from "./AthletesEnrichedPrepareFilters.jsx";
 
 export const AthletesEnrichedLogic = () => {
@@ -106,9 +106,22 @@ export const AthletesEnrichedLogic = () => {
               placeholder={["Inicio", "Fin"]}
               presets={DatePresets}
               onChange={onDateChange}
+              value={
+                startDate && endDate ? [dayjs(startDate), dayjs(endDate)] : []
+              }
             />
             <Button onClick={clearFilters}>Limpiar</Button>
           </Space>
+          {/*<Row justify={"center"} align={"center"} className={"mt-2"}>*/}
+          {/*  {startDate && endDate && (*/}
+          {/*    <Text>*/}
+          {/*      <strong>*/}
+          {/*        Rango de fechas: {dayjs(startDate).format("DD/MM/YYYY")} -{" "}*/}
+          {/*        {dayjs(endDate).format("DD/MM/YYYY")}*/}
+          {/*      </strong>*/}
+          {/*    </Text>*/}
+          {/*  )}*/}
+          {/*</Row>*/}
           <TablesComponent
             data={athletesEnriched}
             loading={isLoading}

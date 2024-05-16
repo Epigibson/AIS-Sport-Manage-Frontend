@@ -1,4 +1,4 @@
-import { Tag } from "antd";
+import { Avatar, Row, Tag, Tooltip } from "antd";
 import { FormatCurrencyUtil } from "../../../utils/FormatCurrencyUtil.jsx";
 
 export const AthletesEnrichedColumns = (filters) => [
@@ -9,6 +9,48 @@ export const AthletesEnrichedColumns = (filters) => [
     align: "center",
     defaultSortOrder: "descend",
     sorter: (a, b) => a.tuition - b.tuition,
+  },
+  {
+    title: "Membresias",
+    dataIndex: "products_which_inscribed",
+    key: "products_which_inscribed",
+    align: "center",
+    render: (products_which_inscribed) => {
+      let names = products_which_inscribed
+        .map((membership) => membership.product_name)
+        .join("\n");
+
+      return (
+        <>
+          <Tooltip
+            color={"cyan"}
+            title={<div style={{ whiteSpace: "pre-line" }}>{names}</div>}
+            placement={"left"}
+          >
+            <Row align={"middle"} justify={"center"}>
+              {products_which_inscribed.map((membership) => {
+                const productName = membership?.product_name || "";
+                const firstLetter = productName.charAt(0);
+                const secondLetter = productName.charAt(1).toUpperCase();
+                const lastLetter = productName.charAt(2).toUpperCase();
+
+                return (
+                  <Avatar
+                    key={membership._id}
+                    style={{ backgroundColor: "#cfd3fd", color: "#0045f5" }}
+                    className={"mx-1"}
+                  >
+                    {firstLetter}
+                    {secondLetter}
+                    {lastLetter}
+                  </Avatar>
+                );
+              })}
+            </Row>
+          </Tooltip>
+        </>
+      );
+    },
   },
   {
     title: "Atleta",
@@ -38,29 +80,9 @@ export const AthletesEnrichedColumns = (filters) => [
     },
   },
   {
-    title: "Monto Total",
-    key: "amount",
-    align: "center",
-    width: 200,
-    render: (_, record) => {
-      let sum = 0;
-      record.payments.map((payment) =>
-        payment?.amount && payment?.status !== "Cancelado"
-          ? (sum += payment.amount)
-          : null,
-      );
-      return (
-        <div className={"mt-2 pb-0"}>
-          <strong>{FormatCurrencyUtil(sum)}</strong>
-        </div>
-      );
-    },
-  },
-  {
     title: "Monto Pagado",
     key: "amount",
     align: "center",
-    width: 200,
     render: (_, record) => {
       let sum = 0;
       record.payments.map((payment) =>
@@ -79,7 +101,6 @@ export const AthletesEnrichedColumns = (filters) => [
     title: "Monto Pendiente",
     key: "amount",
     align: "center",
-    width: 200,
     render: (_, record) => {
       let sum = 0;
       record?.payments.forEach((payment) => {
@@ -90,6 +111,24 @@ export const AthletesEnrichedColumns = (filters) => [
           sum += payment.amount;
         }
       });
+      return (
+        <div className={"mt-2 pb-0"}>
+          <strong>{FormatCurrencyUtil(sum)}</strong>
+        </div>
+      );
+    },
+  },
+  {
+    title: "Total Esperado (Pagado + Pendiente)",
+    key: "amount",
+    align: "center",
+    render: (_, record) => {
+      let sum = 0;
+      record.payments.map((payment) =>
+        payment?.amount && payment?.status !== "Cancelado"
+          ? (sum += payment.amount)
+          : null,
+      );
       return (
         <div className={"mt-2 pb-0"}>
           <strong>{FormatCurrencyUtil(sum)}</strong>

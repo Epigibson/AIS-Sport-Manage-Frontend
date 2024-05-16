@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CategoriesProvider } from "./hooks/CategoryContext/CategoriesProvider.jsx";
-import { LoadingProvider } from "./hooks/LoadingContext/LoadingContext.jsx";
+import { LoadingProvider } from "./hooks/LoadingContext/LoadingProvider.jsx";
 
 const queryClient = new QueryClient();
 

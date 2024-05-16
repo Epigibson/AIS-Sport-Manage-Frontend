@@ -15,7 +15,7 @@ export const RolesProvider = ({ children }) => {
     queryFn: getAllRoles,
   });
 
-  if (isLoading) return <LoaderIconUtils />;
+  if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (isError) return <div>Error loading roles: {error?.message}</div>;
 
   return (

@@ -16,20 +16,6 @@ export const AthletesEnrichedStatisticCards = (data) => [
     ],
   },
   {
-    backgroundClass: "shadow-md bg-gradient-to-r from-orange-50 to-blue-200",
-    statistics: [
-      {
-        title: "Total",
-        value: `$${parseFloat(data?.total).toLocaleString("es-MX", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })} MXN`,
-        fontSize: 14,
-        fontWeight: "bold",
-      },
-    ],
-  },
-  {
     backgroundClass: "shadow-md bg-gradient-to-r from-yellow-50 to-green-200",
     statistics: [
       {
@@ -49,6 +35,20 @@ export const AthletesEnrichedStatisticCards = (data) => [
       {
         title: "Pendiente",
         value: `$${parseFloat(data?.pending).toLocaleString("es-MX", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })} MXN`,
+        fontSize: 14,
+        fontWeight: "bold",
+      },
+    ],
+  },
+  {
+    backgroundClass: "shadow-md bg-gradient-to-r from-orange-50 to-blue-200",
+    statistics: [
+      {
+        title: "Total",
+        value: `$${parseFloat(data?.total).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })} MXN`,

@@ -4,12 +4,12 @@ import { AthletesEnrichedLogic } from "./athletesEnriched/AthletesEnrichedLogic.
 export const ReportsTabItems = [
   {
     key: "1",
-    label: "Reporte de Pagos 1",
+    label: "Reporte de Ingresos",
     component: AthletesEnrichedLogic,
   },
   {
     key: "2",
-    label: "Reporte de Pagos 2",
+    label: "Reporte de Estatus de Pago",
     component: AthletesPaidOrNotLogic,
   },
 ];
