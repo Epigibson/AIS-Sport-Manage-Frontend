@@ -2,7 +2,10 @@ import { Table } from "antd";
 import PropTypes from "prop-types";
 
 import "./TablesStyle.css";
-import { MinusCircleTwoTone, PlusCircleTwoTone } from "@ant-design/icons";
+import {
+  CustomMinusCircleIcon,
+  CustomPlusCircleIcon,
+} from "../utils/CustomIcons.jsx";
 
 export const TablesComponent = ({
   data,
@@ -41,13 +44,13 @@ export const TablesComponent = ({
               expandRowByClick: true,
               expandIcon: ({ expanded, onExpand, record }) => {
                 return expanded ? (
-                  <MinusCircleTwoTone
+                  <CustomMinusCircleIcon
                     onClick={(e) => {
                       onExpand(record, e);
                     }}
                   />
                 ) : (
-                  <PlusCircleTwoTone
+                  <CustomPlusCircleIcon
                     onClick={(e) => {
                       onExpand(record, e);
                     }}
