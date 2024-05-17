@@ -58,6 +58,7 @@ export const AthletesEnrichedColumns = (filters) => [
     key: "name",
     align: "center",
     filters: filters.name,
+    filterSearch: true,
     onFilter: (value, record) => record.name.includes(value),
     render: (text) => <a>{text}</a>,
   },

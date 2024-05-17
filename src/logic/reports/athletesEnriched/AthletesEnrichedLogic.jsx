@@ -13,6 +13,7 @@ import { DatePresets } from "../../../utils/DatesUtils.jsx";
 import { TablesComponent } from "../../../components/TablesComponent.jsx";
 import { useLoading } from "../../../hooks/LoadingContext/useLoading.jsx";
 import { PrepareFilters } from "./AthletesEnrichedPrepareFilters.jsx";
+import * as XLSX from "xlsx";
 
 export const AthletesEnrichedLogic = () => {
   const [startDate, setStartDate] = useState(null);
@@ -79,6 +80,16 @@ export const AthletesEnrichedLogic = () => {
     [athletesEnriched],
   );
 
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(athletesEnriched);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte de Ingresos");
+    XLSX.writeFile(
+      workbook,
+      `reporte_de_ingresos${dayjs().format("YYYYMMDD_HHmmss")}.xlsx`,
+    );
+  };
+
   return (
     <>
       {globalIsLoading && <LoaderIconUtils isLoading={true} />}
@@ -111,17 +122,14 @@ export const AthletesEnrichedLogic = () => {
               }
             />
             <Button onClick={clearFilters}>Limpiar</Button>
+            <Button
+              type="primary"
+              className={"bg-primary-700"}
+              onClick={exportToExcel}
+            >
+              Exportar a Excel
+            </Button>
           </Space>
-          {/*<Row justify={"center"} align={"center"} className={"mt-2"}>*/}
-          {/*  {startDate && endDate && (*/}
-          {/*    <Text>*/}
-          {/*      <strong>*/}
-          {/*        Rango de fechas: {dayjs(startDate).format("DD/MM/YYYY")} -{" "}*/}
-          {/*        {dayjs(endDate).format("DD/MM/YYYY")}*/}
-          {/*      </strong>*/}
-          {/*    </Text>*/}
-          {/*  )}*/}
-          {/*</Row>*/}
           <TablesComponent
             data={athletesEnriched}
             loading={isLoading}
