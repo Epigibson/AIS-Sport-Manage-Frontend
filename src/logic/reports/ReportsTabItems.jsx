@@ -1,5 +1,5 @@
-import { AthletesPaidOrNotLogic } from "./athletesPaidOrNot/AthletesPaidOrNotLogic.jsx";
 import { AthletesEnrichedLogic } from "./athletesEnriched/AthletesEnrichedLogic.jsx";
+import { AthletesPaymentsReportLogic } from "./athletePayments/AthletesPaymentsReportLogic.jsx";
 
 export const ReportsTabItems = [
   {
@@ -10,6 +10,6 @@ export const ReportsTabItems = [
   {
     key: "2",
     label: "Reporte de Estatus de Pago",
-    component: AthletesPaidOrNotLogic,
+    component: AthletesPaymentsReportLogic,
   },
 ];

@@ -1,74 +1,130 @@
-import { Tag } from "antd";
+import { FormatCurrencyUtil } from "../../../utils/FormatCurrencyUtil.jsx";
+import { Row, Tag } from "antd";
+import { ConvertDatetimeToMonth } from "../../../utils/DatesUtils.jsx";
+import { GetColorByStatus } from "../../../utils/ManageTagColorUtil.jsx";
+import { format } from "date-fns";
 
-export const AthletesPaymentsExpandedColumns = (
-  mesPasado,
-  mesActual,
-  mesSiguiente,
-) => [
+export const AthletesPaymentsExpandedColumns = [
   {
-    title: mesPasado,
-    key: "last_month_payments",
+    title: "Paquete",
+    key: "package",
     align: "center",
     width: 200,
     render: (_, record) => {
       return (
-        <>
-          {record.last_month_payments.map((item) => (
-            <Tag
-              key={item._id} // Ensure each Tag has a unique key
-              color={item.status === "Pagado" ? "green" : "volcano"}
+        <div className={"mt-2 pb-0"}>
+          {record.payments.map((payment, index) => (
+            <Row
+              key={index}
+              align={"middle"}
+              justify={"center"}
+              className={"pb-4"}
             >
-              {item.membership} - {item.status} - {item.amount}
-            </Tag>
+              <div>{payment?.receipt_id?.receipt_package_name}</div>
+            </Row>
           ))}
-        </>
-      );
-    },
-  },
-
-  // You should repeat this setup for current_month_payments and next_month_payments
-  {
-    title: mesActual,
-    key: "current_month_payments",
-    align: "center",
-    width: 200,
-    render: (_, record) => {
-      return (
-        <>
-          {record.current_month_payments.map((item) => (
-            <Tag
-              key={item._id} // Ensure each Tag has a unique key
-              color={item.status === "Pagado" ? "green" : "volcano"}
-            >
-              {item.membership} - {item.status} - {item.amount}
-            </Tag>
-          ))}
-        </>
+        </div>
       );
     },
   },
   {
-    title: mesSiguiente,
-    key: "next_month_payments",
+    title: "Monto",
+    key: "amount",
     align: "center",
     width: 200,
     render: (_, record) => {
-      if (
-        !record.next_month_payments ||
-        record.next_month_payments.length === 0
-      )
-        return <Tag>Sin Recibos</Tag>;
       return (
-        <>
-          {record.next_month_payments.map((item) => (
-            <Tag
-              key={item._id} // Ensure each Tag has a unique key
-              color={item.status === "Pagado" ? "green" : "volcano"}
+        <div className={"mt-2 pb-0"}>
+          {record.payments.map((payment, index) => (
+            <Row
+              key={index}
+              align={"middle"}
+              justify={"center"}
+              className={"pb-4"}
             >
-              {item.membership} - {item.status} - {item.amount}
-            </Tag>
+              <div>{FormatCurrencyUtil(payment.amount)}</div>
+            </Row>
           ))}
-        </>
+        </div>
+      );
+    },
+  },
+  {
+    title: "Mes",
+    key: "period_month",
+    align: "center",
+    width: 200,
+    render: (_, record) => {
+      return (
+        <div className={"mt-2 pb-0"}>
+          {record.payments.map((payment, index) => (
+            <Row
+              key={index}
+              align={"middle"}
+              justify={"center"}
+              className={"pb-4"}
+            >
+              <Tag color={"magenta"}>
+                {ConvertDatetimeToMonth(payment.period_month).toUpperCase()}
+              </Tag>
+            </Row>
+          ))}
+        </div>
+      );
+    },
+  },
+  {
+    title: "Estatus",
+    key: "status",
+    align: "center",
+    width: 200,
+    render: (_, record) => {
+      return (
+        <div className={"mt-2 pb-0"}>
+          {record.payments.map((payment, index) => (
+            <Row
+              key={index}
+              align={"middle"}
+              justify={"center"}
+              className={"pb-4"}
+            >
+              <Tag color={GetColorByStatus(payment.status)}>
+                {payment.status}
+              </Tag>
+            </Row>
+          ))}
+        </div>
+      );
+    },
+  },
+  {
+    title: "Fecha en que se Pago",
+    key: "period_month",
+    align: "center",
+    width: 200,
+    render: (_, record) => {
+      return (
+        <div className={"mt-2 pb-0"}>
+          {record.payments.map((payment, index) => (
+            <Row
+              key={index}
+              align={"middle"}
+              justify={"center"}
+              className={"pb-4"}
+            >
+              {payment.receipt_id.receipt_status === "Pagado" ? (
+                <Tag color={"cyan"}>
+                  {format(
+                    new Date(payment.receipt_id.updated_at),
+                    "dd/MM/yyyy",
+                  )}
+                </Tag>
+              ) : (
+                <Tag color={"warning"}>Sin Pago</Tag>
+              )}
+            </Row>
+          ))}
+        </div>
       );
     },
   },

@@ -63,7 +63,7 @@ export const TablesComponent = ({
       size={"small"}
       loading={loading}
       className={modifiedTable ? "my-dark-table" : "mt-4"}
-      pagination={modifiedTable ? false : { pageSize: 15 }}
+      pagination={!modifiedTable}
       scroll={{
         x: 1200,
         y: headerFixed ? 800 : "100%",

@@ -11,7 +11,7 @@ export const StatisticCard = ({ statistics, backgroundClass }) => (
           fontSize: stat.fontSize,
           fontWeight: stat.fontWeight,
         }} // Asegúrate de pasar fontSize correctamente
-        title={stat.title}
+        title={<strong className={"font-black"}>{stat.title}</strong>}
         value={stat.value}
         prefix={stat.prefix}
       />
