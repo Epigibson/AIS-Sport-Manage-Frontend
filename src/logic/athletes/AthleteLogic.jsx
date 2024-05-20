@@ -20,7 +20,7 @@ import {getAllAthletes} from "../../api/AtheleService.jsx";
 import {getAllUsers} from "../../api/UserService.jsx";
 import {getAllPackages} from "../../api/ProductService.jsx";
 import {useColumnSearchProps} from "../../utils/useColumnSearchProps.jsx";
-import {prepareRecord} from "../../utils/FieldsComposerUtils.jsx";
+import dayjs from "dayjs";
 
 const { useBreakpoint } = Grid;
 
@@ -141,9 +141,10 @@ export const AthleteLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
-    const preparedRecord = prepareRecord(record);
-    form.setFieldsValue(preparedRecord);
-    setSelectedRecord(preparedRecord);
+    record.start_date = dayjs(record.start_date);
+    console.log("Campos", record);
+    form.setFieldsValue(record);
+    setSelectedRecord(record);
     setIsModalVisible(true);
   };
 
