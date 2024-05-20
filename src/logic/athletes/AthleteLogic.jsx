@@ -141,7 +141,7 @@ export const AthleteLogic = () => {
 
   const handleEdit = (record) => {
     setModalContext("edit");
-    record.start_date = dayjs(record.start_date);
+    record.start_date = record.start_date ? dayjs(record.start_date) : null;
     console.log("Campos", record);
     form.setFieldsValue(record);
     setSelectedRecord(record);
