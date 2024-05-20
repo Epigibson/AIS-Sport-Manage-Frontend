@@ -21,7 +21,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: monthSelector.lastMonthName,
         value: `Total Estimado: $${parseFloat(
-          data.total_by_month["previousMonth"],
+          data.total_by_month["previousMonth"] !== undefined
+            ? data.total_by_month["previousMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -32,7 +34,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: "",
         value: `Total Pagado: $${parseFloat(
-          data.paid_by_month["previousMonth"],
+          data.paid_by_month["previousMonth"] !== undefined
+            ? data.paid_by_month["previousMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -42,7 +46,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: "",
         value: `Total Pendiente: $${parseFloat(
-          data.pending_by_month["previousMonth"],
+          data.pending_by_month["previousMonth"] !== undefined
+            ? data.pending_by_month["previousMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -57,7 +63,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: monthSelector.currentMonthName,
         value: `Total Estimado: $${parseFloat(
-          data.total_by_month["currentMonth"],
+          data.total_by_month["currentMonth"] !== undefined
+            ? data.total_by_month["currentMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -68,7 +76,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: "",
         value: `Total Pagado: $${parseFloat(
-          data.paid_by_month["currentMonth"],
+          data.paid_by_month["currentMonth"] !== undefined
+            ? data.paid_by_month["currentMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -78,7 +88,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: "",
         value: `Total Pendiente: $${parseFloat(
-          data.pending_by_month["currentMonth"],
+          data.pending_by_month["currentMonth"] !== undefined
+            ? data.pending_by_month["currentMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -93,7 +105,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: monthSelector.nextMonthName,
         value: `Total Estimado: $${parseFloat(
-          data.total_by_month["nextMonth"],
+          data.total_by_month["nextMonth"] !== undefined
+            ? data.total_by_month["nextMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -104,7 +118,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: "",
         value: `Total Pagado: $${parseFloat(
-          data.paid_by_month["nextMonth"],
+          data.paid_by_month["nextMonth"] !== undefined
+            ? data.paid_by_month["nextMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -114,7 +130,9 @@ export const AthletesPaymentsReportStaticCards = (data, monthSelector) => [
       {
         title: "",
         value: `Total Pendiente: $${parseFloat(
-          data.pending_by_month["nextMonth"],
+          data.pending_by_month["nextMonth"] !== undefined
+            ? data.pending_by_month["nextMonth"]
+            : 0,
         ).toLocaleString("es-MX", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
