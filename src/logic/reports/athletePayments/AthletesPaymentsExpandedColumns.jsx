@@ -50,6 +50,28 @@ export const AthletesPaymentsExpandedColumns = [
     },
   },
   {
+    title: "Metodo de Pago",
+    key: "payment_method",
+    align: "center",
+    width: 200,
+    render: (_, record) => {
+      return (
+        <div className={"mt-2 pb-0"}>
+          {record.payments.map((payment, index) => (
+            <Row
+              key={index}
+              align={"middle"}
+              justify={"center"}
+              className={"pb-4"}
+            >
+              <Tag color={"cyan"}>{payment.payment_method}</Tag>
+            </Row>
+          ))}
+        </div>
+      );
+    },
+  },
+  {
     title: "Mes",
     key: "period_month",
     align: "center",
