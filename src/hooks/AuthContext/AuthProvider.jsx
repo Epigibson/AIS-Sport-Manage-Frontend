@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: () => {
-      navigate("/home");
+      navigate("/");
     },
     onError: (error) => {
       console.error(error);
@@ -36,11 +36,10 @@ export const AuthProvider = ({ children }) => {
 
       const userData = await GetUserLoggedIn();
       setUser(userData);
-      console.log("Usuario autenticado:", user);
       setIsLoading(false); // Desactiva el estado de carga si el login es exitoso
       toastNotify({
         type: "success",
-        message: `Bienvenid@ de nuevo!.`,
+        message: `Hola ${userData.tutors_name_one || userData.name || userData.username}!.`,
         description: "Sesión iniciada correctamente.",
       });
     } catch (error) {

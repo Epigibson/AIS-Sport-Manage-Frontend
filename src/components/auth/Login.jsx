@@ -4,25 +4,41 @@ import logo from "/src/assets/logo-be.png";
 import { Button, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../../utils/tokenUtils.jsx";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserSession } from "../../api/UserService.jsx";
 
 export const Login = () => {
   const { loginHandler, isLoading } = useAuth();
+  const queryClient = useQueryClient();
+
+  const { data: loggedUser, isLoading: isUserLoading } = useQuery({
+    queryKey: ["loggedUser"],
+    queryFn: getUserSession,
+    enabled: !!getToken(), // Solo ejecuta la consulta si hay un token presente
+  });
+
   const navigate = useNavigate();
   const onFinish = async (event) => {
     event.preventDefault(); // Evita el comportamiento predeterminado de envío del formulario
     const formData = new FormData(event.target);
     const username = formData.get("username");
     const password = formData.get("password");
-    // console.log({ username, password });
     await loginHandler(username, password);
+    await queryClient.invalidateQueries(["loggedUser"]); // Invalidar la consulta para obtener los datos actualizados del usuario
   };
 
   useEffect(() => {
     const token = getToken();
-    if (token !== null) {
-      navigate("/home"); // Redirige a la página de inicio si ya está autenticado
+    if (token !== null && loggedUser && !isUserLoading) {
+      console.log("Usuario autenticado:", loggedUser);
+      const userRole = loggedUser.user_type;
+      if (userRole === "Normal" || userRole === "User") {
+        navigate("/perfil");
+      } else if (userRole !== undefined && userRole === "Admin") {
+        navigate("/home");
+      }
     }
-  }, [navigate]);
+  }, [isUserLoading, loggedUser, navigate]);
 
   return (
     <section className="bg-[#001529] dark:bg-gray-900 h-screen">

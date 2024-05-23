@@ -9,12 +9,15 @@ import {
   theme,
   Typography,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from "../../assets/logo-be.png";
 import PropTypes from "prop-types";
 import { clearTokens } from "../../utils/tokenUtils.jsx";
 import { MenuItems } from "./MenuItems.jsx";
+import { getUserSession } from "../../api/UserService.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 const { Title } = Typography;
 const { Header, Sider, Footer, Content } = Layout;
@@ -22,6 +25,7 @@ const { useBreakpoint } = Grid;
 
 export const SideBarLayout = ({ children, title }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [filteredMenuItems, setFilteredMenuItems] = useState([]);
   const [openKeys, setOpenKeys] = useState(() => {
     // Intenta leer los keys de los menús abiertos desde localStorage
     const storedKeys = localStorage.getItem("openMenuKeys");
@@ -35,6 +39,37 @@ export const SideBarLayout = ({ children, title }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const { data: userLogged, isLoading: isLoadingUserLogged } = useQuery({
+    queryKey: ["userLogged"],
+    queryFn: getUserSession,
+  });
+
+  const getUserRole = useCallback(() => {
+    return userLogged?.user_type;
+  }, [userLogged]);
+
+  const updateMenuItems = useCallback(() => {
+    const userRole = getUserRole();
+    setFilteredMenuItems(
+      MenuItems.filter(
+        (item) => !item.roles || item.roles.includes(userRole),
+      ).map((item) => ({
+        key: item.key,
+        label: item.label,
+        icon: item.icon,
+        children: item.children?.map((subItem) => ({
+          key: subItem.key,
+          label: subItem.label,
+          icon: subItem.icon,
+        })),
+      })),
+    );
+  }, [getUserRole]);
+
+  useEffect(() => {
+    updateMenuItems();
+  }, [location, updateMenuItems, userLogged]);
+
   useEffect(() => {
     if (screens.xs && openKeys.length === 0) {
       setCollapsed(true);
@@ -45,22 +80,52 @@ export const SideBarLayout = ({ children, title }) => {
   }, [screens, openKeys]);
 
   useEffect(() => {
-    // Extrae la parte relevante de la ruta como la key del menú.
-    // Asegúrate de que esto coincida con cómo has definido las keys de tus items de menú.
     const key = location.pathname.slice(1) || "defaultKey"; // Añade una key por defecto si necesario
     setSelectedKeys([key]);
   }, [location]);
 
-  // Asegúrate de actualizar el estado openKeys basado en la interacción del usuario
+  useEffect(() => {
+    const handleStorageChange = () => {
+      updateMenuItems();
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [updateMenuItems]);
+
   const onOpenChange = (keys) => {
     setOpenKeys(keys);
   };
 
   const logout = () => {
     clearTokens();
-    // const tokens = getToken();
-    // console.log(tokens);
+    localStorage.removeItem("userData");
+    setFilteredMenuItems([]);
     navigate("/");
+  };
+
+  const handleClick = (e) => {
+    const key = e.key;
+    const menuItem = MenuItems.find(
+      (item) =>
+        item.key === key ||
+        item.children?.find((subItem) => subItem.key === key),
+    );
+    const path =
+      menuItem?.path ||
+      menuItem?.children?.find((subItem) => subItem.key === key)?.path;
+    const func =
+      menuItem?.function ||
+      menuItem?.children?.find((subItem) => subItem.key === key)?.function;
+
+    if (path) {
+      navigate(path);
+    }
+    if (func && func === "logout") {
+      logout();
+      updateMenuItems(); // Update menu items immediately after logout
+    }
   };
 
   return (
@@ -74,53 +139,22 @@ export const SideBarLayout = ({ children, title }) => {
       >
         <div className="pt-0 flex flex-col items-center justify-center ">
           <img src={logoImage} alt="Logo" style={{ maxHeight: "120px" }} />
-          {/*{!collapsed && appName && (*/}
-          {/*  <Title*/}
-          {/*    level={5}*/}
-          {/*    style={{*/}
-          {/*      color: "white",*/}
-          {/*      marginLeft: "8px",*/}
-          {/*    }}*/}
-          {/*  >*/}
-          {/*    {appName}*/}
-          {/*  </Title>*/}
-          {/*)}*/}
         </div>
         <Divider className="bg-blue-950" />
-        <Menu
-          style={{ width: "100%" }}
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          theme="dark"
-          mode="inline"
-          selectedKeys={selectedKeys}
-          items={MenuItems.map((item) => ({
-            key: item.key,
-            label: item.label,
-            icon: item.icon,
-            children: item.children, // Esto es nuevo
-          }))}
-          onClick={({ key }) => {
-            const menuItem = MenuItems.find(
-              (item) =>
-                item.key === key ||
-                item.children?.find((subItem) => subItem.key === key),
-            );
-            const path =
-              menuItem?.path ||
-              menuItem?.children?.find((subItem) => subItem.key === key)?.path;
-            const func =
-              menuItem?.function ||
-              menuItem?.children?.find((subItem) => subItem.key === key)
-                ?.function;
-            if (path) {
-              navigate(path);
-            }
-            if (func && func === "logout") {
-              logout();
-            }
-          }}
-        />
+        {isLoadingUserLogged ? (
+          <LoaderIconUtils isLoading={true} />
+        ) : (
+          <Menu
+            style={{ width: "100%" }}
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
+            theme="dark"
+            mode="inline"
+            selectedKeys={selectedKeys}
+            items={filteredMenuItems}
+            onClick={handleClick}
+          />
+        )}
       </Sider>
       <Layout>
         <Header

@@ -21,6 +21,9 @@ import { DiscountsPage } from "./pages/DiscountsPage.jsx";
 import { ConfigurationPage } from "./pages/ConfigurationPage.jsx";
 import { MovementsPage } from "./pages/MovementsPage.jsx";
 import { ReportsPage } from "./pages/ReportsPage.jsx";
+import { UserProfilePage } from "./pages/UserPages/UserProfilePage.jsx";
+import { UserAthletesPage } from "./pages/UserPages/UserAthletesPage.jsx";
+import { UserPaymentsPage } from "./pages/UserPages/UserPaymentsPage.jsx";
 
 const App = () => {
   return (
@@ -56,6 +59,9 @@ const App = () => {
             path="/asignacion_de_grupos/:userId"
             element={<GroupAssignPage />}
           />
+          <Route path="/perfil" element={<UserProfilePage />} />
+          <Route path="/mis_atletas" element={<UserAthletesPage />} />
+          <Route path="/mis_pagos" element={<UserPaymentsPage />} />
         </Route>
       </Routes>
     </AuthProvider>
