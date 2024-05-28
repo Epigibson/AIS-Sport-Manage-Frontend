@@ -66,7 +66,7 @@ export const ModalComponent = ({
           confirmLoading={confirmLoading}
         />
       ) : null}
-      {dataTable != null && dataTableColumns != null ? (
+      {dataTable && dataTableColumns ? (
         <TablesComponent data={dataTable} columns={dataTableColumns} />
       ) : null}
     </Modal>

@@ -123,6 +123,8 @@ export const PaymentLogic = () => {
     queryFn: getAllPackages,
   });
 
+  const userLogged = queryClient.getQueryData(["userLogged"]);
+
   const handleSearch = async () => {
     await queryClient.invalidateQueries({
       queryKey: [
@@ -521,72 +523,79 @@ export const PaymentLogic = () => {
     return <LoaderIconUtils isLoading={true} />;
   if (isError) return <h1>Error...</h1>;
 
+  console.log("RECIBO", selectedReceipt);
+
   return (
     <>
-      <Row
-        gutter={[16, 16]}
-        wrap={true}
-        align={"middle"}
-        justify={"center"}
-        className={"mb-6"}
-      >
-        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-          <Card
-            className={
-              "mt-3 shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"
-            }
-          >
-            <Statistic
-              title={
-                <div style={{ fontSize: 12 }}>
-                  Ingreso Estimado: (Pendiente + Pagado)
-                </div>
+      {userLogged.user_type === "Admin" ||
+      userLogged.user_type === "SuperAdmin" ? (
+        <Row
+          gutter={[16, 16]}
+          wrap={true}
+          align={"middle"}
+          justify={"center"}
+          className={"mb-6"}
+        >
+          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+            <Card
+              className={
+                "mt-3 shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"
               }
-              value={parseMoney(total.total)}
-              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-            />
-          </Card>
-        </Col>
-        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-          <Card
-            className={
-              "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-yellow-200"
-            }
-          >
-            <Statistic
-              title="No Pagado: (Creado + Pendiente)"
-              value={parseMoney(totals?.pending)}
-              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-            />
-          </Card>
-        </Col>
-        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-          <Card
-            className={
-              "mt-3 shadow-md bg-gradient-to-r from-yellow-100 to-green-200"
-            }
-          >
-            <Statistic
-              title="Pagado"
-              value={parseMoney(totals?.paid)}
-              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-            />
-          </Card>
-        </Col>
-        <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-          <Card
-            className={
-              "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-red-200"
-            }
-          >
-            <Statistic
-              title="Cancelado"
-              value={parseMoney(totals?.cancelled)}
-              valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-            />
-          </Card>
-        </Col>
-      </Row>
+            >
+              <Statistic
+                title={
+                  <div style={{ fontSize: 12 }}>
+                    Ingreso Estimado: (Pendiente + Pagado)
+                  </div>
+                }
+                value={parseMoney(total.total)}
+                valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+              />
+            </Card>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+            <Card
+              className={
+                "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-yellow-200"
+              }
+            >
+              <Statistic
+                title="No Pagado: (Creado + Pendiente)"
+                value={parseMoney(totals?.pending)}
+                valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+              />
+            </Card>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+            <Card
+              className={
+                "mt-3 shadow-md bg-gradient-to-r from-yellow-100 to-green-200"
+              }
+            >
+              <Statistic
+                title="Pagado"
+                value={parseMoney(totals?.paid)}
+                valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+              />
+            </Card>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
+            <Card
+              className={
+                "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-red-200"
+              }
+            >
+              <Statistic
+                title="Cancelado"
+                value={parseMoney(totals?.cancelled)}
+                valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
+              />
+            </Card>
+          </Col>
+        </Row>
+      ) : (
+        <></>
+      )}
       <Row gutter={[16, 16]} wrap={true} align={"middle"} justify={"center"}>
         <Col className="gutter-row" xs={24} sm={12} md={10} lg={24} xl={24}>
           <PaymentFilters

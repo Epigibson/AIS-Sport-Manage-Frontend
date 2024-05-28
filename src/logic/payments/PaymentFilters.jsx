@@ -2,6 +2,7 @@ import { Button, Col, DatePicker, Divider, Row, Select, Space } from "antd";
 import { ArrowDownOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
+import { DatePresets } from "../../utils/DatesUtils.jsx";
 
 const { RangePicker } = DatePicker;
 
@@ -21,7 +22,6 @@ export const PaymentFilters = ({
   handleChangeReceiptPackageName,
   receiptPackageNames,
 }) => {
-  console.log(receiptPackageNames);
   return (
     <>
       <Divider orientation="center">
@@ -50,26 +50,7 @@ export const PaymentFilters = ({
               style={{ width: "100%" }}
               // showTime={{ format: "HH:mm" }}
               format="DD-MM-YYYY"
-              ranges={{
-                "Ultimos 7 Dias": [
-                  dayjs().startOf("day").subtract(7, "days"),
-                  dayjs().endOf("day"),
-                ],
-                "Ultimos 30 Dias": [
-                  dayjs().startOf("day").subtract(30, "days"),
-                  dayjs().endOf("day"),
-                ],
-                Ayer: [
-                  dayjs().startOf("day").subtract(1, "days"),
-                  dayjs().endOf("day").subtract(1, "days"),
-                ],
-                Hoy: [
-                  dayjs().startOf("day"),
-                  dayjs().endOf("day").add(1, "days"),
-                ],
-                "Este Mes": [dayjs().startOf("month"), dayjs().endOf("month")],
-                "Esta Semana": [dayjs().startOf("week"), dayjs().endOf("week")],
-              }}
+              presets={DatePresets}
               onChange={handleDateChange}
               value={
                 dateRange?.length === 2

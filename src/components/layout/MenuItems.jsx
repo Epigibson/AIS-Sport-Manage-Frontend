@@ -25,34 +25,34 @@ export const MenuItems = [
     icon: <HomeFilled />,
     label: "Inicio",
     path: "/home",
-    roles: ["Admin", "Normal"],
+    roles: ["Admin", "Manager", "Normal"],
   },
   {
     key: "2",
     icon: <ReadOutlined />,
     label: "Inscripciones",
     path: "/inscripciones",
-    roles: ["Admin"],
+    roles: ["Admin", "Manager"],
   },
   {
     key: "3",
     icon: <DollarCircleOutlined />,
     label: "Control de Pagos",
     path: "/pagos",
-    roles: ["Admin"],
+    roles: ["Admin", "Manager"],
   },
   {
     key: "4",
     icon: <UserOutlined />,
     label: "Atletas",
     path: "/atletas",
-    roles: ["Admin"],
+    roles: ["Admin", "Manager"],
   },
   {
     key: "sub1", // Clave única para el submenú
     icon: <SettingOutlined />, // Ícono para el submenú
     label: "Catálogos", // Título del submenú
-    roles: ["Admin"],
+    roles: ["Admin", "Manager"],
     children: [
       // Elementos dentro del submenú
       {
@@ -92,7 +92,7 @@ export const MenuItems = [
     icon: <UsergroupAddOutlined />,
     label: "Usuarios con Adeudos",
     path: "/adeudos",
-    roles: ["Admin"],
+    roles: ["Admin", "Manager"],
   },
   {
     key: "10",
@@ -113,7 +113,7 @@ export const MenuItems = [
     icon: <AccountBookOutlined />,
     label: "Reportes",
     path: "/reportes",
-    roles: ["Admin"],
+    roles: ["Admin", "Manager"],
   },
   {
     key: "13",

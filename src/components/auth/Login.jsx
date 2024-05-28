@@ -34,7 +34,10 @@ export const Login = () => {
       const userRole = loggedUser.user_type;
       if (userRole === "Normal" || userRole === "User") {
         navigate("/perfil");
-      } else if (userRole !== undefined && userRole === "Admin") {
+      } else if (
+        (userRole !== undefined && userRole === "Admin") ||
+        userRole === "Manager"
+      ) {
         navigate("/home");
       }
     }
