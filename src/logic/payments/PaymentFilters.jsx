@@ -15,11 +15,13 @@ export const PaymentFilters = ({
   filterOption,
   athletesData,
   handleChangeStatus,
-  handleChangePaymentType,
   handleChangePaymentMethod,
   handleSearch,
   handleResetFilters,
+  handleChangeReceiptPackageName,
+  receiptPackageNames,
 }) => {
+  console.log(receiptPackageNames);
   return (
     <>
       <Divider orientation="center">
@@ -124,12 +126,13 @@ export const PaymentFilters = ({
               style={{ width: "100%" }}
               showSearch
               allowClear={true}
-              placeholder="Tipo de Pago"
-              onChange={handleChangePaymentType}
-              options={[
-                { value: "inscription", label: "Inscripcion" },
-                { value: "payment", label: "Paquete" },
-              ]}
+              placeholder="Membresia"
+              onChange={handleChangeReceiptPackageName}
+              options={receiptPackageNames?.map((product) => ({
+                value: product._id,
+                key: product._id,
+                label: <span>{product.product_name}</span>,
+              }))}
             />
           </Col>
           <Col xs={24} sm={12} md={10} lg={6} xl={4}>
@@ -175,7 +178,6 @@ export const PaymentFilters = ({
               </Button>
             </Space.Compact>
           </Col>
-          <Col xs={24} sm={12} md={10} lg={6} xl={4}></Col>
         </Row>
       ) : (
         <></>
@@ -199,4 +201,6 @@ PaymentFilters.propTypes = {
   handleDateChange: PropTypes.func,
   dateRange: PropTypes.array,
   showCreateModal: PropTypes.func,
+  handleChangeReceiptPackageName: PropTypes.func,
+  receiptPackageNames: PropTypes.array,
 };

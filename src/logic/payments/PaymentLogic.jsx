@@ -28,6 +28,7 @@ import { PaymentFormFields } from "./PaymentFormFields.jsx";
 import dayjs from "dayjs";
 import { FileAddOutlined } from "@ant-design/icons";
 import { PaymentCancelFields } from "./PaymentCancelFields.jsx";
+import { getAllPackages } from "../../api/ProductService.jsx";
 
 export const PaymentLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -44,6 +45,7 @@ export const PaymentLogic = () => {
   const [statusPayFilter, setStatusPayFilter] = useState("");
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
+  const [MembershipFilter, setMembershipFilter] = useState("");
   const [showFilters, setShowFilters] = useState(true);
   const [editingKeyPaymentMethod, setEditingKeyPaymentMethod] = useState("");
   const [editingKeyAmount, setEditingKeyAmount] = useState("");
@@ -116,6 +118,11 @@ export const PaymentLogic = () => {
     queryFn: getAllReceipts,
   });
 
+  const { data: membershipData } = useQuery({
+    queryKey: ["allMemberships"],
+    queryFn: getAllPackages,
+  });
+
   const handleSearch = async () => {
     await queryClient.invalidateQueries({
       queryKey: [
@@ -154,16 +161,16 @@ export const PaymentLogic = () => {
       return [];
     }
 
-    return historyPaymentData?.map((historyPayment) => {
+    let filteredData = historyPaymentData?.map((historyPayment) => {
       const user = usersData?.find(
         (user) => user?._id === historyPayment?.user,
-      ); // Ajusta según la estructura de tus datos
+      );
       const athlete = athletesData?.find(
         (athlete) => athlete?._id === historyPayment?.athlete,
       );
       const receipt = receiptsData?.find(
         (receipt) => receipt?._id === historyPayment?.receipt_id,
-      ); // Ajusta según la estructura de tus datos
+      );
       return {
         ...historyPayment,
         user,
@@ -171,9 +178,22 @@ export const PaymentLogic = () => {
         receipt,
         limit_date: receipt?.limit_date,
         updated_at: receipt?.updated_at,
-      }; // Añade la información del grupo al objeto de usuario
+      };
     });
-  }, [historyPaymentData, usersData, athletesData, receiptsData]);
+    if (MembershipFilter) {
+      filteredData = filteredData.filter(
+        (payment) => payment.receipt?.receipt_package === MembershipFilter,
+      );
+    }
+
+    return filteredData;
+  }, [
+    historyPaymentData,
+    usersData,
+    athletesData,
+    receiptsData,
+    MembershipFilter,
+  ]);
 
   useEffect(() => {
     // console.log("AUTOFETCH", autoFetchEnabled);
@@ -293,6 +313,7 @@ export const PaymentLogic = () => {
     setStatusPayFilter("");
     setPaymentTypeFilter("");
     setPaymentMethodFilter("");
+    setMembershipFilter("");
     setDateRange([]);
   };
 
@@ -371,6 +392,11 @@ export const PaymentLogic = () => {
 
   const handleChangePaymentMethod = async (value) => {
     await setPaymentMethodFilter(value);
+    // console.log(`selected ${value}`);
+  };
+
+  const handleChangeMembership = async (value) => {
+    await setMembershipFilter(value);
     // console.log(`selected ${value}`);
   };
 
@@ -513,7 +539,7 @@ export const PaymentLogic = () => {
             <Statistic
               title={
                 <div style={{ fontSize: 12 }}>
-                  Ingreso Estimado: Pendiente + Pagado
+                  Ingreso Estimado: (Pendiente + Pagado)
                 </div>
               }
               value={parseMoney(total.total)}
@@ -528,7 +554,7 @@ export const PaymentLogic = () => {
             }
           >
             <Statistic
-              title="Pendiente"
+              title="No Pagado: (Creado + Pendiente)"
               value={parseMoney(totals?.pending)}
               valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
             />
@@ -561,23 +587,29 @@ export const PaymentLogic = () => {
           </Card>
         </Col>
       </Row>
-      <PaymentFilters
-        showFilters={showFilters}
-        setShowFilters={setShowFilters}
-        athletesData={athletesData}
-        handleChangeStatus={handleChangeStatus}
-        handleChangePaymentType={handleChangePaymentType}
-        handleChangePaymentMethod={handleChangePaymentMethod}
-        handleSearch={handleSearch}
-        filterOption={filterOption}
-        handleUserChange={handleUserChange}
-        handleAthleteChange={handleAthleteChange}
-        dateRange={dateRange}
-        handleDateChange={handleDateChange}
-        handleResetFilters={handleResetFilters}
-        isLoading={isLoading}
-        showCreateModal={showCreateModal}
-      />
+      <Row gutter={[16, 16]} wrap={true} align={"middle"} justify={"center"}>
+        <Col className="gutter-row" xs={24} sm={12} md={10} lg={24} xl={24}>
+          <PaymentFilters
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            athletesData={athletesData}
+            handleChangeStatus={handleChangeStatus}
+            handleChangePaymentType={handleChangePaymentType}
+            handleChangePaymentMethod={handleChangePaymentMethod}
+            handleSearch={handleSearch}
+            filterOption={filterOption}
+            handleUserChange={handleUserChange}
+            handleAthleteChange={handleAthleteChange}
+            dateRange={dateRange}
+            handleDateChange={handleDateChange}
+            handleResetFilters={handleResetFilters}
+            isLoading={isLoading}
+            showCreateModal={showCreateModal}
+            handleChangeReceiptPackageName={handleChangeMembership}
+            receiptPackageNames={membershipData}
+          />
+        </Col>
+      </Row>
       <ModalComponent
         form={formCreate}
         formFields={PaymentFormFields}
