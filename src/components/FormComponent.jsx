@@ -1,39 +1,23 @@
-import {
-  Button,
-  Checkbox,
-  DatePicker,
-  Form,
-  Grid,
-  Input,
-  InputNumber,
-  Select,
-  TimePicker,
-  Tooltip,
-} from "antd";
+import { Button, Form, Grid } from "antd";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
 import { getAllGroups } from "../api/GroupService.jsx";
-import { AvatarComponent } from "./AvatarComponent.jsx";
 import { getAllPackages } from "../api/ProductService.jsx";
 import { getAllCategories } from "../api/CategoryService.jsx";
-import PropTypes from "prop-types";
 import { getAllAthletes } from "../api/AtheleService.jsx";
-// import { prepareInitialValues } from "./PrepareInitialValues.jsx";
-import { QuestionCircleOutlined } from "@ant-design/icons";
-import "./FormStyle.css";
-import dayjs from "dayjs";
+import { getAllSalesProducts } from "../api/ProductsService.jsx";
+import PropTypes from "prop-types";
+import { FormFields } from "./FormFields.jsx";
+import { getDataSource, handleFieldDependencies } from "./FormUtils.jsx";
 
-const { Option } = Select;
 const { useBreakpoint } = Grid;
-const { RangePicker } = TimePicker;
 
 export const FormComponent = ({
   form,
   formFields,
   handleSubmit,
   handleClose,
-  setProfileImage,
   isLogin,
   confirmLoading,
 }) => {
@@ -49,53 +33,47 @@ export const FormComponent = ({
   const { data: groups } = useQuery({
     queryKey: ["allGroups"],
     queryFn: getAllGroups,
-  }); // Obtiene groups del contexto
-
+  });
   const { data: users } = useQuery({
     queryKey: ["allUsers"],
     queryFn: getAllUsers,
   });
-
   const { data: athletes } = useQuery({
     queryKey: ["allAthletes"],
     queryFn: getAllAthletes,
   });
-
   const { data: packages } = useQuery({
     queryKey: ["allPackages"],
     queryFn: getAllPackages,
   });
+  const { data: products } = useQuery({
+    queryKey: ["productList"],
+    queryFn: getAllSalesProducts,
+  });
 
   const [selectOptions, setSelectOptions] = useState({});
   const [selectedValues, setSelectedValues] = useState({});
-  const [selectedObjects, setSelectedObjects] = useState({});
-  const handleImageLoaded = (file) => {
-    setProfileImage(file);
-  };
-
   const [dependentFieldsVisibility, setDependentFieldsVisibility] = useState(
     {},
   );
 
   useEffect(() => {
-    // console.log("Selected Values Updated:", selectedObjects);
     const newSelectOptions = {};
     const visibility = {};
     formFields.forEach((field) => {
       let options = [];
+      const dataSource = getDataSource(field.optionsSource, {
+        categories,
+        couches,
+        groups,
+        users,
+        athletes,
+        packages,
+        products,
+      });
+
       if (field.dependencies) {
         const dependentValue = form.getFieldValue(field.dependencies.fieldName);
-        const dataSource = {
-          categories: categories || [],
-          couches: couches || [],
-          groups: groups || [],
-          users: users || [],
-          athletes: athletes || [],
-          products: (packages || []).filter(
-            (p) => p.product_name !== "Inscripcion",
-          ),
-        }[field.optionsSource];
-
         const selectedItem = dataSource?.find(
           (item) => item._id === dependentValue,
         );
@@ -113,27 +91,15 @@ export const FormComponent = ({
       } else {
         visibility[field.name] = true; // Si no tiene dependencias, es siempre visible
       }
+
       if (Array.isArray(field.optionsSource)) {
         options = field.optionsSource.map((option) => ({
           label: option,
           value: option,
         }));
       } else if (typeof field.optionsSource === "string") {
-        // Opciones dinámicas basadas en la fuente de datos especificada
-        const dataSource = {
-          categories: categories || [],
-          couches: couches || [],
-          groups: groups || [],
-          users: users || [],
-          athletes: athletes || [],
-          products: (packages || []).filter(
-            (p) => p.product_name !== "Inscripcion",
-          ),
-        }[field.optionsSource];
-
         if (field.dependentOn) {
-          // Manejo de dependencias basado en los objetos seleccionados
-          const selectedObject = selectedObjects[field.dependentOn.field];
+          const selectedObject = selectedValues[field.dependentOn.field];
           if (selectedObject && selectedObject[field.dependentOn.relatedKey]) {
             const filterIds = selectedObject[field.dependentOn.relatedKey];
             options = dataSource
@@ -149,7 +115,6 @@ export const FormComponent = ({
               }));
           }
         } else {
-          // No hay dependencias, usa todos los datos disponibles
           options = dataSource.map((option) => ({
             label:
               option.tutors_name_one ||
@@ -161,8 +126,10 @@ export const FormComponent = ({
           }));
         }
       } else if (field.options) {
-        // Opciones estáticas definidas en el campo
-        options = field.options;
+        options = field.options.map((option) => ({
+          label: option.label,
+          value: option.value,
+        }));
       }
 
       newSelectOptions[field.name] = options;
@@ -170,7 +137,7 @@ export const FormComponent = ({
     setDependentFieldsVisibility(visibility);
     setSelectOptions(newSelectOptions);
   }, [
-    selectedObjects,
+    selectedValues,
     form,
     formFields,
     categories,
@@ -178,11 +145,9 @@ export const FormComponent = ({
     groups,
     users,
     packages,
+    products,
     athletes,
-    selectedValues,
-  ]); // Dependencias del efecto
-
-  // const initialValues = prepareInitialValues(formFields);
+  ]);
 
   return (
     <Form
@@ -199,139 +164,53 @@ export const FormComponent = ({
         maxWidth: 600,
       }}
       onValuesChange={(_, allValues) => {
-        const updatedSelectedObjects = { ...selectedObjects };
-        const visibility = {};
+        let updatedValues = { ...allValues };
+
+        // Verificar si el checkbox 'is_lost' está marcado
+        if (allValues.is_lost !== undefined) {
+          if (allValues.is_lost) {
+            updatedValues.product_price = 0;
+            updatedValues.total_price = 0;
+          } else {
+            // Restablecer el precio original si 'is_lost' se desmarca
+            const selectedProduct = products?.find(
+              (product) => product._id === allValues.product_id,
+            );
+            if (selectedProduct) {
+              updatedValues.product_price = selectedProduct.price;
+              updatedValues.total_price =
+                selectedProduct.price * (allValues.product_quantity || 1);
+            }
+          }
+          form.setFieldsValue({
+            product_price: updatedValues.product_price,
+            total_price: updatedValues.total_price,
+          });
+        }
 
         formFields.forEach((field) => {
-          if (field.dependencies) {
-            visibility[field.name] =
-              allValues[field.dependencies.fieldName] ===
-              field.dependencies.value;
-          } else {
-            visibility[field.name] = true;
-          }
-
-          // Actualizar el objeto completo para campos select
-          if (field.inputType === "select" && field.optionsSource) {
-            const dataSource = {
-              users: users,
-              athletes: athletes,
-              // Otros dataSources según sea necesario
-            }[field.optionsSource];
-
-            const selectedItem = dataSource?.find(
-              (item) => item._id === allValues[field.name],
+          if (field.dependentFields) {
+            updatedValues = handleFieldDependencies(
+              field,
+              updatedValues,
+              { salesProducts: products },
+              form,
             );
-            if (selectedItem) {
-              updatedSelectedObjects[field.name] = selectedItem;
-            }
           }
         });
 
-        setDependentFieldsVisibility(visibility);
-        setSelectedValues(allValues); // Actualiza todos los valores seleccionados
-        setSelectedObjects(updatedSelectedObjects); // Actualiza los objetos seleccionados
+        setSelectedValues(updatedValues);
+        form.setFieldsValue(updatedValues);
       }}
     >
-      {formFields.map((field) => {
-        if (!dependentFieldsVisibility[field.name]) {
-          return null;
-        }
-        return (
-          <Form.Item
-            hidden={field.hidden}
-            key={field.name}
-            name={field.name}
-            label={field.label}
-            rules={field.rules}
-            valuePropName={
-              field.inputType === "checkbox" ? "checked" : undefined
-            }
-            className={`${field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : ""}`}
-          >
-            {field.inputType === "input" && (
-              <Input
-                placeholder={screen.xs ? field.label : undefined}
-                className="rounded-md py-0.5 my-0 border-gray-300"
-              />
-            )}
-            {field.inputType === "number" && (
-              <InputNumber
-                placeholder={screen.xs ? field.label : undefined}
-                className="rounded-md py-0.5 my-0 border-gray-300 w-full"
-              />
-            )}
-            {field.inputType === "password" && (
-              <Input.Password className="rounded-md py-0.5 my-0 border-gray-300" />
-            )}
-            {field.inputType === "avatar" && (
-              <AvatarComponent
-                onImageLoaded={handleImageLoaded}
-                existingImageUrl={field.existingImageUrl}
-              />
-            )}
-            {field.inputType === "checkbox" && (
-              <Checkbox className={"mr-2"}>
-                <Tooltip title={field.tooltip}>
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </Checkbox>
-            )}
-
-            {field.inputType === "select" && (
-              <Select
-                allowClear={true}
-                className={"text-left"}
-                placeholder={`-- Seleccionar ${field.label} --`}
-              >
-                {selectOptions[field.name]?.map((option, index) => (
-                  <Option key={option.value || index} value={option.value}>
-                    {option.label}
-                  </Option>
-                ))}
-              </Select>
-            )}
-            {field.inputType === "multipleSelect" && (
-              <Select
-                className={"text-left"}
-                placeholder={` --Seleccionar ${field.label} --`}
-                mode="multiple"
-              >
-                {selectOptions[field.name]?.map((option, index) => (
-                  <Option key={option.value || index} value={option.value}>
-                    {option.label}
-                  </Option>
-                ))}
-              </Select>
-            )}
-            {field.inputType === "schedule" && (
-              <RangePicker
-                format="HH:mm a"
-                placeholder={["Inicio", "Fin"]}
-                className="rounded-md py-0.5 my-0 border-gray-300"
-                variant={"filled"}
-                use24Hours
-                // onChange={(dates, dateStrings) => {
-                //   console.log(dates, dateStrings);
-                // }}
-              />
-            )}
-            {field.inputType === "datePicker" && (
-              <DatePicker
-                className={"text-left w-full"}
-                // defaultValue={dayjs(new Date(), "YYYY-MM-DD")}
-                placeholder={field.label}
-                value={
-                  field.name !== undefined
-                    ? field.name
-                    : dayjs(new Date(), "YYYY-MM-DD")
-                }
-                picker={field.picker ? field.picker : "date"}
-              />
-            )}
-          </Form.Item>
-        );
-      })}
+      <FormFields
+        form={form}
+        formFields={formFields}
+        selectOptions={selectOptions}
+        dependentFieldsVisibility={dependentFieldsVisibility}
+        handleImageLoaded={null} // Cambia esto si necesitas manejar la carga de imágenes
+        screen={screen}
+      />
       <Form.Item wrapperCol={{ span: 24 }} className={"text-center"}>
         <Button
           type={"primary"}
@@ -354,8 +233,6 @@ FormComponent.propTypes = {
   formFields: PropTypes.any,
   handleSubmit: PropTypes.func,
   handleClose: PropTypes.func,
-  setProfileImage: PropTypes.func,
   isLogin: PropTypes.any,
   confirmLoading: PropTypes.bool,
-  // ...
 };

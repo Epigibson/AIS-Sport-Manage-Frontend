@@ -21,71 +21,71 @@ export const ModalComponent = ({
   external,
   confirmLoading,
 }) => {
-  // console.log(buttonModal, textButtonModal); // Verifica que se reciban las props
   const screen = useBreakpoint();
+
+  const renderModalTitle = () => (
+    <Row className="mb-6" align="middle" justify="center" title={title}>
+      <Text className="text-center text-xl">{title}</Text>
+    </Row>
+  );
+
+  const renderExternalButton = () => (
+    <Row justify="end" className="overflow-hidden mb-5">
+      <Button
+        type="primary"
+        className="bg-primary-700"
+        onClick={() => buttonModal(dataTable)}
+        loading={confirmLoading}
+      >
+        {textButtonModal}
+      </Button>
+    </Row>
+  );
+
+  const renderFormComponent = () => (
+    <FormComponent
+      form={form}
+      formFields={formFields}
+      handleSubmit={onOk}
+      handleClose={onClose}
+      setProfileImage={setProfileImage}
+      confirmLoading={confirmLoading}
+    />
+  );
+
+  const renderTablesComponent = () => (
+    <TablesComponent data={dataTable} columns={dataTableColumns} />
+  );
+
   return (
     <Modal
       centered={true}
-      title={
-        <Row
-          className={"mb-6"}
-          align={"middle"}
-          justify={"center"}
-          title={title}
-        >
-          <Text className={"text-center text-xl"}>{title}</Text>
-        </Row>
-      }
+      title={renderModalTitle()}
       open={onOpen}
       onCancel={onClose}
       footer={false}
       confirmLoading={confirmLoading}
       width={screen.xs ? 300 : 600}
     >
-      {external === true ? (
-        <Row justify={"end"} className={"overflow-hidden mb-5"}>
-          <Button
-            type={"primary"}
-            className={"bg-primary-700"}
-            onClick={() => buttonModal(dataTable)}
-            loading={confirmLoading}
-          >
-            {textButtonModal}
-          </Button>
-        </Row>
-      ) : (
-        <> </>
-      )}
-      {dataTable == null && form != null && formFields != null ? (
-        <FormComponent
-          form={form}
-          formFields={formFields}
-          handleSubmit={onOk}
-          handleClose={onClose}
-          setProfileImage={setProfileImage}
-          confirmLoading={confirmLoading}
-        />
-      ) : null}
-      {dataTable && dataTableColumns ? (
-        <TablesComponent data={dataTable} columns={dataTableColumns} />
-      ) : null}
+      {external && renderExternalButton()}
+      {!dataTable && form && formFields && renderFormComponent()}
+      {dataTable && dataTableColumns && renderTablesComponent()}
     </Modal>
   );
 };
 
 ModalComponent.propTypes = {
-  title: PropTypes.string,
-  onOk: PropTypes.any,
-  onOpen: PropTypes.any,
-  onClose: PropTypes.any,
-  form: PropTypes.any,
-  formFields: PropTypes.any,
-  dataTable: PropTypes.any,
-  dataTableColumns: PropTypes.any,
-  setProfileImage: PropTypes.any,
+  title: PropTypes.string.isRequired,
+  onOk: PropTypes.func.isRequired,
+  onOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  form: PropTypes.object,
+  formFields: PropTypes.array,
+  dataTable: PropTypes.array,
+  dataTableColumns: PropTypes.array,
+  setProfileImage: PropTypes.func,
   buttonModal: PropTypes.func,
   textButtonModal: PropTypes.string,
   external: PropTypes.bool,
   confirmLoading: PropTypes.bool,
-  // ...
 };

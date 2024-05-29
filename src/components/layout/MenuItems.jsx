@@ -14,6 +14,7 @@ import {
   ProfileOutlined,
   ReadOutlined,
   SettingOutlined,
+  ShopOutlined,
   UsergroupAddOutlined,
   UserOutlined,
   UserSwitchOutlined,
@@ -39,6 +40,13 @@ export const MenuItems = [
     icon: <DollarCircleOutlined />,
     label: "Control de Pagos",
     path: "/pagos",
+    roles: ["Admin", "Manager"],
+  },
+  {
+    key: "18",
+    icon: <ShopOutlined />,
+    label: "Ventas Indirectas",
+    path: "/ventas_indirectas",
     roles: ["Admin", "Manager"],
   },
   {

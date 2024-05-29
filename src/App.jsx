@@ -25,6 +25,7 @@ import { UserProfilePage } from "./pages/UserPages/UserProfilePage.jsx";
 import { UserAthletesPage } from "./pages/UserPages/UserAthletesPage.jsx";
 import { UserPaymentsPage } from "./pages/UserPages/UserPaymentsPage.jsx";
 import { ProductsPage } from "./pages/ProductsPage.jsx";
+import { SalesHistoryPage } from "./pages/SalesHistoryPage.jsx";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/atletas" element={<AthletesPage />} />
           <Route path="/coaches" element={<CouchesPage />} />
           <Route path="/productos" element={<ProductsPage />} />
+          <Route path="/ventas_indirectas" element={<SalesHistoryPage />} />
           <Route path="/grupos" element={<GroupsPage />} />
           <Route
             path="/asignacion_de_grupos/:athleteId"
