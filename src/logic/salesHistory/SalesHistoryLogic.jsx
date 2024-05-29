@@ -13,6 +13,7 @@ import { useState } from "react";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { SalesHistoryFormFields } from "./SalesHistoryFormFields.jsx";
 import { getAllSalesProducts } from "../../api/ProductsService.jsx";
+import { PrepareFilters } from "../reports/athletesEnriched/AthletesEnrichedPrepareFilters.jsx";
 
 export const SalesHistoryLogic = () => {
   const queryClient = useQueryClient();
@@ -102,6 +103,7 @@ export const SalesHistoryLogic = () => {
   };
 
   const columns = SalesHistoryColumns({
+    filters: { product_name: PrepareFilters(salesHistoryData, "product_name") },
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,

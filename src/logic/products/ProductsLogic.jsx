@@ -12,6 +12,7 @@ import {
   useUpdateSalesProduct,
 } from "./ProductsLogicMutations.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
+import { PrepareFilters } from "../reports/athletesEnriched/AthletesEnrichedPrepareFilters.jsx";
 
 export const ProductsLogic = () => {
   const queryClient = useQueryClient();
@@ -45,21 +46,21 @@ export const ProductsLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
-      console.log("SE EDITA");
-      console.log("VER SI CAMBIA", values);
+      // console.log("SE EDITA");
+      // console.log("VER SI CAMBIA", values);
       await mutateUpdateSalesProduct({
         ...values,
         sales_product_id: selectedRecord.product_id,
       });
     }
     if (modalContext === "create") {
-      console.log("SE CREA");
-      console.log("VER SI CAMBIA", values);
+      // console.log("SE CREA");
+      // console.log("VER SI CAMBIA", values);
       await mutateCreateSalesProduct(values);
     }
     if (modalContext === "addStock") {
-      console.log("SE CREA");
-      console.log("VER SI CAMBIA", values);
+      // console.log("SE CREA");
+      // console.log("VER SI CAMBIA", values);
       values.quantity_stock = previousStock + values.quantity_stock;
       await mutateUpdateSalesProduct({
         ...values,
@@ -111,6 +112,7 @@ export const ProductsLogic = () => {
   };
 
   const columns = ProductsColumns({
+    filters: { name: PrepareFilters(productData, "name") },
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,

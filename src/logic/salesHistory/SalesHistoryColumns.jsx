@@ -2,12 +2,20 @@ import { Tag } from "antd";
 import { FormatCurrencyUtil } from "../../utils/FormatCurrencyUtil.jsx";
 import { convertToMexicoCityTimeAndSubtractSixHours } from "../../utils/ConvertDateToMexicoTimeUtil.jsx";
 
-export const SalesHistoryColumns = ({ onEdit, onDelete, onCancel }) => [
+export const SalesHistoryColumns = ({
+  filters,
+  onEdit,
+  onDelete,
+  onCancel,
+}) => [
   {
     title: "Producto",
     dataIndex: "product_name",
     key: "product_name",
     align: "center",
+    filters: filters.product_name,
+    filterSearch: true,
+    onFilter: (value, record) => record.product_name.includes(value),
     render: (text) => <a>{text}</a>,
   },
   {
@@ -39,6 +47,12 @@ export const SalesHistoryColumns = ({ onEdit, onDelete, onCancel }) => [
     key: "payment_method",
     dataIndex: "payment_method",
     align: "center",
+    filters: [
+      { text: "Efectivo", value: "Efectivo" },
+      { text: "Transferencia", value: "Transferencia" },
+      { text: "Ninguno (Cortesia)", value: "Ninguno" },
+    ],
+    onFilter: (value, record) => record.payment_method === value,
     render: (payment_method) => {
       if (payment_method) {
         return <Tag color={"green"}>{payment_method}</Tag>;
@@ -62,6 +76,11 @@ export const SalesHistoryColumns = ({ onEdit, onDelete, onCancel }) => [
     key: "is_lost",
     dataIndex: "is_lost",
     align: "center",
+    filters: [
+      { text: "Cortesia", value: true },
+      { text: "Venta", value: false },
+    ],
+    onFilter: (value, record) => record.is_lost === value,
     render: (is_lost) => {
       return <Tag color={"cyan"}>{is_lost ? "Cortesia" : "Venta"}</Tag>;
     },

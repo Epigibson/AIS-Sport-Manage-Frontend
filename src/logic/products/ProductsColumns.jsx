@@ -1,12 +1,21 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { FormatCurrencyUtil } from "../../utils/FormatCurrencyUtil.jsx";
 
-export const ProductsColumns = ({ onEdit, onAddStock, onDelete, onCancel }) => [
+export const ProductsColumns = ({
+  filters,
+  onEdit,
+  onAddStock,
+  onDelete,
+  onCancel,
+}) => [
   {
     title: "Nombre",
     dataIndex: "name",
     key: "name",
     align: "center",
+    filters: filters.name,
+    filterSearch: true,
+    onFilter: (value, record) => record.name.includes(value),
     render: (text) => <a>{text}</a>,
   },
   {
@@ -35,6 +44,11 @@ export const ProductsColumns = ({ onEdit, onAddStock, onDelete, onCancel }) => [
     key: "status",
     dataIndex: "status",
     align: "center",
+    filters: [
+      { text: "En existencia", value: true },
+      { text: "Agotado", value: false },
+    ],
+    onFilter: (value, record) => record.status === value,
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>En existencia</Tag>;
