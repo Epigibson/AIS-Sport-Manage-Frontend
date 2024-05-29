@@ -1,6 +1,7 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
+import { FormatCurrencyUtil } from "../../utils/FormatCurrencyUtil.jsx";
 
-export const ProductsColumns = ({ onEdit, onDelete, onCancel }) => [
+export const ProductsColumns = ({ onEdit, onAddStock, onDelete, onCancel }) => [
   {
     title: "Nombre",
     dataIndex: "name",
@@ -13,7 +14,9 @@ export const ProductsColumns = ({ onEdit, onDelete, onCancel }) => [
     dataIndex: "price",
     key: "price",
     align: "center",
-    render: (text) => <a>{text}</a>,
+    render: (price) => {
+      return <a>{FormatCurrencyUtil(price)}</a>;
+    },
   },
   {
     title: "Existencias",
@@ -39,6 +42,21 @@ export const ProductsColumns = ({ onEdit, onDelete, onCancel }) => [
         return <Tag color={"volcano"}>Agotado</Tag>;
       }
     },
+  },
+  {
+    title: "Ingresar a Stock",
+    key: "stock",
+    align: "center",
+    width: 200,
+    render: (_, record) => (
+      <Button
+        style={{ backgroundColor: "#1d4ed8" }}
+        type={"primary"}
+        onClick={() => onAddStock(record)}
+      >
+        Ingresar a Stock
+      </Button>
+    ),
   },
   {
     title: "Acciones",

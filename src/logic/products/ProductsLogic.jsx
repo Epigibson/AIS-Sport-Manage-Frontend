@@ -16,8 +16,10 @@ import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 export const ProductsLogic = () => {
   const queryClient = useQueryClient();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalAddStockVisible, setIsModalAddStockVisible] = useState(false);
   const [modalContext, setModalContext] = useState("");
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [previousStock, setPreviousStock] = useState(null);
   const [form] = Form.useForm();
   const {
     data: productData,
@@ -55,10 +57,20 @@ export const ProductsLogic = () => {
       console.log("VER SI CAMBIA", values);
       await mutateCreateSalesProduct(values);
     }
+    if (modalContext === "addStock") {
+      console.log("SE CREA");
+      console.log("VER SI CAMBIA", values);
+      values.quantity_stock = previousStock + values.quantity_stock;
+      await mutateUpdateSalesProduct({
+        ...values,
+        sales_product_id: selectedRecord.product_id,
+      });
+    }
     form.resetFields();
     setModalContext("");
     setSelectedRecord(null);
     setIsModalVisible(false);
+    setIsModalAddStockVisible(false);
   };
 
   const handleEdit = (record) => {
@@ -66,6 +78,13 @@ export const ProductsLogic = () => {
     form.setFieldsValue(record);
     setSelectedRecord(record);
     setIsModalVisible(true);
+  };
+
+  const handleAddStock = (record) => {
+    setModalContext("addStock");
+    setPreviousStock(record.quantity_stock);
+    setSelectedRecord(record);
+    setIsModalAddStockVisible(true);
   };
 
   const handleDelete = async (record) => {
@@ -78,6 +97,7 @@ export const ProductsLogic = () => {
     setModalContext("");
     form.resetFields();
     setIsModalVisible(false);
+    setIsModalAddStockVisible(false);
   };
 
   const cancel = (e) => {
@@ -94,6 +114,7 @@ export const ProductsLogic = () => {
     onEdit: handleEdit,
     onDelete: handleDelete,
     onCancel: cancel,
+    onAddStock: handleAddStock,
   });
 
   if (isError) {
@@ -120,6 +141,21 @@ export const ProductsLogic = () => {
         title={modalContext === "edit" ? "Editar Registro" : "Crear Registro"}
         onOk={handleSubmit}
         onOpen={isModalVisible}
+        onClose={handleCancel}
+      />
+      <ModalComponent
+        form={form}
+        formFields={[
+          {
+            name: "quantity_stock",
+            label: "Cantidad",
+            rules: [{ required: true, message: "La cantidad es obligatoria" }],
+            inputType: "number",
+          },
+        ]}
+        title={"Agregar Stock"}
+        onOk={handleSubmit}
+        onOpen={isModalAddStockVisible}
         onClose={handleCancel}
       />
       <TablesComponent

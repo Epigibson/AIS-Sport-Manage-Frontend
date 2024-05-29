@@ -10,6 +10,7 @@ export const ProductsFormFields = [
     label: "Precio",
     rules: [{ required: true, message: "El precio es obligatorio" }],
     inputType: "number",
+    formatter: "money",
   },
   {
     name: "quantity_stock",
