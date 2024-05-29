@@ -57,6 +57,15 @@ export const SalesHistoryColumns = ({ onEdit, onDelete, onCancel }) => [
       return <Tag color={"cyan"}>{date}</Tag>;
     },
   },
+  {
+    title: "Venta / Cortesia",
+    key: "is_lost",
+    dataIndex: "is_lost",
+    align: "center",
+    render: (is_lost) => {
+      return <Tag color={"cyan"}>{is_lost ? "Cortesia" : "Venta"}</Tag>;
+    },
+  },
   // {
   //   title: "Acciones",
   //   key: "action",

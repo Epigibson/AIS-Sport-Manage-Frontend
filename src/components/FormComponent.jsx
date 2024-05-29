@@ -126,10 +126,7 @@ export const FormComponent = ({
           }));
         }
       } else if (field.options) {
-        options = field.options.map((option) => ({
-          label: option.label,
-          value: option.value,
-        }));
+        options = field.options;
       }
 
       newSelectOptions[field.name] = options;
@@ -230,9 +227,9 @@ export const FormComponent = ({
 
 FormComponent.propTypes = {
   form: PropTypes.object,
-  formFields: PropTypes.any,
-  handleSubmit: PropTypes.func,
-  handleClose: PropTypes.func,
-  isLogin: PropTypes.any,
+  formFields: PropTypes.array.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  isLogin: PropTypes.bool,
   confirmLoading: PropTypes.bool,
 };

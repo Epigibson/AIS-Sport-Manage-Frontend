@@ -23,15 +23,6 @@ export const SalesHistoryFormFields = [
     ],
   },
   {
-    name: "is_lost",
-    label: "Es Cortesia",
-    rules: [
-      { required: true, message: "Definir si es cortesia es obligatorio" },
-    ],
-    inputType: "checkbox",
-    tooltip: "Selecciona esta opción para indicar si sera cortesia.",
-  },
-  {
     name: "product_price",
     label: "Precio",
     rules: [{ required: true, message: "El precio es obligatorio" }],
@@ -68,10 +59,51 @@ export const SalesHistoryFormFields = [
   {
     name: "total_price",
     label: "Precio Total",
-    rules: [{ required: true, message: "El precio total es obligatorio" }],
+    rules: [
+      { required: true, message: "El precio total es obligatorio" },
+      ({ getFieldValue }) => ({
+        validator(_, value) {
+          const is_lost = getFieldValue("is_lost");
+          if (is_lost) {
+            return Promise.resolve();
+          }
+          if (value <= 0) {
+            return Promise.reject(
+              new Error("El precio total debe ser mayor a 0"),
+            );
+          }
+          return Promise.resolve();
+        },
+      }),
+    ],
     inputType: "number",
     formatter: "money",
     disabled: true,
+  },
+  {
+    name: "is_lost",
+    label: "Es Cortesia",
+    rules: [
+      { required: false, message: "Definir si es cortesia es obligatorio" },
+    ],
+    inputType: "checkbox",
+    tooltip: "Selecciona esta opción para indicar si sera cortesia.",
+    onChange: (checked, form) => {
+      if (checked) {
+        form.setFieldsValue({
+          product_price: 0,
+          total_price: 0,
+          payment_method: "Ninguno",
+        });
+      } else {
+        const productPrice = form.getFieldValue("product_price");
+        const quantity = form.getFieldValue("product_quantity");
+        form.setFieldsValue({
+          total_price: productPrice * quantity,
+          payment_method: "",
+        });
+      }
+    },
   },
   {
     name: "payment_method",
@@ -81,6 +113,7 @@ export const SalesHistoryFormFields = [
     options: [
       { label: "Efectivo", value: "Efectivo" },
       { label: "Transferencia", value: "Transferencia" },
+      { label: "Ninguno (Cortesia)", value: "Ninguno" },
     ],
   },
 ];

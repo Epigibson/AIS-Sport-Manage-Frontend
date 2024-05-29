@@ -10,24 +10,42 @@ import {
 } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
+import { AvatarComponent } from "./AvatarComponent.jsx";
 import {
   formatMoney,
   formatPercentage,
   parseMoney,
   parsePercentage,
 } from "../utils/FormatAndParseNumberInputUtil.jsx";
-import { AvatarComponent } from "./AvatarComponent.jsx";
 
 const { Option } = Select;
 const { RangePicker } = TimePicker;
 
 export const FormFields = ({
+  form,
   formFields,
   selectOptions,
   dependentFieldsVisibility,
   handleImageLoaded,
   screen,
 }) => {
+  const handleCheckboxChange = (field, checked) => {
+    if (checked) {
+      form.setFieldsValue({
+        product_price: 0,
+        total_price: 0,
+        payment_method: "Ninguno",
+      });
+    } else {
+      const productPrice = form.getFieldValue("product_price");
+      const quantity = form.getFieldValue("product_quantity");
+      form.setFieldsValue({
+        total_price: productPrice * quantity,
+        payment_method: "",
+      });
+    }
+  };
+
   return formFields.map((field) => {
     if (!dependentFieldsVisibility[field.name]) {
       return null;
@@ -82,7 +100,10 @@ export const FormFields = ({
           />
         )}
         {field.inputType === "checkbox" && (
-          <Checkbox className={"mr-2"}>
+          <Checkbox
+            className={"mr-2"}
+            onChange={(e) => handleCheckboxChange(field, e.target.checked)}
+          >
             <Tooltip title={field.tooltip}>
               <QuestionCircleOutlined />
             </Tooltip>
@@ -119,7 +140,6 @@ export const FormFields = ({
             format="HH:mm a"
             placeholder={["Inicio", "Fin"]}
             className="rounded-md py-0.5 my-0 border-gray-300"
-            variant={"filled"}
             use24Hours
           />
         )}
@@ -137,9 +157,9 @@ export const FormFields = ({
 
 FormFields.propTypes = {
   form: PropTypes.object,
-  formFields: PropTypes.any,
-  selectOptions: PropTypes.object,
-  dependentFieldsVisibility: PropTypes.object,
+  formFields: PropTypes.array.isRequired,
+  selectOptions: PropTypes.object.isRequired,
+  dependentFieldsVisibility: PropTypes.object.isRequired,
   handleImageLoaded: PropTypes.func,
-  screen: PropTypes.object,
+  screen: PropTypes.object.isRequired,
 };

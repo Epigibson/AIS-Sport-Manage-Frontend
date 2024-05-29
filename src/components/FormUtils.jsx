@@ -1,3 +1,19 @@
+export const formatMoney = (value) => {
+  return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+export const parseMoney = (value) => {
+  return value ? value.replace(/\$\s?|(,*)/g, "") : "";
+};
+
+export const formatPercentage = (value) => {
+  return `${value}%`;
+};
+
+export const parsePercentage = (value) => {
+  return value ? value.replace("%", "") : "";
+};
+
 export const getDataSource = (
   source,
   { categories, couches, groups, users, athletes, packages, products },
@@ -20,7 +36,7 @@ export const handleFieldDependencies = (
   form,
 ) => {
   const dependentFields = field.dependentFields;
-  const selectedItem = dependencies.salesProducts?.find(
+  const selectedItem = dependencies.salesProducts.find(
     (product) => product._id === allValues[field.name],
   );
 
