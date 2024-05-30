@@ -21,6 +21,7 @@ import {getAllUsers} from "../../api/UserService.jsx";
 import {getAllPackages} from "../../api/ProductService.jsx";
 import {useColumnSearchProps} from "../../utils/useColumnSearchProps.jsx";
 import dayjs from "dayjs";
+import {exportToExcel} from "./ExportAthletesExcel.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -98,6 +99,14 @@ export const AthleteLogic = () => {
         phone: firstTutor?.phone,
         mobile: firstTutor?.mobile,
         products_which_inscribed: packages,
+        name: athlete.name || "N/A",
+        age: athlete.age || "N/A",
+        gender: athlete.gender || "N/A",
+        sport_preference: athlete.sport_preference || "N/A",
+        hobbies: athlete.hobbies || "N/A",
+        start_date: athlete.start_date
+          ? dayjs(athlete.start_date).format("YYYY-MM-DD")
+          : "N/A",
       };
     });
   }, [athletesData, groupsData, usersData, packagesData]);
@@ -213,6 +222,8 @@ export const AthleteLogic = () => {
     return <LoaderIconUtils isLoading={true} />;
   if (isAthletesError) return <h1>Error...</h1>;
 
+  console.log("DATA", enrichedUsersData);
+
   return (
     <>
       <Row justify={"end"} className={"overflow-hidden"}>
@@ -223,6 +234,13 @@ export const AthleteLogic = () => {
           onClick={() => navigate("/inscripciones")}
         >
           Registrar Atleta
+        </Button>
+        <Button
+          className={"bg-primary-700 mb-3 ml-2"}
+          type={"primary"}
+          onClick={() => exportToExcel(enrichedUsersData, "Atletas")}
+        >
+          Exportar a Excel
         </Button>
       </Row>
       <ModalComponent
