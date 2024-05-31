@@ -34,7 +34,7 @@ export const FormFields = ({
       form.setFieldsValue({
         product_price: 0,
         total_price: 0,
-        payment_method: "Ninguno",
+        payment_method: "Cortesia",
       });
     } else {
       const productPrice = form.getFieldValue("product_price");

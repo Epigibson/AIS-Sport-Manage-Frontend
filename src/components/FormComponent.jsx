@@ -131,6 +131,11 @@ export const FormComponent = ({
 
       newSelectOptions[field.name] = options;
     });
+
+    // Verificar y actualizar la visibilidad inicial del campo payment_method
+    const isLostInitialValue = form.getFieldValue("is_lost");
+    visibility["payment_method"] = !isLostInitialValue;
+
     setDependentFieldsVisibility(visibility);
     setSelectOptions(newSelectOptions);
   }, [

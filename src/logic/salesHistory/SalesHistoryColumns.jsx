@@ -9,6 +9,16 @@ export const SalesHistoryColumns = ({
   onCancel,
 }) => [
   {
+    title: "Fecha de Venta",
+    key: "created_at",
+    dataIndex: "created_at",
+    align: "center",
+    render: (created_at) => {
+      const date = convertToMexicoCityTimeAndSubtractSixHours(created_at);
+      return <Tag color={"cyan"}>{date}</Tag>;
+    },
+  },
+  {
     title: "Producto",
     dataIndex: "product_name",
     key: "product_name",
@@ -43,35 +53,6 @@ export const SalesHistoryColumns = ({
     },
   },
   {
-    title: "Metodo de Pago",
-    key: "payment_method",
-    dataIndex: "payment_method",
-    align: "center",
-    filters: [
-      { text: "Efectivo", value: "Efectivo" },
-      { text: "Transferencia", value: "Transferencia" },
-      { text: "Ninguno (Cortesia)", value: "Ninguno" },
-    ],
-    onFilter: (value, record) => record.payment_method === value,
-    render: (payment_method) => {
-      if (payment_method) {
-        return <Tag color={"green"}>{payment_method}</Tag>;
-      } else {
-        return <Tag color={"volcano"}>{payment_method}</Tag>;
-      }
-    },
-  },
-  {
-    title: "Fecha de Venta",
-    key: "created_at",
-    dataIndex: "created_at",
-    align: "center",
-    render: (created_at) => {
-      const date = convertToMexicoCityTimeAndSubtractSixHours(created_at);
-      return <Tag color={"cyan"}>{date}</Tag>;
-    },
-  },
-  {
     title: "Venta / Cortesia",
     key: "is_lost",
     dataIndex: "is_lost",
@@ -83,6 +64,25 @@ export const SalesHistoryColumns = ({
     onFilter: (value, record) => record.is_lost === value,
     render: (is_lost) => {
       return <Tag color={"cyan"}>{is_lost ? "Cortesia" : "Venta"}</Tag>;
+    },
+  },
+  {
+    title: "Metodo de Pago",
+    key: "payment_method",
+    dataIndex: "payment_method",
+    align: "center",
+    filters: [
+      { text: "Efectivo", value: "Efectivo" },
+      { text: "Transferencia", value: "Transferencia" },
+      { text: "Cortesia", value: "Cortesia" },
+    ],
+    onFilter: (value, record) => record.payment_method === value,
+    render: (payment_method) => {
+      if (payment_method) {
+        return <Tag color={"green"}>{payment_method}</Tag>;
+      } else {
+        return <Tag color={"volcano"}>{payment_method}</Tag>;
+      }
     },
   },
   // {

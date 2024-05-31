@@ -88,22 +88,6 @@ export const SalesHistoryFormFields = [
     ],
     inputType: "checkbox",
     tooltip: "Selecciona esta opción para indicar si sera cortesia.",
-    onChange: (checked, form) => {
-      if (checked) {
-        form.setFieldsValue({
-          product_price: 0,
-          total_price: 0,
-          payment_method: "Ninguno",
-        });
-      } else {
-        const productPrice = form.getFieldValue("product_price");
-        const quantity = form.getFieldValue("product_quantity");
-        form.setFieldsValue({
-          total_price: productPrice * quantity,
-          payment_method: "",
-        });
-      }
-    },
   },
   {
     name: "payment_method",
@@ -113,7 +97,11 @@ export const SalesHistoryFormFields = [
     options: [
       { label: "Efectivo", value: "Efectivo" },
       { label: "Transferencia", value: "Transferencia" },
-      { label: "Ninguno (Cortesia)", value: "Ninguno" },
+      { label: "Cortesia", value: "Cortesia" },
     ],
+    dependencies: {
+      fieldName: "is_lost",
+      value: false,
+    },
   },
 ];
