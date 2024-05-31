@@ -103,5 +103,6 @@ export const SalesHistoryFormFields = [
       fieldName: "is_lost",
       value: false,
     },
+    visible: true, // Siempre enviar este campo aunque esté oculto visualmente
   },
 ];

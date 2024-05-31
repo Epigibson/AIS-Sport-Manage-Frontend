@@ -188,6 +188,12 @@ export const FormComponent = ({
             product_price: updatedValues.product_price,
             total_price: updatedValues.total_price,
           });
+
+          // Actualizar visibilidad del campo payment_method
+          setDependentFieldsVisibility((prevVisibility) => ({
+            ...prevVisibility,
+            payment_method: !allValues.is_lost,
+          }));
         }
 
         formFields.forEach((field) => {
@@ -213,6 +219,14 @@ export const FormComponent = ({
         handleImageLoaded={null} // Cambia esto si necesitas manejar la carga de imágenes
         screen={screen}
       />
+      {formFields.map((field) =>
+        field.name === "payment_method" &&
+        !dependentFieldsVisibility[field.name] ? (
+          <Form.Item name={field.name} hidden key={field.name}>
+            <input type="hidden" />
+          </Form.Item>
+        ) : null,
+      )}
       <Form.Item wrapperCol={{ span: 24 }} className={"text-center"}>
         <Button
           type={"primary"}
