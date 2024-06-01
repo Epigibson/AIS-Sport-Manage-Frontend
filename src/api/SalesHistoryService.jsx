@@ -1,8 +1,17 @@
 import { apiClient } from "./index.jsx";
 
-export const getAllSalesHistory = async () => {
+export const getAllSalesHistory = async ({ start_date, end_date }) => {
   try {
-    const response = await apiClient.get("/sales_history/");
+    // Construir los parámetros de la consulta
+    const queryParams = new URLSearchParams();
+
+    // Añadir parámetros a la consulta solo si están presentes
+    if (start_date && end_date) {
+      queryParams.append("start_date", start_date);
+      queryParams.append("end_date", end_date);
+    }
+
+    const response = await apiClient.get(`/sales_history/?${queryParams}`);
     return response.data;
   } catch (error) {
     const errorMessage =

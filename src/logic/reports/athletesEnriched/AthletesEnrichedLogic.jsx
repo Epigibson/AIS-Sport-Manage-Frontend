@@ -64,8 +64,15 @@ export const AthletesEnrichedLogic = () => {
   const nestedColumns = AthletesEnrichedNestedColumns;
 
   const onDateChange = (dates, dateStrings) => {
-    setStartDate(dateStrings[0] ? dayjs(dateStrings[0]).toISOString() : null);
-    setEndDate(dateStrings[1] ? dayjs(dateStrings[1]).toISOString() : null);
+    const adjustedStartDate = dateStrings[0]
+      ? dayjs(dateStrings[0]).subtract(6, "hours").toISOString()
+      : null;
+    const adjustedEndDate = dateStrings[1]
+      ? dayjs(dateStrings[1]).subtract(6, "hours").toISOString()
+      : null;
+
+    setStartDate(adjustedStartDate);
+    setEndDate(adjustedEndDate);
     refetch();
   };
 

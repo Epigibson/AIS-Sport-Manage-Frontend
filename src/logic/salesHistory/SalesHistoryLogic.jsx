@@ -7,9 +7,9 @@ import {
   useDeleteSalesHistory,
   useUpdateSalesHistory,
 } from "./SalesHistoryLogicMutations.jsx";
-import { Button, DatePicker, Form, message, Row, Space } from "antd";
+import { Button, Col, DatePicker, Form, message, Row, Space } from "antd";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { SalesHistoryFormFields } from "./SalesHistoryFormFields.jsx";
 import { getAllSalesProducts } from "../../api/ProductsService.jsx";
@@ -17,6 +17,10 @@ import { PrepareFilters } from "../reports/athletesEnriched/AthletesEnrichedPrep
 import { DatePresets } from "../../utils/DatesUtils.jsx";
 import dayjs from "dayjs";
 import * as XLSX from "xlsx";
+import { useLoading } from "../../hooks/LoadingContext/useLoading.jsx";
+import { SalesHistoryStatisticCards } from "./SalesHistoryStatisticCards.jsx";
+import { SalesHistoryCalculateTotals } from "./SalesHistoryCalculateTotals.jsx";
+import { StatisticCard } from "../../components/StatisticCardComponent.jsx";
 
 export const SalesHistoryLogic = () => {
   const queryClient = useQueryClient();
@@ -27,14 +31,36 @@ export const SalesHistoryLogic = () => {
   const [form] = Form.useForm();
   const [selectedRecord, setSelectedRecord] = useState(null);
   const {
+    startLoading,
+    stopLoading,
+    isLoading: globalIsLoading,
+  } = useLoading();
+
+  const {
     data: salesHistoryData,
     error: salesHistoryError,
     isLoading: salesHistoryLoading,
     refetch,
   } = useQuery({
-    queryKey: ["salesHistory"],
-    queryFn: getAllSalesHistory,
+    queryKey: ["salesHistory", { startDate, endDate }],
+    queryFn: () =>
+      getAllSalesHistory({ start_date: startDate, end_date: endDate }),
+    onSuccess: () => {
+      stopLoading();
+    },
+    onError: () => {
+      stopLoading();
+    },
   });
+
+  // Solo actualizar el estado de carga cuando cambie `isLoading`
+  useEffect(() => {
+    if (salesHistoryLoading) {
+      startLoading();
+    } else {
+      stopLoading();
+    }
+  }, [salesHistoryLoading, startLoading, stopLoading]);
 
   const { data: productData, refetch: refetchProduct } = useQuery({
     queryKey: ["productList"],
@@ -126,6 +152,12 @@ export const SalesHistoryLogic = () => {
     refetch();
   };
 
+  const statisticCardsDataUsed = useMemo(
+    () =>
+      SalesHistoryStatisticCards(SalesHistoryCalculateTotals(salesHistoryData)),
+    [salesHistoryData],
+  );
+
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(salesHistoryData);
     const workbook = XLSX.utils.book_new();
@@ -139,12 +171,28 @@ export const SalesHistoryLogic = () => {
   if (salesHistoryError) {
     return <div>Error</div>;
   }
-  if (salesHistoryLoading) {
+  if (salesHistoryLoading || globalIsLoading) {
     return <LoaderIconUtils isLoading={true} />;
   }
 
   return (
     <>
+      <Row
+        gutter={[16, 16]}
+        wrap={true}
+        align={"middle"}
+        justify={"center"}
+        className={"mb-6"}
+      >
+        {statisticCardsDataUsed?.map((card, index) => (
+          <Col key={index} xs={24} sm={12} md={8} lg={4}>
+            <StatisticCard
+              statistics={card.statistics} // Pasando el array de estadísticas directamente
+              backgroundClass={card.backgroundClass} // El fondo de la tarjeta
+            />
+          </Col>
+        ))}
+      </Row>
       <Row justify={"end"} className={"overflow-hidden"}>
         <Button
           className={"bg-primary-700 mb-3"}
