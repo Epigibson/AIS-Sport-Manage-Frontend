@@ -13,9 +13,12 @@ export const PaymentFormFields = [
     inputType: "select",
     optionsSource: "athletes",
     dependentOn: {
-      field: "user", // El campo del cual depende
-      relatedKey: "athletes", // La clave en los datos de atletas que corresponde al valor en el campo usuario
+      field: "user", // Field this one depends on
+      fromCollection: "users", // Collection to get data from
+      relatedKey: "athletes", // Key in the user data to filter athletes
+      type: "relation", // Indicate this is a relation dependency
     },
+    visible: true,
   },
   {
     name: "package",

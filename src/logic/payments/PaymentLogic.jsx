@@ -197,6 +197,8 @@ export const PaymentLogic = () => {
     MembershipFilter,
   ]);
 
+  // console.log("DATA", enrichedHistoryPaymentsData);
+
   useEffect(() => {
     // console.log("AUTOFETCH", autoFetchEnabled);
     if (historyPaymentData && firstCharge <= 0) {
@@ -303,6 +305,7 @@ export const PaymentLogic = () => {
 
   const handleCloseCreateModal = () => {
     setIsCreateModalVisible(false);
+    formCreate.resetFields();
   };
 
   const handleCloseModal = () => {
@@ -523,7 +526,7 @@ export const PaymentLogic = () => {
     return <LoaderIconUtils isLoading={true} />;
   if (isError) return <h1>Error...</h1>;
 
-  console.log("RECIBO", selectedReceipt);
+  // console.log("RECIBO", selectedReceipt);
 
   return (
     <>

@@ -76,7 +76,7 @@ export const ModalComponent = ({
 
 ModalComponent.propTypes = {
   title: PropTypes.string.isRequired,
-  onOk: PropTypes.func.isRequired,
+  onOk: PropTypes.func,
   onOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   form: PropTypes.object,

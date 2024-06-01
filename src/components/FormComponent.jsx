@@ -60,6 +60,7 @@ export const FormComponent = ({
   useEffect(() => {
     const newSelectOptions = {};
     const visibility = {};
+
     formFields.forEach((field) => {
       let options = [];
       const dataSource = getDataSource(field.optionsSource, {
@@ -72,25 +73,7 @@ export const FormComponent = ({
         products,
       });
 
-      if (field.dependencies) {
-        const dependentValue = form.getFieldValue(field.dependencies.fieldName);
-        const selectedItem = dataSource?.find(
-          (item) => item._id === dependentValue,
-        );
-        if (selectedItem) {
-          const updatedValues = {
-            ...selectedValues,
-            [field.name]: selectedItem[field.dependencies.relatedKey],
-          };
-          setSelectedValues(updatedValues);
-          form.setFieldsValue(updatedValues);
-        }
-        visibility[field.name] =
-          dependentValue === field.dependencies.value ||
-          field.dependencies.relatedKey;
-      } else {
-        visibility[field.name] = true; // Si no tiene dependencias, es siempre visible
-      }
+      visibility[field.name] = true; // Predeterminado a true a menos que las dependencias digan lo contrario
 
       if (Array.isArray(field.optionsSource)) {
         options = field.optionsSource.map((option) => ({
@@ -98,43 +81,51 @@ export const FormComponent = ({
           value: option,
         }));
       } else if (typeof field.optionsSource === "string") {
-        if (field.dependentOn) {
-          const selectedObject = selectedValues[field.dependentOn.field];
-          if (selectedObject && selectedObject[field.dependentOn.relatedKey]) {
-            const filterIds = selectedObject[field.dependentOn.relatedKey];
-            options = dataSource
-              .filter((item) => filterIds.includes(item._id))
-              .map((item) => ({
-                label:
-                  item.tutors_name_one ||
-                  item.tutors_name_two ||
-                  item.name ||
-                  item.username ||
-                  item.product_name,
-                value: item._id,
-              }));
-          }
-        } else {
-          options = dataSource.map((option) => ({
-            label:
-              option.tutors_name_one ||
-              option.tutors_name_two ||
-              option.name ||
-              option.username ||
-              option.product_name,
-            value: option._id,
-          }));
-        }
+        options = dataSource.map((option) => ({
+          label:
+            option.tutors_name_one ||
+            option.tutors_name_two ||
+            option.name ||
+            option.username ||
+            option.product_name,
+          value: option._id,
+        }));
       } else if (field.options) {
         options = field.options;
       }
 
+      if (field.dependentOn && field.dependentOn.type === "relation") {
+        const dependentFieldValue = selectedValues[field.dependentOn.field];
+        if (dependentFieldValue) {
+          const originData = getDataSource(field.dependentOn.fromCollection, {
+            categories,
+            couches,
+            groups,
+            users,
+            athletes,
+            packages,
+            products,
+          });
+
+          const selectedParent = originData.find(
+            (item) => item._id === dependentFieldValue,
+          );
+
+          if (selectedParent && selectedParent[field.dependentOn.relatedKey]) {
+            options = athletes
+              .filter((item) =>
+                selectedParent[field.dependentOn.relatedKey].includes(item._id),
+              )
+              .map((item) => ({
+                label: item.name || item.username || item.product_name,
+                value: item._id,
+              }));
+          }
+        }
+      }
+
       newSelectOptions[field.name] = options;
     });
-
-    // Verificar y actualizar la visibilidad inicial del campo payment_method
-    const isLostInitialValue = form.getFieldValue("is_lost");
-    visibility["payment_method"] = !isLostInitialValue;
 
     setDependentFieldsVisibility(visibility);
     setSelectOptions(newSelectOptions);
@@ -151,6 +142,54 @@ export const FormComponent = ({
     athletes,
   ]);
 
+  const handleValuesChange = (_, allValues) => {
+    console.log("Values Changed: ", allValues); // Depuración
+
+    let updatedValues = { ...allValues };
+
+    // Verificar si el checkbox 'is_lost' está marcado
+    if (allValues.is_lost !== undefined) {
+      if (allValues.is_lost) {
+        updatedValues.product_price = 0;
+        updatedValues.total_price = 0;
+      } else {
+        // Restablecer el precio original si 'is_lost' se desmarca
+        const selectedProduct = products?.find(
+          (product) => product._id === allValues.product_id,
+        );
+        if (selectedProduct) {
+          updatedValues.product_price = selectedProduct.price;
+          updatedValues.total_price =
+            selectedProduct.price * (allValues.product_quantity || 1);
+        }
+      }
+      form.setFieldsValue({
+        product_price: updatedValues.product_price,
+        total_price: updatedValues.total_price,
+      });
+
+      // Actualizar visibilidad del campo payment_method
+      setDependentFieldsVisibility((prevVisibility) => ({
+        ...prevVisibility,
+        payment_method: !allValues.is_lost,
+      }));
+    }
+
+    formFields.forEach((field) => {
+      if (field.dependentFields) {
+        updatedValues = handleFieldDependencies(
+          field,
+          updatedValues,
+          { salesProducts: products },
+          form,
+        );
+      }
+    });
+
+    setSelectedValues(updatedValues);
+    form.setFieldsValue(updatedValues);
+  };
+
   return (
     <Form
       form={form}
@@ -165,51 +204,7 @@ export const FormComponent = ({
       style={{
         maxWidth: 600,
       }}
-      onValuesChange={(_, allValues) => {
-        let updatedValues = { ...allValues };
-
-        // Verificar si el checkbox 'is_lost' está marcado
-        if (allValues.is_lost !== undefined) {
-          if (allValues.is_lost) {
-            updatedValues.product_price = 0;
-            updatedValues.total_price = 0;
-          } else {
-            // Restablecer el precio original si 'is_lost' se desmarca
-            const selectedProduct = products?.find(
-              (product) => product._id === allValues.product_id,
-            );
-            if (selectedProduct) {
-              updatedValues.product_price = selectedProduct.price;
-              updatedValues.total_price =
-                selectedProduct.price * (allValues.product_quantity || 1);
-            }
-          }
-          form.setFieldsValue({
-            product_price: updatedValues.product_price,
-            total_price: updatedValues.total_price,
-          });
-
-          // Actualizar visibilidad del campo payment_method
-          setDependentFieldsVisibility((prevVisibility) => ({
-            ...prevVisibility,
-            payment_method: !allValues.is_lost,
-          }));
-        }
-
-        formFields.forEach((field) => {
-          if (field.dependentFields) {
-            updatedValues = handleFieldDependencies(
-              field,
-              updatedValues,
-              { salesProducts: products },
-              form,
-            );
-          }
-        });
-
-        setSelectedValues(updatedValues);
-        form.setFieldsValue(updatedValues);
-      }}
+      onValuesChange={handleValuesChange}
     >
       <FormFields
         form={form}

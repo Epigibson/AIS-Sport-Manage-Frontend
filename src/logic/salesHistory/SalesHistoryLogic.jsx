@@ -7,16 +7,21 @@ import {
   useDeleteSalesHistory,
   useUpdateSalesHistory,
 } from "./SalesHistoryLogicMutations.jsx";
-import { Button, Form, message, Row } from "antd";
+import { Button, DatePicker, Form, message, Row, Space } from "antd";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { useState } from "react";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { SalesHistoryFormFields } from "./SalesHistoryFormFields.jsx";
 import { getAllSalesProducts } from "../../api/ProductsService.jsx";
 import { PrepareFilters } from "../reports/athletesEnriched/AthletesEnrichedPrepareFilters.jsx";
+import { DatePresets } from "../../utils/DatesUtils.jsx";
+import dayjs from "dayjs";
+import * as XLSX from "xlsx";
 
 export const SalesHistoryLogic = () => {
   const queryClient = useQueryClient();
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContext, setModalContext] = useState("");
   const [form] = Form.useForm();
@@ -109,6 +114,28 @@ export const SalesHistoryLogic = () => {
     onCancel: cancel,
   });
 
+  const onDateChange = (dates, dateStrings) => {
+    setStartDate(dateStrings[0] ? dayjs(dateStrings[0]).toISOString() : null);
+    setEndDate(dateStrings[1] ? dayjs(dateStrings[1]).toISOString() : null);
+    refetch();
+  };
+
+  const clearFilters = () => {
+    setStartDate(null);
+    setEndDate(null);
+    refetch();
+  };
+
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(salesHistoryData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte de Ventas");
+    XLSX.writeFile(
+      workbook,
+      `reporte_de_ventas${dayjs().format("YYYYMMDD_HHmmss")}.xlsx`,
+    );
+  };
+
   if (salesHistoryError) {
     return <div>Error</div>;
   }
@@ -126,7 +153,23 @@ export const SalesHistoryLogic = () => {
         >
           Registrar Venta
         </Button>
+        <Button
+          type="primary"
+          className={"bg-primary-700 ml-2"}
+          onClick={exportToExcel}
+        >
+          Exportar a Excel
+        </Button>
       </Row>
+      <Space direction="horizontal" size={12}>
+        <DatePicker.RangePicker
+          placeholder={["Inicio", "Fin"]}
+          presets={DatePresets}
+          onChange={onDateChange}
+          value={startDate && endDate ? [dayjs(startDate), dayjs(endDate)] : []}
+        />
+        <Button onClick={clearFilters}>Limpiar</Button>
+      </Space>
       <ModalComponent
         form={form}
         formFields={SalesHistoryFormFields}
