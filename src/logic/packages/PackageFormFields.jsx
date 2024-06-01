@@ -3,30 +3,26 @@ export const packageFormFields = [
     name: "product_name",
     label: "Nombre",
     rules: [{ required: true }],
-    inputType: "input", // Indica el tipo de control de entrada
+    inputType: "input",
   },
   {
     name: "product_description",
     label: "Descripcion",
     rules: [{ required: true }],
     inputType: "input",
-    // valuePropName: "checked",
-    // tooltip:
-    //   "Selecciona esta opción para agregar la solución del ticket a la Base de Conocimientos, donde otros usuarios pueden beneficiarse de ella.",
-    // Puedes omitir 'rules' si no es necesario para un campo específico
   },
   {
     name: "price",
     label: "Precio",
     rules: [{ required: true }],
-    inputType: "input", // Indica el tipo de control de entrada
+    inputType: "input",
   },
   {
     name: "category",
     label: "Categoria",
     rules: [{ required: true }],
     inputType: "select",
-    optionsSource: "categories", // Utiliza un identificador para las opciones
+    optionsSource: "categories",
   },
   {
     name: "payment_deadline",
@@ -57,31 +53,34 @@ export const packageFormFields = [
   {
     name: "week_duration",
     label: "Semanas de duración",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "input",
-    dependencies: {
-      fieldName: "is_temporary",
+    dependentOn: {
+      field: "is_temporary",
       value: true,
+      type: "visible",
     },
   },
   {
     name: "start_date",
     label: "Fecha de Inicio",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "datePicker",
-    dependencies: {
-      fieldName: "is_temporary",
+    dependentOn: {
+      field: "is_temporary",
       value: true,
+      type: "visible",
     },
   },
   {
     name: "end_date",
     label: "Fecha de Finalizacion",
-    rules: [{ required: true }],
+    rules: [{ required: false }],
     inputType: "datePicker",
-    dependencies: {
-      fieldName: "is_temporary",
+    dependentOn: {
+      field: "is_temporary",
       value: true,
+      type: "visible",
     },
   },
 ];

@@ -99,10 +99,10 @@ export const SalesHistoryFormFields = [
       { label: "Transferencia", value: "Transferencia" },
       { label: "Cortesia", value: "Cortesia" },
     ],
-    dependencies: {
-      fieldName: "is_lost",
+    dependentOn: {
+      field: "is_lost",
       value: false,
+      type: "visible",
     },
-    visible: true, // Siempre enviar este campo aunque esté oculto visualmente
   },
 ];

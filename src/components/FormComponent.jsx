@@ -127,6 +127,14 @@ export const FormComponent = ({
       newSelectOptions[field.name] = options;
     });
 
+    formFields.forEach((field) => {
+      if (field.dependentOn && field.dependentOn.type === "visible") {
+        const dependentFieldValue = selectedValues[field.dependentOn.field];
+        visibility[field.name] =
+          dependentFieldValue === field.dependentOn.value;
+      }
+    });
+
     setDependentFieldsVisibility(visibility);
     setSelectOptions(newSelectOptions);
   }, [
@@ -188,6 +196,17 @@ export const FormComponent = ({
 
     setSelectedValues(updatedValues);
     form.setFieldsValue(updatedValues);
+
+    // Actualizar visibilidad de campos dependientes
+    formFields.forEach((field) => {
+      if (field.dependentOn && field.dependentOn.type === "visible") {
+        const dependentFieldValue = allValues[field.dependentOn.field];
+        setDependentFieldsVisibility((prevVisibility) => ({
+          ...prevVisibility,
+          [field.name]: dependentFieldValue === field.dependentOn.value,
+        }));
+      }
+    });
   };
 
   return (
@@ -215,7 +234,6 @@ export const FormComponent = ({
         screen={screen}
       />
       {formFields.map((field) =>
-        field.name === "payment_method" &&
         !dependentFieldsVisibility[field.name] ? (
           <Form.Item name={field.name} hidden key={field.name}>
             <input type="hidden" />
