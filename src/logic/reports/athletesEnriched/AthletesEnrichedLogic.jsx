@@ -65,11 +65,13 @@ export const AthletesEnrichedLogic = () => {
 
   const onDateChange = (dates, dateStrings) => {
     const adjustedStartDate = dateStrings[0]
-      ? dayjs(dateStrings[0]).subtract(6, "hours").toISOString()
+      ? dayjs(dateStrings[0]).toISOString()
       : null;
     const adjustedEndDate = dateStrings[1]
-      ? dayjs(dateStrings[1]).subtract(6, "hours").toISOString()
+      ? dayjs(dateStrings[1]).toISOString()
       : null;
+
+    console.log(adjustedStartDate, adjustedEndDate);
 
     setStartDate(adjustedStartDate);
     setEndDate(adjustedEndDate);
@@ -82,10 +84,15 @@ export const AthletesEnrichedLogic = () => {
     refetch();
   };
 
-  const statisticCardsDataUsed = useMemo(
-    () => AthletesEnrichedStatisticCards(getAmountsByStatus(athletesEnriched)),
-    [athletesEnriched],
-  );
+  // Actualización del cálculo de estadísticas basado en datos filtrados
+  const statisticCardsDataUsed = useMemo(() => {
+    if (athletesEnriched) {
+      return AthletesEnrichedStatisticCards(
+        getAmountsByStatus(athletesEnriched),
+      );
+    }
+    return [];
+  }, [athletesEnriched]);
 
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(athletesEnriched);

@@ -7,6 +7,7 @@ import {
 import {
   addHistoryPaymentDiscountCode,
   createPayment,
+  deleteHistoryPayment,
   editHistoryPaymentAmount,
   editHistoryPaymentExtension,
   editHistoryPaymentLimitDate,
@@ -380,6 +381,45 @@ export const useAddPaymentHistoryDiscountCode = (onSuccessCallback) => {
   });
   return {
     mutateAddHistoryPaymentDiscountCode,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  }; // Asegúrate de devolver estos valores desde tu hook
+};
+
+export const useDeletePaymentHistory = (onSuccessCallback) => {
+  const {
+    mutate: mutateDeleteHistoryPayment,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  } = useMutation({
+    mutationFn: deleteHistoryPayment,
+    onSuccess: async () => {
+      onSuccessCallback();
+      toastNotify({
+        type: "success",
+        message: "Exito!.",
+        description: "Se ha eliminado el recibo de pago correctamente.",
+      });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "No se ha podido actualizar correctamente la accion.";
+      toastNotify({
+        type: "error",
+        message: "Accion no realizada!.",
+        description: errorMessage,
+      });
+    },
+    onSettled: () => {
+      reset();
+    },
+  });
+  return {
+    mutateDeleteHistoryPayment,
     isSuccess,
     isError,
     error,

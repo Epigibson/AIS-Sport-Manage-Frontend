@@ -13,6 +13,7 @@ import {
   useAddPaymentHistoryDiscountCode,
   useCancelReceipt,
   useCreatePayment,
+  useDeletePaymentHistory,
   useEditPaymentHistoryAmount,
   useEditPaymentHistoryExtension,
   useEditPaymentHistoryLimitDate,
@@ -217,6 +218,7 @@ export const PaymentLogic = () => {
 
   const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
   const { mutateUpdate } = usePayReceipt(handleSearch);
+  const { mutateDeleteHistoryPayment } = useDeletePaymentHistory(handleSearch);
   const { mutateUpdateCancelReceipt } = useCancelReceipt(handleSearch);
   const { mutateRevertReceipt } = useRevertReceipt(handleSearch);
   const { mutateEditHistoryPaymentExtension } =
@@ -363,6 +365,13 @@ export const PaymentLogic = () => {
     await refetch();
   };
 
+  const handleDeleteReceipt = async (record) => {
+    console.log("RECORD", record);
+    await mutateDeleteHistoryPayment(record.history_payment_id);
+    await handleSearch();
+    await refetch();
+  };
+
   const filterOption = (input, option) => option?.search?.includes(input);
 
   const handleDateChange = (dates) => {
@@ -492,6 +501,10 @@ export const PaymentLogic = () => {
     edit: edit,
     cancel: cancel,
     handleSave: handleSave,
+    handleDeleteReceipt: handleDeleteReceipt,
+
+    checkUser: userLogged?.email,
+
     editingKeyPaymentMethod: editingKeyPaymentMethod,
     editingKeyAmount: editingKeyAmount,
     editingKeyLimitDate: editingKeyLimitDate,

@@ -28,7 +28,6 @@ export const getAmountsByStatus = (data) => {
           totals.pending += payment.amount;
           break;
         default:
-          // Handle unexpected status or do nothing
           break;
       }
       totals.total += payment.status !== "Cancelado" ? payment.amount : 0; // Actualizar total global

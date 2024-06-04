@@ -153,3 +153,16 @@ export const addHistoryPaymentDiscountCode = async (data) => {
     throw new Error(errorMessage);
   }
 };
+
+export const deleteHistoryPayment = async (history_payment_id) => {
+  try {
+    const response = await apiClient.delete(
+      `/history_payment/${history_payment_id}`,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
