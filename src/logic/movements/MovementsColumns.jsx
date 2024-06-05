@@ -58,8 +58,8 @@ export const MovementsColumns = ({
     dataIndex: "created_at",
     key: "created_at",
     align: "center",
-    defaultSortOrder: "descend",
-    sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
+    // defaultSortOrder: "descend",
+    // sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
     render: (created_at) => {
       const date = new Date(created_at);
       const formattedDate = [
