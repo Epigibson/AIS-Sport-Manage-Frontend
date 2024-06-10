@@ -1,12 +1,12 @@
 import { SideBarLayout } from "../../components/layout/SideBarLayout.jsx";
 import { MainContainerLayout } from "../../components/layout/MainContainerLayout.jsx";
-import { UserAthletesLogic } from "../../logic/user/userAthletes/UserAthletesLogic.jsx";
+import { UserLoggedAthletesLogic } from "../../logic/user/userAthletes/UserLoggedAthletesLogic.jsx";
 
 export const UserAthletesPage = () => {
   return (
     <SideBarLayout>
       <MainContainerLayout title={"Atletas Registrados"}>
-        <UserAthletesLogic />
+        <UserLoggedAthletesLogic />
       </MainContainerLayout>
     </SideBarLayout>
   );

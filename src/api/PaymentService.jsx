@@ -26,7 +26,9 @@ export const getAllHistoryPayments = async (options = {}) => {
       queryParams.append("payment_method", options.payment_method);
     }
 
-    const response = await apiClient.get(`/history_payment/?${queryParams}`);
+    const response = await apiClient.get(
+      queryParams ? `/history_payment/?${queryParams}` : "/history_payment/",
+    );
     return response.data;
   } catch (error) {
     const errorMessage =
