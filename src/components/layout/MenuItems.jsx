@@ -57,6 +57,13 @@ export const MenuItems = [
     roles: ["Admin", "Manager"],
   },
   {
+    key: "19",
+    icon: <UserOutlined />,
+    label: "Usuarios",
+    path: "/usuarios",
+    roles: ["Admin", "Manager"],
+  },
+  {
     key: "sub1", // Clave única para el submenú
     icon: <SettingOutlined />, // Ícono para el submenú
     label: "Catálogos", // Título del submenú

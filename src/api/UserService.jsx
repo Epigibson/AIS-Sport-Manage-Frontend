@@ -22,6 +22,17 @@ export const getAllUsers = async () => {
   }
 };
 
+export const getAllUsersAsAdmin = async () => {
+  try {
+    const response = await apiClient.get("/user/list_as_admin");
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
 export const getAllCouches = async () => {
   try {
     const response = await apiClient.get("/user/list/couches");
@@ -83,6 +94,38 @@ export const changeUserAvatar = async (data) => {
 export const deleteUser = async (data) => {
   try {
     const response = await apiClient.delete(`/user/delete/${data}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
+export const addBalanceToUser = async (data) => {
+  try {
+    const queryParams = new URLSearchParams({
+      balance_amount: data.balance_amount,
+    }).toString(); // Convierte los parámetros a una cadena de consulta
+    const response = await apiClient.put(
+      `/user/add_balance/${data.user_id}?${queryParams}`, // Agrega los parámetros de consulta a la URL
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
+export const subtractBalanceToUser = async (data) => {
+  try {
+    const queryParams = new URLSearchParams({
+      balance_amount: data.balance_amount,
+    }).toString();
+    const response = await apiClient.put(
+      `/user/subtract_balance/${data.user_id}?${queryParams}`,
+    );
     return response.data;
   } catch (error) {
     const errorMessage =
