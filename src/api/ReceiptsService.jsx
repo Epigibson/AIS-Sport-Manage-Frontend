@@ -22,6 +22,24 @@ export const payReceipt = async (receipt_id) => {
   }
 };
 
+export const subtractAmountReceiptWithBalance = async (data) => {
+  try {
+    const { receipt_id, amount_to_apply } = data;
+    const queryParams = new URLSearchParams({
+      amount_to_apply,
+    }).toString();
+    const response = await apiClient.put(
+      `/receipts/subtract_amount_with_balance/${receipt_id}?${queryParams}`,
+      data,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
 export const cancelReceipt = async (data) => {
   try {
     const queryParams = new URLSearchParams({

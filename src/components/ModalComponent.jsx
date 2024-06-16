@@ -22,6 +22,17 @@ export const ModalComponent = ({
   confirmLoading,
 }) => {
   const screen = useBreakpoint();
+  // console.log("DATA COMO VIENE", dataTable);
+
+  let dataClean = null;
+
+  if (dataTable) {
+    if (Array.isArray(dataTable)) {
+      dataClean = dataTable[0];
+    } else if (typeof dataTable === "object") {
+      dataClean = dataTable;
+    }
+  }
 
   const renderModalTitle = () => (
     <Row className="mb-6" align="middle" justify="center" title={title}>
@@ -54,7 +65,7 @@ export const ModalComponent = ({
   );
 
   const renderTablesComponent = () => (
-    <TablesComponent data={dataTable} columns={dataTableColumns} />
+    <TablesComponent data={dataClean || dataTable} columns={dataTableColumns} />
   );
 
   return (
@@ -81,7 +92,7 @@ ModalComponent.propTypes = {
   onClose: PropTypes.func.isRequired,
   form: PropTypes.object,
   formFields: PropTypes.array,
-  dataTable: PropTypes.array,
+  dataTable: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   dataTableColumns: PropTypes.array,
   setProfileImage: PropTypes.func,
   buttonModal: PropTypes.func,

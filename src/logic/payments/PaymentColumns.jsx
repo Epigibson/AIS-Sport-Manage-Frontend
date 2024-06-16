@@ -18,12 +18,14 @@ import {
   CheckCircleFilled,
   ClockCircleFilled,
   DeleteOutlined,
+  DollarCircleFilled,
   EditFilled,
   ExclamationCircleFilled,
   RollbackOutlined,
   StopOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { FormatCurrencyUtil } from "../../utils/FormatCurrencyUtil.jsx";
 
 const { Text, Link } = Typography;
 
@@ -35,18 +37,21 @@ export const PaymentColumns = ({
   handleRevertReceipt,
 
   editingKeyPaymentMethod,
+  editingKeyBalanceAmount,
   editingKeyAmount,
   editingKeyLimitDate,
   editingKeyPeriodMonth,
   editingKeyDiscountCode,
 
   editingPaymentMethod,
+  editingBalanceAmount,
   editingAmount,
   editingLimitDate,
   editingPeriodMonth,
   editingDiscountCode,
 
   setEditingPaymentMethod,
+  setEditingBalanceAmount,
   setEditingAmount,
   setEditingLimitDate,
   setEditingPeriodMonth,
@@ -239,6 +244,12 @@ export const PaymentColumns = ({
             >
               <Select.Option value="Transferencia">Transferencia</Select.Option>
               <Select.Option value="Efectivo">Efectivo</Select.Option>
+              {record.user.positive_balance &&
+              record.user.positive_balance > 0 ? (
+                <Select.Option value="Saldo a favor">
+                  Saldo a favor
+                </Select.Option>
+              ) : null}
             </Select>
 
             <Space.Compact className={"mt-2"}>
@@ -258,7 +269,19 @@ export const PaymentColumns = ({
         ) : (
           <div>
             <Tag color="blue">
-              {record?.payment_method || "No especificado"}
+              <Tooltip
+                title={
+                  record.payment_method === "Saldo a favor" &&
+                  record.user.positive_balance
+                    ? `Saldo a favor: ${FormatCurrencyUtil(record.user.positive_balance)}`
+                    : null
+                }
+                color={
+                  record.payment_method === "Saldo a favor" ? "blue" : null
+                }
+              >
+                {record?.payment_method || "No especificado"}
+              </Tooltip>
             </Tag>
             {record?.status !== "Pagado" && record?.status !== "Cancelado" ? (
               <EditFilled
@@ -270,6 +293,72 @@ export const PaymentColumns = ({
               </EditFilled>
             ) : null}
           </div>
+        ),
+    },
+    {
+      title: "Saldo a Favor",
+      key: "saldo",
+      align: "center",
+      width: 200,
+      render: (_, record) =>
+        editingKeyBalanceAmount === record._id ? ( // Asumimos que usas _id como identificador único
+          <span>
+            <InputNumber
+              value={editingBalanceAmount}
+              onChange={(value) => setEditingBalanceAmount(value)}
+              max={record.amount}
+              min={0}
+            />
+
+            <Space.Compact className={"mt-2"}>
+              <Button
+                onClick={() => handleSave(record, "balance_amount")}
+                size="small"
+                style={{ marginRight: 8 }}
+                success
+              >
+                Guardar
+              </Button>
+              <Button onClick={cancel} danger size="small">
+                Cancelar
+              </Button>
+            </Space.Compact>
+          </span>
+        ) : record.user.positive_balance > 0 ? (
+          <Space>
+            <Row
+              gutter={[16, 16]}
+              wrap={true}
+              align={"middle"}
+              justify={"center"}
+            >
+              <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
+                <div className="flex flex-row items-center justify-center">
+                  <Tag>{FormatCurrencyUtil(record.user.positive_balance)}</Tag>
+                  {record.payment_method === "Saldo a favor" ? (
+                    <Popconfirm
+                      title="Estas seguro de aplicar el saldo a favor?"
+                      okText="Si"
+                      cancelText="No"
+                      wrapClassName="mi-popconfirm-especifico"
+                      onConfirm={() => edit(record, "balance_amount")}
+                    >
+                      <Button
+                        hidden={record.payment_method !== "Saldo a favor"}
+                        type="primary"
+                        className="flex flex-row items-center justify-center"
+                        size="small"
+                      >
+                        <DollarCircleFilled twoToneColor={"green"} />
+                      </Button>
+                    </Popconfirm>
+                  ) : null}
+                </div>
+              </Col>
+            </Row>
+          </Space>
+        ) : (
+          <Tag color={"warning"}>Sin saldo a favor</Tag>
         ),
     },
     {

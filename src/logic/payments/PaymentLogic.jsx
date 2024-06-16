@@ -20,6 +20,7 @@ import {
   useEditPaymentHistoryPeriodMonth,
   usePayReceipt,
   useRevertReceipt,
+  useSubtractAmountReceiptWithBalance,
   useUpdatePaymentMethod,
 } from "./PaymentLogicMutations.jsx";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
@@ -49,11 +50,13 @@ export const PaymentLogic = () => {
   const [MembershipFilter, setMembershipFilter] = useState("");
   const [showFilters, setShowFilters] = useState(true);
   const [editingKeyPaymentMethod, setEditingKeyPaymentMethod] = useState("");
+  const [editingKeyBalanceAmount, setEditingKeyBalanceAmount] = useState("");
   const [editingKeyAmount, setEditingKeyAmount] = useState("");
   const [editingKeyLimitDate, setEditingKeyLimitDate] = useState("");
   const [editingKeyPeriodMonth, setEditingKeyPeriodMonth] = useState("");
   const [editingKeyDiscountCode, setEditingKeyDiscountCode] = useState("");
   const [editingPaymentMethod, setEditingPaymentMethod] = useState("");
+  const [editingBalanceAmount, setEditingBalanceAmount] = useState("");
   const [editingAmount, setEditingAmount] = useState("");
   const [editingLimitDate, setEditingLimitDate] = useState("");
   const [editingPeriodMonth, setEditingPeriodMonth] = useState("");
@@ -218,6 +221,8 @@ export const PaymentLogic = () => {
 
   const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
   const { mutateUpdate } = usePayReceipt(handleSearch);
+  const { mutateSubtractAmountReceiptWithBalance } =
+    useSubtractAmountReceiptWithBalance(handleSearch);
   const { mutateDeleteHistoryPayment } = useDeletePaymentHistory(handleSearch);
   const { mutateUpdateCancelReceipt } = useCancelReceipt(handleSearch);
   const { mutateRevertReceipt } = useRevertReceipt(handleSearch);
@@ -283,13 +288,11 @@ export const PaymentLogic = () => {
   };
 
   const showReceipts = (record) => {
-    // console.log("DATA DE EL RECIBO SELECCIONADO", record.receipt);
     setSelectedReceipt([record.receipt]);
     setIsModalVisible(true);
   };
 
   const showExtensionModal = async (record) => {
-    // console.log("DATA DE EL RECIBO SELECCIONADO", record.receipt);
     form.setFieldsValue({
       extension: record.extension,
     });
@@ -432,17 +435,22 @@ export const PaymentLogic = () => {
     } else if (type === "discount_code") {
       setEditingKeyDiscountCode(record?._id);
       setEditingDiscountCode(record?.discount_code);
+    } else if (type === "balance_amount") {
+      setEditingKeyBalanceAmount(record?._id);
+      setEditingBalanceAmount(record?.amount);
     }
   };
 
   const cancel = () => {
     setEditingKeyPaymentMethod("");
+    setEditingKeyBalanceAmount("");
     setEditingKeyLimitDate("");
     setEditingKeyPeriodMonth("");
     setEditingKeyAmount("");
     setEditingKeyPeriodMonth("");
     setEditingKeyDiscountCode("");
     setEditingPaymentMethod("");
+    setEditingBalanceAmount("");
     setEditingAmount("");
     setEditingLimitDate("");
     setEditingDiscountCode("");
@@ -489,6 +497,14 @@ export const PaymentLogic = () => {
       console.log("Codigo de Descuento", data);
       await mutateAddHistoryPaymentDiscountCode(data);
     }
+    if (field === "balance_amount") {
+      const data = {
+        receipt_id: record?.receipt._id,
+        amount_to_apply: editingBalanceAmount,
+      };
+      console.log("Balance Amount", data);
+      await mutateSubtractAmountReceiptWithBalance(data);
+    }
     cancel(); // Restablece el estado de edición
   };
 
@@ -506,18 +522,21 @@ export const PaymentLogic = () => {
     checkUser: userLogged?.email,
 
     editingKeyPaymentMethod: editingKeyPaymentMethod,
+    editingKeyBalanceAmount: editingKeyBalanceAmount,
     editingKeyAmount: editingKeyAmount,
     editingKeyLimitDate: editingKeyLimitDate,
     editingKeyPeriodMonth: editingKeyPeriodMonth,
     editingKeyDiscountCode: editingKeyDiscountCode,
 
     editingPaymentMethod: editingPaymentMethod,
+    editingBalanceAmount: editingBalanceAmount,
     editingAmount: editingAmount,
     editingLimitDate: editingLimitDate,
     editingPeriodMonth: editingPeriodMonth,
     editingDiscountCode: editingDiscountCode,
 
     setEditingPaymentMethod: setEditingPaymentMethod,
+    setEditingBalanceAmount: setEditingBalanceAmount,
     setEditingAmount: setEditingAmount,
     setEditingLimitDate: setEditingLimitDate,
     setEditingPeriodMonth: setEditingPeriodMonth,
@@ -660,7 +679,7 @@ export const PaymentLogic = () => {
         onClose={handleCloseCancelModal}
       />
       <ModalComponent
-        dataTable={selectedReceipt}
+        dataTable={[selectedReceipt]}
         dataTableColumns={PaymentReceiptColumns}
         title={"Recibo"}
         onOpen={isModalVisible}
