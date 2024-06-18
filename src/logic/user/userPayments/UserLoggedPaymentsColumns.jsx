@@ -101,6 +101,52 @@ export const UserLoggedPaymentsColumns = [
     },
   },
   {
+    title: "Mes Correspondiente",
+    dataIndex: "period_month",
+    key: "period_month",
+    align: "center",
+    width: 200,
+    render: (period_month, record) => (
+      <div>
+        {(() => {
+          if (period_month) {
+            const date = new Date(period_month);
+            const monthNames = [
+              "Enero",
+              "Febrero",
+              "Marzo",
+              "Abril",
+              "Mayo",
+              "Junio",
+              "Julio",
+              "Agosto",
+              "Septiembre",
+              "Octubre",
+              "Noviembre",
+              "Diciembre",
+            ];
+            const formattedMonthName = monthNames[date.getMonth()];
+            if (record.status !== "Pagado" || record.status === "Cancelado") {
+              return (
+                <>
+                  <Tag color={"purple"}>{formattedMonthName}</Tag>
+                </>
+              );
+            } else {
+              return <Tag color={"purple"}>{formattedMonthName}</Tag>;
+            }
+          } else {
+            return (
+              <>
+                <Text>No especificado</Text>;
+              </>
+            );
+          }
+        })()}
+      </div>
+    ),
+  },
+  {
     title: "Metodo de Pago",
     dataIndex: "payment_method",
     key: "payment_method",
@@ -113,36 +159,36 @@ export const UserLoggedPaymentsColumns = [
       </div>
     ),
   },
-  {
-    title: "Cupon de Descuento",
-    dataIndex: "discount_code",
-    key: "discount_code",
-    align: "center",
-    width: 200,
-    render: (_, record) => (
-      <div>
-        <Tag color={record?.discount_code_is_applied ? "green" : "cyan"}>
-          {record?.discount_code_is_applied ? "Cupon aplicado" : "Sin cupon"}
-        </Tag>
-      </div>
-    ),
-  },
-  {
-    title: "Fecha de Recibo",
-    dataIndex: "created_at",
-    key: "created_at",
-    align: "center",
-    width: 100,
-    render: (created_at) => {
-      const date = new Date(created_at);
-      const formattedDate = [
-        `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
-        `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
-        date.getFullYear(), // Año completo
-      ].join("/"); // Junta los componentes con guiones
-      return <Text>{formattedDate}</Text>;
-    },
-  },
+  // {
+  //   title: "Cupon de Descuento",
+  //   dataIndex: "discount_code",
+  //   key: "discount_code",
+  //   align: "center",
+  //   width: 200,
+  //   render: (_, record) => (
+  //     <div>
+  //       <Tag color={record?.discount_code_is_applied ? "green" : "cyan"}>
+  //         {record?.discount_code_is_applied ? "Cupon aplicado" : "Sin cupon"}
+  //       </Tag>
+  //     </div>
+  //   ),
+  // },
+  // {
+  //   title: "Fecha de Recibo",
+  //   dataIndex: "created_at",
+  //   key: "created_at",
+  //   align: "center",
+  //   width: 100,
+  //   render: (created_at) => {
+  //     const date = new Date(created_at);
+  //     const formattedDate = [
+  //       `0${date.getDate()}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos
+  //       `0${date.getMonth() + 1}`.slice(-2), // Añade un cero al inicio y luego obtiene los últimos dos dígitos, +1 porque getMonth() retorna de 0 a 11
+  //       date.getFullYear(), // Año completo
+  //     ].join("/"); // Junta los componentes con guiones
+  //     return <Text>{formattedDate}</Text>;
+  //   },
+  // },
   {
     title: "Fecha limite de Pago",
     dataIndex: "limit_date",
@@ -201,51 +247,5 @@ export const UserLoggedPaymentsColumns = [
         return <Text>No pagado</Text>;
       }
     },
-  },
-  {
-    title: "Mes Correspondiente",
-    dataIndex: "period_month",
-    key: "period_month",
-    align: "center",
-    width: 200,
-    render: (period_month, record) => (
-      <div>
-        {(() => {
-          if (period_month) {
-            const date = new Date(period_month);
-            const monthNames = [
-              "Enero",
-              "Febrero",
-              "Marzo",
-              "Abril",
-              "Mayo",
-              "Junio",
-              "Julio",
-              "Agosto",
-              "Septiembre",
-              "Octubre",
-              "Noviembre",
-              "Diciembre",
-            ];
-            const formattedMonthName = monthNames[date.getMonth()];
-            if (record.status !== "Pagado" || record.status === "Cancelado") {
-              return (
-                <>
-                  <Tag color={"purple"}>{formattedMonthName}</Tag>
-                </>
-              );
-            } else {
-              return <Tag color={"purple"}>{formattedMonthName}</Tag>;
-            }
-          } else {
-            return (
-              <>
-                <Text>No especificado</Text>;
-              </>
-            );
-          }
-        })()}
-      </div>
-    ),
   },
 ];

@@ -13,7 +13,12 @@ export const UserLoggedAthletesColumns = [
     width: 150,
     render: (_, record) => {
       if (record) {
-        return <AvatarComponent existingImageUrl={record.avatar} />;
+        return (
+          <AvatarComponent
+            existingImageUrl={record.avatar}
+            onImageLoaded={null}
+          />
+        );
       } else {
         return <AvatarComponent />;
       }
