@@ -1,0 +1,6 @@
+.text-style {
+    text-align: center;
+    max-width: 120px;
+    overflow-x: auto;
+    white-space: nowrap;
+}

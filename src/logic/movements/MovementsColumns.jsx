@@ -1,4 +1,5 @@
-import { Tag } from "antd";
+import { Tag, Tooltip } from "antd";
+import "./MovementsStyle.css";
 
 export const MovementsColumns = ({
   typeSearchProps,
@@ -50,7 +51,11 @@ export const MovementsColumns = ({
     align: "center",
     ...modelFieldHelperSearchProps,
     render: (_, record) => (
-      <Tag color="geekblue">{record.model_field_helper}</Tag>
+      <Tooltip title={record.model_field_helper} color={"orange"}>
+        <div className={"overflow-x-hidden text-center"}>
+          <Tag color="geekblue">{record.model_field_helper}</Tag>
+        </div>
+      </Tooltip>
     ),
   },
   {
