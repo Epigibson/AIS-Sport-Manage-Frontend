@@ -342,8 +342,18 @@ export const PaymentLogic = () => {
     setIsExtensionModalVisible(false);
   };
 
-  const handlePayReceipt = async (record) => {
-    await mutateUpdate(record.receipt_id);
+  const handlePayReceipt = async (record, type) => {
+    if (type === "balance") {
+      const data = {
+        receipt_id: record?.receipt._id,
+        amount_to_apply: record?.receipt.receipt_amount,
+      };
+      console.log("Balance Amount con Saldo", data);
+      await mutateSubtractAmountReceiptWithBalance(data);
+    } else if (type === "payment") {
+      console.log("Balance Amount con tro tipo de pago");
+      // await mutateUpdate(record.receipt_id);
+    }
     await handleSearch();
     await refetch();
   };
@@ -503,7 +513,7 @@ export const PaymentLogic = () => {
         amount_to_apply: editingBalanceAmount,
       };
       console.log("Balance Amount", data);
-      await mutateSubtractAmountReceiptWithBalance(data);
+      // await mutateSubtractAmountReceiptWithBalance(data);
     }
     cancel(); // Restablece el estado de edición
   };

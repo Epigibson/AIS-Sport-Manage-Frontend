@@ -24,6 +24,7 @@ export const payReceipt = async (receipt_id) => {
 
 export const subtractAmountReceiptWithBalance = async (data) => {
   try {
+    // console.log("Data que viene", data);
     const { receipt_id, amount_to_apply } = data;
     const queryParams = new URLSearchParams({
       amount_to_apply,

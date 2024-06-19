@@ -18,7 +18,6 @@ import {
   CheckCircleFilled,
   ClockCircleFilled,
   DeleteOutlined,
-  DollarCircleFilled,
   EditFilled,
   ExclamationCircleFilled,
   RollbackOutlined,
@@ -335,24 +334,24 @@ export const PaymentColumns = ({
               <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
                 <div className="flex flex-row items-center justify-center">
                   <Tag>{FormatCurrencyUtil(record.user.positive_balance)}</Tag>
-                  {record.payment_method === "Saldo a favor" ? (
-                    <Popconfirm
-                      title="Estas seguro de aplicar el saldo a favor?"
-                      okText="Si"
-                      cancelText="No"
-                      wrapClassName="mi-popconfirm-especifico"
-                      onConfirm={() => edit(record, "balance_amount")}
-                    >
-                      <Button
-                        hidden={record.payment_method !== "Saldo a favor"}
-                        type="primary"
-                        className="flex flex-row items-center justify-center"
-                        size="small"
-                      >
-                        <DollarCircleFilled twoToneColor={"green"} />
-                      </Button>
-                    </Popconfirm>
-                  ) : null}
+                  {/*{record.payment_method === "Saldo a favor" ? (*/}
+                  {/*  <Popconfirm*/}
+                  {/*    title="Estas seguro de aplicar el saldo a favor?"*/}
+                  {/*    okText="Si"*/}
+                  {/*    cancelText="No"*/}
+                  {/*    wrapClassName="mi-popconfirm-especifico"*/}
+                  {/*    onConfirm={() => edit(record, "balance_amount")}*/}
+                  {/*  >*/}
+                  {/*    <Button*/}
+                  {/*      hidden={record.payment_method !== "Saldo a favor"}*/}
+                  {/*      type="primary"*/}
+                  {/*      className="flex flex-row items-center justify-center"*/}
+                  {/*      size="small"*/}
+                  {/*    >*/}
+                  {/*      <DollarCircleFilled twoToneColor={"green"} />*/}
+                  {/*    </Button>*/}
+                  {/*  </Popconfirm>*/}
+                  {/*) : null}*/}
                 </div>
               </Col>
             </Row>
@@ -625,27 +624,52 @@ export const PaymentColumns = ({
             <Popconfirm
               title="Confirmar Pago"
               description={`Estas seguro de pagar $${record?.amount}?`}
-              onConfirm={() => handlePayReceipt(record)}
+              onConfirm={() =>
+                handlePayReceipt(
+                  record,
+                  record?.payment_method === "Saldo a favor"
+                    ? "balance"
+                    : "payment",
+                )
+              }
               okText="Si"
               cancelText="No"
               wrapClassName="mi-popconfirm-especifico"
             >
-              <Button
-                disabled={
-                  record?.status === "Pagado" || record?.status === "Cancelado"
+              <Tooltip
+                title={
+                  record?.payment_method === "Saldo a favor" &&
+                  record?.user.positive_balance < record?.amount
+                    ? "No se puede confirmar el pago ya que el saldo es menor al monto del recibo"
+                    : null
                 }
-                type={"primary"}
-                className="ant-btn-custom px-2 mr-2"
-                style={
-                  record?.status !== "Pagado" && record?.status !== "Cancelado"
-                    ? { backgroundColor: "#48bb78" }
-                    : {}
-                }
-                size={"small"}
-                // onClick={() => handlePayReceipt(record)}
               >
-                Confirmar Pago
-              </Button>
+                <Button
+                  disabled={
+                    record?.status === "Pagado" ||
+                    record?.status === "Cancelado" ||
+                    (record?.payment_method === "Saldo a favor" &&
+                      record?.user.positive_balance < record?.amount)
+                  }
+                  type={"primary"}
+                  danger={
+                    record?.payment_method === "Saldo a favor" &&
+                    record?.user.positive_balance < record?.amount
+                  }
+                  className="ant-btn-custom px-2 mr-2"
+                  style={
+                    record?.status !== "Pagado" &&
+                    record?.status !== "Cancelado" &&
+                    record?.payment_method !== "Saldo a favor"
+                      ? { backgroundColor: "#48bb78" }
+                      : null
+                  }
+                  size={"small"}
+                  // onClick={() => handlePayReceipt(record)}
+                >
+                  Confirmar Pago
+                </Button>
+              </Tooltip>
             </Popconfirm>
             <Button
               disabled={record?.status !== "Pagado"}
