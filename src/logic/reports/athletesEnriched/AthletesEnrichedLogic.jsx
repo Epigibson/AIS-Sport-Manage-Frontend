@@ -3,21 +3,31 @@ import { getAllAthletesEnriched } from "../../../api/AtheleService.jsx";
 import { AthletesEnrichedColumns } from "./AthletesEnrichedColumns.jsx";
 import { LoaderIconUtils } from "../../../utils/LoaderIconUtils.jsx";
 import { AthletesEnrichedNestedColumns } from "./AthletesEnrichedNestedColumns.jsx";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { AthletesEnrichedStatisticCards } from "./AthletesEnrichedStatisticCards.jsx";
 import { getAmountsByStatus } from "./AthletesEnrichedCalculateTotals.jsx";
-import { Button, Col, DatePicker, Row, Space } from "antd";
+import { Button, Col, DatePicker, Row, Select, Space } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
 import { DatePresets } from "../../../utils/DatesUtils.jsx";
 import { TablesComponent } from "../../../components/TablesComponent.jsx";
 import { useLoading } from "../../../hooks/LoadingContext/useLoading.jsx";
 import { PrepareFilters } from "./AthletesEnrichedPrepareFilters.jsx";
-import * as XLSX from "xlsx";
+import { getAllPackages } from "../../../api/ProductService.jsx";
+import { exportAthletesToExcel } from "./AthletesEnrichedToExcel.jsx";
 
 export const AthletesEnrichedLogic = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [receiptStatus, setReceiptStatus] = useState(null);
+  const [receiptPackage, setReceiptPackage] = useState(null);
+  const [filters, setFilters] = useState({
+    startDate: null,
+    endDate: null,
+    receiptStatus: null,
+    receiptPackage: null,
+  });
+
   const {
     startLoading,
     stopLoading,
@@ -28,20 +38,24 @@ export const AthletesEnrichedLogic = () => {
     data: athletesEnriched,
     isLoading,
     isError,
-    refetch,
   } = useQuery({
-    queryKey: ["athletesEnriched", { startDate, endDate }],
+    queryKey: ["athletesEnriched", filters],
     queryFn: () =>
-      getAllAthletesEnriched({ start_date: startDate, end_date: endDate }),
-    onSuccess: () => {
-      stopLoading();
-    },
-    onError: () => {
-      stopLoading();
-    },
+      getAllAthletesEnriched({
+        start_date: filters.startDate,
+        end_date: filters.endDate,
+        receipt_status: filters.receiptStatus,
+        receipt_package: filters.receiptPackage,
+      }),
+    onSuccess: stopLoading,
+    onError: stopLoading,
   });
 
-  // Solo actualizar el estado de carga cuando cambie `isLoading`
+  const { data: packagesData } = useQuery({
+    queryKey: ["allPackages"],
+    queryFn: getAllPackages,
+  });
+
   useEffect(() => {
     if (isLoading) {
       startLoading();
@@ -63,28 +77,42 @@ export const AthletesEnrichedLogic = () => {
 
   const nestedColumns = AthletesEnrichedNestedColumns;
 
-  const onDateChange = (dates, dateStrings) => {
-    const adjustedStartDate = dateStrings[0]
-      ? dayjs(dateStrings[0]).toISOString()
-      : null;
-    const adjustedEndDate = dateStrings[1]
-      ? dayjs(dateStrings[1]).toISOString()
-      : null;
+  const onDateChange = useCallback((dates, dateStrings) => {
+    setStartDate(dateStrings[0] ? dayjs(dateStrings[0]).toISOString() : null);
+    setEndDate(dateStrings[1] ? dayjs(dateStrings[1]).toISOString() : null);
+  }, []);
 
-    console.log(adjustedStartDate, adjustedEndDate);
+  const onStatusChange = useCallback((value) => {
+    setReceiptStatus(value);
+  }, []);
 
-    setStartDate(adjustedStartDate);
-    setEndDate(adjustedEndDate);
-    refetch();
-  };
+  const onPackageChange = useCallback((value) => {
+    setReceiptPackage(value);
+  }, []);
 
-  const clearFilters = () => {
+  const applyFilters = useCallback(() => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      startDate,
+      endDate,
+      receiptStatus,
+      receiptPackage,
+    }));
+  }, [startDate, endDate, receiptStatus, receiptPackage]);
+
+  const clearFilters = useCallback(() => {
     setStartDate(null);
     setEndDate(null);
-    refetch();
-  };
+    setReceiptStatus(null);
+    setReceiptPackage(null);
+    setFilters({
+      startDate: null,
+      endDate: null,
+      receiptStatus: null,
+      receiptPackage: null,
+    });
+  }, []);
 
-  // Actualización del cálculo de estadísticas basado en datos filtrados
   const statisticCardsDataUsed = useMemo(() => {
     if (athletesEnriched) {
       return AthletesEnrichedStatisticCards(
@@ -93,16 +121,6 @@ export const AthletesEnrichedLogic = () => {
     }
     return [];
   }, [athletesEnriched]);
-
-  const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(athletesEnriched);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte de Ingresos");
-    XLSX.writeFile(
-      workbook,
-      `reporte_de_ingresos${dayjs().format("YYYYMMDD_HHmmss")}.xlsx`,
-    );
-  };
 
   return (
     <>
@@ -120,8 +138,8 @@ export const AthletesEnrichedLogic = () => {
             {statisticCardsDataUsed?.map((card, index) => (
               <Col key={index} xs={24} sm={12} md={8} lg={4}>
                 <StatisticCard
-                  statistics={card.statistics} // Pasando el array de estadísticas directamente
-                  backgroundClass={card.backgroundClass} // El fondo de la tarjeta
+                  statistics={card.statistics}
+                  backgroundClass={card.backgroundClass}
                 />
               </Col>
             ))}
@@ -135,11 +153,42 @@ export const AthletesEnrichedLogic = () => {
                 startDate && endDate ? [dayjs(startDate), dayjs(endDate)] : []
               }
             />
+            <Select
+              className={"w-36"}
+              onChange={onStatusChange}
+              placeholder="Estatus"
+              value={receiptStatus}
+              allowClear
+            >
+              <Select.Option value="Pendiente">Pendiente</Select.Option>
+              <Select.Option value="Pagado">Pagado</Select.Option>
+              <Select.Option value="Cancelado">Cancelado</Select.Option>
+            </Select>
+            <Select
+              className={"w-56"}
+              onChange={onPackageChange}
+              placeholder="Membresia"
+              value={receiptPackage}
+              allowClear
+            >
+              {packagesData?.map((packageItem) => (
+                <Select.Option key={packageItem._id} value={packageItem._id}>
+                  {packageItem.product_name}
+                </Select.Option>
+              ))}
+            </Select>
+            <Button
+              type="primary"
+              className={"bg-primary-700"}
+              onClick={applyFilters}
+            >
+              Aplicar
+            </Button>
             <Button onClick={clearFilters}>Limpiar</Button>
             <Button
               type="primary"
               className={"bg-primary-700"}
-              onClick={exportToExcel}
+              onClick={() => exportAthletesToExcel(athletesEnriched)}
             >
               Exportar a Excel
             </Button>

@@ -11,16 +11,30 @@ export const getAllAthletes = async () => {
   }
 };
 
-export const getAllAthletesEnriched = async ({ start_date, end_date }) => {
+export const getAllAthletesEnriched = async ({
+  start_date,
+  end_date,
+  receipt_status,
+  receipt_package,
+}) => {
   try {
     // Construir los parámetros de la consulta
     const queryParams = new URLSearchParams();
 
     // Añadir parámetros a la consulta solo si están presentes
-    if (start_date && end_date) {
+    if (start_date) {
       queryParams.append("start_date", start_date);
+    }
+    if (end_date) {
       queryParams.append("end_date", end_date);
     }
+    if (receipt_status) {
+      queryParams.append("receipt_status", receipt_status);
+    }
+    if (receipt_package) {
+      queryParams.append("receipt_package", receipt_package);
+    }
+
     const response = await apiClient.get(`/athletes/enriched/?${queryParams}`);
     return response.data;
   } catch (error) {

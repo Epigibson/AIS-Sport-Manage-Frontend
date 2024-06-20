@@ -352,7 +352,7 @@ export const PaymentLogic = () => {
       await mutateSubtractAmountReceiptWithBalance(data);
     } else if (type === "payment") {
       console.log("Balance Amount con tro tipo de pago");
-      // await mutateUpdate(record.receipt_id);
+      await mutateUpdate(record.receipt_id);
     }
     await handleSearch();
     await refetch();
