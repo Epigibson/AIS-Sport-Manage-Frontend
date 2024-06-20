@@ -10,7 +10,7 @@ export const UserListColumns = ({ filters, handleOpenModal }) => [
     align: "center",
     filters: filters.tutors_name_one,
     filterSearch: true,
-    onFilter: (value, record) => record.tutors_name_one.includes(value),
+    onFilter: (value, record) => record?.tutors_name_one?.includes(value),
     render: (text) => <a>{text}</a>,
   },
   {

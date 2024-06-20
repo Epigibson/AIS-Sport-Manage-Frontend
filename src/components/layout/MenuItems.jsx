@@ -1,5 +1,6 @@
 import {
   AccountBookOutlined,
+  BookOutlined,
   ControlFilled,
   CopyrightOutlined,
   DollarCircleOutlined,
@@ -101,6 +102,13 @@ export const MenuItems = [
         path: "/productos",
       },
     ],
+  },
+  {
+    key: "21",
+    icon: <BookOutlined />,
+    label: "Pase de Lista",
+    path: "/pase_de_lista",
+    roles: ["Admin", "Manager"],
   },
   {
     key: "9",
