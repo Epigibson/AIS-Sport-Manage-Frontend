@@ -66,6 +66,25 @@ export const exportAthletesToExcel = (athletesEnriched) => {
     { wch: 25 }, // Fecha en que se pagó
   ];
 
+  // Aplicar estilo a las cabeceras
+  const headerRange = XLSX.utils.decode_range(worksheet["!ref"]);
+  for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
+    const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+    if (!worksheet[cellAddress]) continue;
+    worksheet[cellAddress].s = {
+      fill: {
+        fgColor: { rgb: "000080" }, // Azul marino
+      },
+      font: {
+        color: { rgb: "FFFFFF" }, // Blanco
+        bold: true,
+      },
+    };
+  }
+
+  // Aplicar filtro a las cabeceras
+  worksheet["!autofilter"] = { ref: `A1:K${transformedData.length + 1}` };
+
   // Crear el libro de trabajo y añadir la hoja de trabajo
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte de Ingresos");
