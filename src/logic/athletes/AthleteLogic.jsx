@@ -1,9 +1,8 @@
-// noinspection UnresolvedVariable
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {TablesComponent} from "../../components/TablesComponent.jsx";
-import {getAllGroups} from "../../api/GroupService.jsx";
-import {Button, Form, Grid, message, Row} from "antd";
-import {useEffect, useMemo, useState} from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { TablesComponent } from "../../components/TablesComponent.jsx";
+import { getAllGroups } from "../../api/GroupService.jsx";
+import { Button, Form, Grid, message, Row } from "antd";
+import { useEffect, useMemo, useState } from "react";
 import {
   useChangeAthleteStatus,
   useChangeAvatar,
@@ -11,17 +10,18 @@ import {
   useDeleteAthlete,
   useUpdateAthlete,
 } from "./AthleteLogicMutations.jsx";
-import {ModalComponent} from "../../components/ModalComponent.jsx";
-import {athleteFormFields} from "./AthleteFormFields.jsx";
-import {AthleteColumns} from "./AthleteColumns.jsx";
-import {LoaderIconUtils} from "../../utils/LoaderIconUtils.jsx";
-import {useNavigate} from "react-router-dom";
-import {getAllAthletes} from "../../api/AtheleService.jsx";
-import {getAllUsers} from "../../api/UserService.jsx";
-import {getAllPackages} from "../../api/ProductService.jsx";
-import {useColumnSearchProps} from "../../utils/useColumnSearchProps.jsx";
+import { ModalComponent } from "../../components/ModalComponent.jsx";
+import { athleteFormFields } from "./AthleteFormFields.jsx";
+import { AthleteColumns } from "./AthleteColumns.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
+import { useNavigate } from "react-router-dom";
+import { getAllAthletes } from "../../api/AtheleService.jsx";
+import { getAllUsers } from "../../api/UserService.jsx";
+import { getAllPackages } from "../../api/ProductService.jsx";
+import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
 import dayjs from "dayjs";
-import {exportToExcel} from "./ExportAthletesExcel.jsx";
+import { exportToExcel } from "./ExportAthletesExcel.jsx";
+import { AthletePrepareFilters } from "./AthletePrepareFilters.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -34,6 +34,7 @@ export const AthleteLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
   const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
+
   const {
     data: athletesData,
     isLoading: isAthletesLoading,
@@ -172,18 +173,16 @@ export const AthleteLogic = () => {
   };
 
   const handleImageLoaded = async (file, record) => {
-    await handleChanceAvatar(file, record);
+    await handleChangeAvatar(file, record);
   };
 
-  const handleChanceAvatar = async (file, record) => {
+  const handleChangeAvatar = async (file, record) => {
     try {
-      // console.log(selectedRecord);
       const data = {};
       const formData = new FormData();
       formData.append("file", file);
       data.athlete_id = record.athlete_id;
       data.file = formData;
-      // console.log("DATA", data);
       await mutateUpdateAvatar(data);
     } catch (error) {
       console.log("Error al guardar la imagen:", error);
@@ -203,20 +202,46 @@ export const AthleteLogic = () => {
     "Matricula",
   );
 
-  const columns = AthleteColumns({
-    onEdit: handleEdit,
-    onDelete: handleDelete,
-    onCancel: cancel,
-    handleImageLoaded: handleImageLoaded,
-    setSelectedRecord,
-    screen: screen,
-    navigate,
-    nameSearchProps,
-    phoneSearchProps,
-    statusSearchProps,
-    tuitionSearchProps,
-    handleChangeStatus,
-  });
+  const columns = useMemo(
+    () =>
+      enrichedUsersData
+        ? AthleteColumns({
+            filters: {
+              products_which_inscribed: AthletePrepareFilters(
+                enrichedUsersData,
+                "products_which_inscribed",
+                (item) =>
+                  item.products_which_inscribed.map((p) => p.name).join(", "),
+              ),
+            },
+            onEdit: handleEdit,
+            onDelete: handleDelete,
+            onCancel: cancel,
+            handleImageLoaded: handleImageLoaded,
+            setSelectedRecord,
+            screen,
+            navigate,
+            nameSearchProps,
+            phoneSearchProps,
+            statusSearchProps,
+            tuitionSearchProps,
+            handleChangeStatus,
+          })
+        : [],
+    [
+      enrichedUsersData,
+      handleChangeStatus,
+      handleDelete,
+      handleEdit,
+      handleImageLoaded,
+      nameSearchProps,
+      navigate,
+      phoneSearchProps,
+      screen,
+      statusSearchProps,
+      tuitionSearchProps,
+    ],
+  );
 
   if (isAthletesLoading || isLoadingEnrichedData)
     return <LoaderIconUtils isLoading={true} />;
@@ -230,7 +255,6 @@ export const AthleteLogic = () => {
         <Button
           className={"bg-primary-700 mb-3"}
           type={"primary"}
-          // onClick={showModal}
           onClick={() => navigate("/inscripciones")}
         >
           Registrar Atleta

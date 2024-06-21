@@ -1,10 +1,7 @@
 import { Button, Popconfirm, Space, Tag, Typography } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
 import { EyeFilled } from "@ant-design/icons";
-import {
-  filterByNameInArray,
-  filterByNameTutors,
-} from "../../utils/FilterUtils.jsx";
+import { filterByNameTutors } from "../../utils/FilterUtils.jsx";
 import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
 
 const { Text } = Typography;
@@ -16,9 +13,9 @@ export const AthleteColumns = ({
   onCancel,
   handleImageLoaded,
   navigate,
+  filters,
   nameSearchProps,
   phoneSearchProps,
-  statusSearchProps,
   tuitionSearchProps,
 }) => [
   {
@@ -121,7 +118,11 @@ export const AthleteColumns = ({
     dataIndex: "status",
     align: "center",
     width: 100,
-    ...statusSearchProps,
+    filters: [
+      { text: "Activo", value: true },
+      { text: "Inactivo", value: false },
+    ],
+    onFilter: (value, record) => record.status === value,
     render: (status) => {
       if (status) {
         return <Tag color={"green"}>Activo</Tag>;
@@ -136,13 +137,12 @@ export const AthleteColumns = ({
     dataIndex: "products_which_inscribed",
     align: "center",
     width: 200,
-    searchable: true,
-    ...useColumnSearchProps(
-      "products_which_inscribed",
-      filterByNameInArray,
-      "Membresia",
-      "array",
-    ),
+    filters: filters.products_which_inscribed,
+    filterSearch: true,
+    onFilter: (value, record) =>
+      record.products_which_inscribed.some((product) =>
+        product.name.includes(value),
+      ),
     render: (products_which_inscribed) =>
       products_which_inscribed && products_which_inscribed.length > 0 ? (
         products_which_inscribed.map((product) => (
@@ -154,6 +154,7 @@ export const AthleteColumns = ({
         <Tag color={"volcano"}>Sin Paquete</Tag>
       ),
   },
+
   {
     title: "Fecha de Inicio",
     dataIndex: "start_date",

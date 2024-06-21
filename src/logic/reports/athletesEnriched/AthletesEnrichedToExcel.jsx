@@ -22,8 +22,12 @@ export const exportAthletesToExcel = (athletesEnriched) => {
         ? payment.receipt_id.receipt_description
         : "",
       "Método de Pago": payment.payment_method,
-      "Fecha de Creación del Pago": payment.created_at,
-      "Fecha en que se pagó": payment.receipt_id.updated_at,
+      "Fecha de Creación del Pago": payment.created_at
+        ? dayjs(payment.created_at).format("DD/MM/YYYY")
+        : "",
+      "Fecha en que se pagó": payment.receipt_id.updated_at
+        ? dayjs(payment.receipt_id.updated_at).format("DD/MM/YYYY")
+        : "",
     }));
   });
 
