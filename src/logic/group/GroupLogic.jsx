@@ -54,7 +54,7 @@ export const GroupLogic = () => {
 
   const enrichedGroupsMembersData = (membersIds) => {
     return athletesData
-      ?.filter((athlete) => membersIds.includes(athlete._id))
+      ?.filter((athlete) => membersIds?.includes(athlete._id))
       .map((athlete) => ({
         key: athlete._id,
         name: athlete.name,
@@ -64,8 +64,6 @@ export const GroupLogic = () => {
         // Otros campos que quieras mostrar
       }));
   };
-
-  // console.log("GRUPOS Miembros", enrichedGroupsMembersData);
 
   const showModalMembers = (value) => {
     const data = enrichedGroupsMembersData(value.members);

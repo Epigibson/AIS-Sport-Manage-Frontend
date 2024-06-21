@@ -24,15 +24,16 @@ export const ModalComponent = ({
   const screen = useBreakpoint();
   // console.log("DATA COMO VIENE", dataTable);
 
-  let dataClean = null;
-
-  if (dataTable) {
-    if (Array.isArray(dataTable)) {
-      dataClean = dataTable[0];
-    } else if (typeof dataTable === "object") {
-      dataClean = dataTable;
+  const verifyDataTypes = () => {
+    if (dataTable) {
+      if (Array.isArray(dataTable)) {
+        return dataTable;
+      } else if (typeof dataTable === "object") {
+        return [dataTable];
+      }
     }
-  }
+    return [];
+  };
 
   const renderModalTitle = () => (
     <Row className="mb-6" align="middle" justify="center" title={title}>
@@ -65,8 +66,15 @@ export const ModalComponent = ({
   );
 
   const renderTablesComponent = () => (
-    <TablesComponent data={dataClean || dataTable} columns={dataTableColumns} />
+    <TablesComponent data={verifyDataTypes()} columns={dataTableColumns} />
   );
+
+  const getModalWidth = () => {
+    if (dataTable) {
+      return screen.xs ? 400 : "80%"; // Ajusta estos valores según sea necesario
+    }
+    return screen.xs ? 300 : 600;
+  };
 
   return (
     <Modal
@@ -76,7 +84,7 @@ export const ModalComponent = ({
       onCancel={onClose}
       footer={false}
       confirmLoading={confirmLoading}
-      width={screen.xs ? 300 : 600}
+      width={getModalWidth()}
     >
       {external && renderExternalButton()}
       {!dataTable && form && formFields && renderFormComponent()}
