@@ -27,7 +27,7 @@ export const AthleteColumns = ({
     width: 150,
     render: (_, record) => {
       if (record) {
-        // console.log("SOLO VER", record.avatar);
+        // console.log(“SOLO VER", record.avatar);
         return (
           <AvatarComponent
             onImageLoaded={(file) => handleImageLoaded(file, record)}
@@ -78,7 +78,7 @@ export const AthleteColumns = ({
             className={"flex flex-col justify-center items-center gap-1"}
           >
             {/*<Button*/}
-            {/*  onClick={() => navigate("/asignacion_de_grupos")}*/}
+            {/*  onClick={() => navigate("/asignación_de_grupos")}*/}
             {/*  icon={<EyeFilled />}*/}
             {/*  type="primary"*/}
             {/*  shape="circle"*/}

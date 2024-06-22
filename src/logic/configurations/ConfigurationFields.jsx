@@ -1,7 +1,7 @@
 export const ConfigurationFields = [
   {
     fieldName: "generation_receipts",
-    label: "Generacion de recibos",
+    label: "Generación de recibos",
     inputType: "select",
     optionSource: [
       { label: "Mes siguiente", value: "Mes siguiente" },

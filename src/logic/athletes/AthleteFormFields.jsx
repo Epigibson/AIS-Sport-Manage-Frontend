@@ -93,7 +93,7 @@ export const athleteFormFields = [
   // },
   {
     name: "sport_preference",
-    label: "Actividad de Prefreferencia",
+    label: "Actividad de Preferencia",
     rules: [
       { required: true, message: "La actividad de preferencia es requerida" },
     ],
@@ -119,7 +119,7 @@ export const athleteFormFields = [
       { label: "Acondicionamiento", value: "Acondicionamiento" },
       { label: "Gimnasio", value: "Gimnasio" },
       { label: "Flag", value: "Flag" },
-      // { label: "Otros Deportes", value: "Otros Deportes" },
+      // {label: "Otros Deportes", value: "Otros Deportes"},
     ],
   },
   {

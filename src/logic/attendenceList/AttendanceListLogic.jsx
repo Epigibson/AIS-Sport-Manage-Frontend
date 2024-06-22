@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Badge, Calendar, Checkbox, List, Select } from "antd";
 import "antd/dist/reset.css"; // Asegúrate de que esta ruta es correcta
+import PropTypes from "prop-types";
 
 const { Option } = Select;
 
@@ -58,17 +59,22 @@ export const AttendanceListLogic = () => {
   };
 
   const dateCellRender = (value) => {
-    const listData =
-      selectedGroup && selectedGroup.days.includes(value.day())
-        ? [{ type: "success", content: `Class for ${selectedGroup.name}` }]
-        : [];
+    if (!selectedGroup || !Array.isArray(selectedGroup.days)) {
+      return null;
+    }
+
+    const listData = selectedGroup.days.includes(value.day())
+      ? [{ type: "success", content: `Class for ${selectedGroup.name}` }]
+      : [];
+
     return (
       <ul className="events">
-        {listData.map((item) => (
-          <li key={item.content}>
-            <Badge status={item.type} text={item.content} />
-          </li>
-        ))}
+        {listData.length > 0 &&
+          listData.map((item) => (
+            <li key={item.content}>
+              <Badge status={item.type} text={item.content} />
+            </li>
+          ))}
       </ul>
     );
   };
@@ -86,7 +92,7 @@ export const AttendanceListLogic = () => {
           </Option>
         ))}
       </Select>
-      <Calendar dateCellRender={dateCellRender} onSelect={handleDateChange} />
+      <Calendar cellRender={dateCellRender} onSelect={handleDateChange} />
       {selectedGroup &&
         selectedDate &&
         selectedGroup.days.includes(selectedDate.day()) && (
@@ -116,4 +122,9 @@ export const AttendanceListLogic = () => {
         )}
     </div>
   );
+};
+
+AttendanceListLogic.propTypes = {
+  attendance: PropTypes.object,
+  setAttendance: PropTypes.func,
 };

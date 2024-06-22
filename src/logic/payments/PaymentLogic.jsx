@@ -6,7 +6,7 @@ import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllReceipts } from "../../api/ReceiptsService.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PaymentReceiptColumns } from "./PaymentReceiptColumns.jsx";
 import { PaymentFilters } from "./PaymentFilters.jsx";
 import {
@@ -129,7 +129,7 @@ export const PaymentLogic = () => {
 
   const userLogged = queryClient.getQueryData(["userLogged"]);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     await queryClient.invalidateQueries({
       queryKey: [
         "allHistoryPayments",
@@ -142,7 +142,7 @@ export const PaymentLogic = () => {
     await refetchUsers();
     await refetchAthletes();
     await refetchReceipts();
-  };
+  }, [queryClient, refetch, refetchAthletes, refetchReceipts, refetchUsers]);
 
   useEffect(() => {
     if (
@@ -201,10 +201,10 @@ export const PaymentLogic = () => {
     MembershipFilter,
   ]);
 
-  // console.log("DATA", enrichedHistoryPaymentsData);
+  // console.log(“DATA”, enrichedHistoryPaymentsData);
 
   useEffect(() => {
-    // console.log("AUTOFETCH", autoFetchEnabled);
+    // console.log("AUTO FETCH", autoFetchEnabled);
     if (historyPaymentData && firstCharge <= 0) {
       setFirstCharge(firstCharge + 2);
     } else {
@@ -261,7 +261,7 @@ export const PaymentLogic = () => {
   //   };
   //
   //   historyPaymentData?.forEach((payment) => {
-  //     switch (payment.status) {
+  //     switch (payment.status){
   //       case "Pendiente":
   //         totals.pending += payment.amount;
   //         break;
@@ -292,13 +292,16 @@ export const PaymentLogic = () => {
     setIsModalVisible(true);
   };
 
-  const showExtensionModal = async (record) => {
-    form.setFieldsValue({
-      extension: record.extension,
-    });
-    setSelectedPayment(record);
-    setIsExtensionModalVisible(true);
-  };
+  const showExtensionModal = useCallback(
+    async (record) => {
+      form.setFieldsValue({
+        extension: record.extension,
+      });
+      setSelectedPayment(record);
+      setIsExtensionModalVisible(true);
+    },
+    [form],
+  );
 
   const handleCloseCancelModal = () => {
     setIsCancelModalVisible(false);
@@ -342,21 +345,29 @@ export const PaymentLogic = () => {
     setIsExtensionModalVisible(false);
   };
 
-  const handlePayReceipt = async (record, type) => {
-    if (type === "balance") {
-      const data = {
-        receipt_id: record?.receipt._id,
-        amount_to_apply: record?.receipt.receipt_amount,
-      };
-      console.log("Balance Amount con Saldo", data);
-      await mutateSubtractAmountReceiptWithBalance(data);
-    } else if (type === "payment") {
-      console.log("Balance Amount con tro tipo de pago");
-      await mutateUpdate(record.receipt_id);
-    }
-    await handleSearch();
-    await refetch();
-  };
+  const handlePayReceipt = useCallback(
+    async (record, type) => {
+      if (type === "balance") {
+        const data = {
+          receipt_id: record?.receipt._id,
+          amount_to_apply: record?.receipt.receipt_amount,
+        };
+        console.log("Balance Amount con Saldo", data);
+        await mutateSubtractAmountReceiptWithBalance(data);
+      } else if (type === "payment") {
+        console.log("Balance Amount con tro tipo de pago");
+        await mutateUpdate(record.receipt_id);
+      }
+      await handleSearch();
+      await refetch();
+    },
+    [
+      handleSearch,
+      mutateSubtractAmountReceiptWithBalance,
+      mutateUpdate,
+      refetch,
+    ],
+  );
 
   const handleCancelReceipt = async (record) => {
     setSelectedReceipt(record);
@@ -372,18 +383,24 @@ export const PaymentLogic = () => {
     setIsCancelModalVisible(false);
   };
 
-  const handleRevertReceipt = async (record) => {
-    await mutateRevertReceipt(record.receipt_id);
-    await handleSearch();
-    await refetch();
-  };
+  const handleRevertReceipt = useCallback(
+    async (record) => {
+      await mutateRevertReceipt(record.receipt_id);
+      await handleSearch();
+      await refetch();
+    },
+    [handleSearch, mutateRevertReceipt, refetch],
+  );
 
-  const handleDeleteReceipt = async (record) => {
-    console.log("RECORD", record);
-    await mutateDeleteHistoryPayment(record.history_payment_id);
-    await handleSearch();
-    await refetch();
-  };
+  const handleDeleteReceipt = useCallback(
+    async (record) => {
+      console.log("RECORD", record);
+      await mutateDeleteHistoryPayment(record.history_payment_id);
+      await handleSearch();
+      await refetch();
+    },
+    [handleSearch, mutateDeleteHistoryPayment, refetch],
+  );
 
   const filterOption = (input, option) => option?.search?.includes(input);
 
@@ -466,92 +483,130 @@ export const PaymentLogic = () => {
     setEditingDiscountCode("");
   };
 
-  const handleSave = async (record, field) => {
-    if (field === "payment_method") {
-      const data = {
-        history_payment_id: record?.history_payment_id,
-        payment_method: editingPaymentMethod,
-      };
-      console.log("Payment Method", data);
-      await mutateUpdatePaymentMethod(data);
-    }
-    if (field === "amount") {
-      const data = {
-        history_payment_id: record?.history_payment_id,
-        amount: editingAmount,
-      };
-      console.log("Cantidad", data);
-      await mutateEditHistoryPaymentAmount(data);
-    }
-    if (field === "limit_date") {
-      const data = {
-        history_payment_id: record?.history_payment_id,
-        limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
-      };
-      console.log("Limit Date", data);
-      await mutateEditHistoryPaymentLimitDate(data);
-    }
-    if (field === "period_month") {
-      const data = {
-        history_payment_id: record?.history_payment_id,
-        period_month: dayjs(editingPeriodMonth).format("YYYY-MM-DD HH:mm"),
-      };
-      console.log("Period Month", data);
-      await mutateEditHistoryPaymentPeriodMonth(data);
-    }
-    if (field === "discount_code") {
-      const data = {
-        history_payment_id: record?.history_payment_id,
-        discount_code: editingDiscountCode,
-      };
-      console.log("Codigo de Descuento", data);
-      await mutateAddHistoryPaymentDiscountCode(data);
-    }
-    if (field === "balance_amount") {
-      const data = {
-        receipt_id: record?.receipt._id,
-        amount_to_apply: editingBalanceAmount,
-      };
-      console.log("Balance Amount", data);
-      // await mutateSubtractAmountReceiptWithBalance(data);
-    }
-    cancel(); // Restablece el estado de edición
-  };
+  const handleSave = useCallback(
+    async (record, field) => {
+      if (field === "payment_method") {
+        const data = {
+          history_payment_id: record?.history_payment_id,
+          payment_method: editingPaymentMethod,
+        };
+        console.log("Payment Method", data);
+        await mutateUpdatePaymentMethod(data);
+      }
+      if (field === "amount") {
+        const data = {
+          history_payment_id: record?.history_payment_id,
+          amount: editingAmount,
+        };
+        console.log("Cantidad", data);
+        await mutateEditHistoryPaymentAmount(data);
+      }
+      if (field === "limit_date") {
+        const data = {
+          history_payment_id: record?.history_payment_id,
+          limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
+        };
+        console.log("Limit Date", data);
+        await mutateEditHistoryPaymentLimitDate(data);
+      }
+      if (field === "period_month") {
+        const data = {
+          history_payment_id: record?.history_payment_id,
+          period_month: dayjs(editingPeriodMonth).format("YYYY-MM-DD HH:mm"),
+        };
+        console.log("Period Month", data);
+        await mutateEditHistoryPaymentPeriodMonth(data);
+      }
+      if (field === "discount_code") {
+        const data = {
+          history_payment_id: record?.history_payment_id,
+          discount_code: editingDiscountCode,
+        };
+        console.log("Código de Descuento", data);
+        await mutateAddHistoryPaymentDiscountCode(data);
+      }
+      if (field === "balance_amount") {
+        const data = {
+          receipt_id: record?.receipt._id,
+          amount_to_apply: editingBalanceAmount,
+        };
+        console.log("Balance Amount", data);
+        // await mutateSubtractAmountReceiptWithBalance(data);
+      }
+      cancel(); // Restablece el estado de edición
+    },
+    [
+      editingAmount,
+      editingBalanceAmount,
+      editingDiscountCode,
+      editingLimitDate,
+      editingPaymentMethod,
+      editingPeriodMonth,
+      mutateAddHistoryPaymentDiscountCode,
+      mutateEditHistoryPaymentAmount,
+      mutateEditHistoryPaymentLimitDate,
+      mutateEditHistoryPaymentPeriodMonth,
+      mutateUpdatePaymentMethod,
+    ],
+  );
 
-  const columns = PaymentColumns({
-    showReceipts: showReceipts,
-    showExtensionModal: showExtensionModal,
-    handlePayReceipt: handlePayReceipt,
-    handleCancelReceipt: handleCancelReceipt,
-    handleRevertReceipt: handleRevertReceipt,
-    edit: edit,
-    cancel: cancel,
-    handleSave: handleSave,
-    handleDeleteReceipt: handleDeleteReceipt,
+  const columns = useMemo(
+    () =>
+      PaymentColumns({
+        showReceipts: showReceipts,
+        showExtensionModal: showExtensionModal,
+        handlePayReceipt: handlePayReceipt,
+        handleCancelReceipt: handleCancelReceipt,
+        handleRevertReceipt: handleRevertReceipt,
+        edit: edit,
+        cancel: cancel,
+        handleSave: handleSave,
+        handleDeleteReceipt: handleDeleteReceipt,
 
-    checkUser: userLogged?.email,
+        checkUser: userLogged?.email,
 
-    editingKeyPaymentMethod: editingKeyPaymentMethod,
-    editingKeyBalanceAmount: editingKeyBalanceAmount,
-    editingKeyAmount: editingKeyAmount,
-    editingKeyLimitDate: editingKeyLimitDate,
-    editingKeyPeriodMonth: editingKeyPeriodMonth,
-    editingKeyDiscountCode: editingKeyDiscountCode,
+        editingKeyPaymentMethod: editingKeyPaymentMethod,
+        editingKeyBalanceAmount: editingKeyBalanceAmount,
+        editingKeyAmount: editingKeyAmount,
+        editingKeyLimitDate: editingKeyLimitDate,
+        editingKeyPeriodMonth: editingKeyPeriodMonth,
+        editingKeyDiscountCode: editingKeyDiscountCode,
 
-    editingPaymentMethod: editingPaymentMethod,
-    editingBalanceAmount: editingBalanceAmount,
-    editingAmount: editingAmount,
-    editingLimitDate: editingLimitDate,
-    editingPeriodMonth: editingPeriodMonth,
-    editingDiscountCode: editingDiscountCode,
+        editingPaymentMethod: editingPaymentMethod,
+        editingBalanceAmount: editingBalanceAmount,
+        editingAmount: editingAmount,
+        editingLimitDate: editingLimitDate,
+        editingPeriodMonth: editingPeriodMonth,
+        editingDiscountCode: editingDiscountCode,
 
-    setEditingPaymentMethod: setEditingPaymentMethod,
-    setEditingBalanceAmount: setEditingBalanceAmount,
-    setEditingAmount: setEditingAmount,
-    setEditingLimitDate: setEditingLimitDate,
-    setEditingPeriodMonth: setEditingPeriodMonth,
-    setEditingDiscountCode: setEditingDiscountCode,
-  });
+        setEditingPaymentMethod: setEditingPaymentMethod,
+        setEditingBalanceAmount: setEditingBalanceAmount,
+        setEditingAmount: setEditingAmount,
+        setEditingLimitDate: setEditingLimitDate,
+        setEditingPeriodMonth: setEditingPeriodMonth,
+        setEditingDiscountCode: setEditingDiscountCode,
+      }),
+    [
+      editingAmount,
+      editingBalanceAmount,
+      editingDiscountCode,
+      editingKeyAmount,
+      editingKeyBalanceAmount,
+      editingKeyDiscountCode,
+      editingKeyLimitDate,
+      editingKeyPaymentMethod,
+      editingKeyPeriodMonth,
+      editingLimitDate,
+      editingPaymentMethod,
+      editingPeriodMonth,
+      handleDeleteReceipt,
+      handlePayReceipt,
+      handleRevertReceipt,
+      handleSave,
+      showExtensionModal,
+      userLogged?.email,
+    ],
+  );
 
   // const totals = getAmountsByStatus();
   // const total = getTotal();
@@ -572,8 +627,8 @@ export const PaymentLogic = () => {
 
   return (
     <>
-      {userLogged.user_type === "Admin" ||
-      userLogged.user_type === "SuperAdmin" ? (
+      {userLogged?.user_type === "Admin" ||
+      userLogged?.user_type === "SuperAdmin" ? (
         // <Row
         //   gutter={[16, 16]}
         //   wrap={true}

@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
 import { Button, Form, Grid, message, Row } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useChangeAthleteStatus,
   useChangeAvatar,
@@ -34,6 +34,10 @@ export const AthleteLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
   const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
+
+  /**
+   * @property {string} _id
+   */
 
   const {
     data: athletesData,
@@ -112,11 +116,11 @@ export const AthleteLogic = () => {
     });
   }, [athletesData, groupsData, usersData, packagesData]);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     await queryClient.invalidateQueries({
       queryKey: ["allAthletes"],
     });
-  };
+  }, [queryClient]);
 
   const { mutateCreate } = useCreateAthlete(handleSearch);
   const { mutateUpdate } = useUpdateAthlete(handleSearch);
@@ -124,20 +128,20 @@ export const AthleteLogic = () => {
   const { mutateDelete } = useDeleteAthlete(handleSearch);
   const { mutateUpdateAvatar } = useChangeAvatar(handleSearch);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setModalContext("");
     form.resetFields();
     setIsModalVisible(false);
-  };
+  }, [form]);
 
-  const handleCleanAfterCreateOrEdit = async () => {
+  const handleCleanAfterCreateOrEdit = useCallback(async () => {
     form.resetFields();
     setModalContext("");
     setSelectedRecord(null);
     setIsModalVisible(false);
-  };
+  }, [form]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
       await mutateUpdate({ ...values, athlete_id: selectedRecord.athlete_id });
@@ -147,47 +151,69 @@ export const AthleteLogic = () => {
     }
     form.resetFields();
     await handleCleanAfterCreateOrEdit();
-  };
+  }, [
+    form,
+    handleCleanAfterCreateOrEdit,
+    modalContext,
+    mutateCreate,
+    mutateUpdate,
+    selectedRecord,
+  ]);
 
-  const handleEdit = (record) => {
-    setModalContext("edit");
-    record.start_date = record.start_date ? dayjs(record.start_date) : null;
-    console.log("Campos", record);
-    form.setFieldsValue(record);
-    setSelectedRecord(record);
-    setIsModalVisible(true);
-  };
+  const handleEdit = useCallback(
+    (record) => {
+      setModalContext("edit");
+      record.start_date = record.start_date ? dayjs(record.start_date) : null;
+      console.log("Campos", record);
+      form.setFieldsValue(record);
+      setSelectedRecord(record);
+      setIsModalVisible(true);
+    },
+    [form],
+  );
 
-  const handleChangeStatus = async (record) => {
-    setModalContext("delete");
-    await mutateUpdateStatus(record.athlete_id);
-  };
+  const handleChangeStatus = useCallback(
+    async (record) => {
+      setModalContext("delete");
+      await mutateUpdateStatus(record.athlete_id);
+    },
+    [mutateUpdateStatus],
+  );
 
-  const handleDelete = async (record) => {
-    setModalContext("delete");
-    await mutateDelete(record.athlete_id);
-  };
+  const handleDelete = useCallback(
+    async (record) => {
+      setModalContext("delete");
+      await mutateDelete(record.athlete_id);
+    },
+    [mutateDelete],
+  );
 
   const cancel = () => {
     message.error("Click on No").then((e) => e);
   };
 
-  const handleImageLoaded = async (file, record) => {
-    await handleChangeAvatar(file, record);
-  };
+  const handleChangeAvatar = useCallback(
+    async (file, record) => {
+      try {
+        const data = {};
+        const formData = new FormData();
+        formData.append("file", file);
+        data.athlete_id = record.athlete_id;
+        data.file = formData;
+        await mutateUpdateAvatar(data);
+      } catch (error) {
+        console.log("Error al guardar la imagen:", error);
+      }
+    },
+    [mutateUpdateAvatar],
+  );
 
-  const handleChangeAvatar = async (file, record) => {
-    try {
-      const data = {};
-      const formData = new FormData();
-      formData.append("file", file);
-      data.athlete_id = record.athlete_id;
-      data.file = formData;
-      await mutateUpdateAvatar(data);
-    } catch (error) {
-      console.log("Error al guardar la imagen:", error);
-    }
-  };
+  const handleImageLoaded = useCallback(
+    async (file, record) => {
+      await handleChangeAvatar(file, record);
+    },
+    [handleChangeAvatar],
+  );
 
   const nameSearchProps = useColumnSearchProps("name", "athlete", "Nombre");
   const phoneSearchProps = useColumnSearchProps("phone", "athlete", "Celular");
@@ -201,7 +227,6 @@ export const AthleteLogic = () => {
     "athlete",
     "Matricula",
   );
-
   const columns = useMemo(
     () =>
       enrichedUsersData

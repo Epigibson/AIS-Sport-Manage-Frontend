@@ -1,11 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  changeUserAvatar,
-  createCouch,
-  deleteUser,
-  updateUser,
-} from "../../api/UserService.jsx";
-import { toastNotify } from "../../utils/ToastNotify.jsx";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {changeUserAvatar, createCouch, deleteUser, updateUser,} from "../../api/UserService.jsx";
+import {toastNotify} from "../../utils/ToastNotify.jsx";
+
+/**
+ * @property {string} message
+ */
 
 export const useCreateCouch = () => {
   const queryClient = useQueryClient(); // Obtener el cliente de react-query
@@ -38,7 +37,7 @@ export const useCreateCouch = () => {
       });
     },
     onSettled: () => {
-      reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Est
+      reset();
     },
   });
   return { mutateCreate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
@@ -75,7 +74,7 @@ export const useUpdateCouch = () => {
       });
     },
     onSettled: () => {
-      reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto
+      reset();
     },
   });
   return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
@@ -93,13 +92,10 @@ export const useUpdateAvatarCouch = () => {
     mutationFn: changeUserAvatar,
     onSuccess: async () => {
       console.log("Mutación exitosa");
-      const errorMessage =
-        error.message ||
-        "No se ha podido actualizar correctamente el registro.";
       toastNotify({
         type: "success",
         message: "Registro actualizado",
-        description: errorMessage,
+        description: "Se ha actualizado correctamente el registro.",
       });
       await queryClient.invalidateQueries({ queryKey: ["couchList"] }); // Invalidar la consulta "allPackages"
     },
@@ -115,7 +111,7 @@ export const useUpdateAvatarCouch = () => {
       });
     },
     onSettled: () => {
-      reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto
+      reset();
     },
   });
   return { mutateUpdateAvatar, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook

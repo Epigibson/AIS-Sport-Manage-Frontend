@@ -233,12 +233,13 @@ export const FormComponent = ({
         handleImageLoaded={null} // Cambia esto si necesitas manejar la carga de imágenes
         screen={screen}
       />
-      {formFields.map((field) =>
-        !dependentFieldsVisibility[field.name] ? (
-          <Form.Item name={field.name} hidden key={field.name}>
-            <input type="hidden" />
-          </Form.Item>
-        ) : null,
+      {formFields?.map(
+        (field) =>
+          !dependentFieldsVisibility[field.name] && (
+            <Form.Item hidden key={field.name}>
+              <input type="hidden" />
+            </Form.Item>
+          ),
       )}
       <Form.Item wrapperCol={{ span: 24 }} className={"text-center"}>
         <Button

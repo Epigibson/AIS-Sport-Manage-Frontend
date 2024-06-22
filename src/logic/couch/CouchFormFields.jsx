@@ -3,7 +3,7 @@ export const couchFormFields = [
     name: "name",
     label: "Nombre",
     rules: [{ required: true, message: "El nombre es obligatorio" }],
-    inputType: "input", // Indica el tipo de control de entrada
+    inputType: "input",
   },
   // {
   //   name: "username",
@@ -37,7 +37,7 @@ export const couchFormFields = [
     name: "groups",
     label: "Grupo",
     rules: [{ required: false, message: "El grupo es obligatorio" }],
-    inputType: "multipleSelect", // Indica el tipo de control de entrada
-    optionsSource: "groups", // Utiliza un identificador para las opciones
+    inputType: "multipleSelect",
+    optionsSource: "groups",
   },
 ];

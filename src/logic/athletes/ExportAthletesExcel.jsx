@@ -31,7 +31,7 @@ export const exportToExcel = async (data, filename) => {
     sport_preference: "Preferencia Deportiva",
     groups: "Grupos",
     start_date: "Fecha de Inicio",
-    products_which_inscribed: "Membresias",
+    products_which_inscribed: "Membresías",
     email: "Correo Electrónico",
     phone: "Teléfono",
     mobile: "Móvil",
@@ -42,7 +42,7 @@ export const exportToExcel = async (data, filename) => {
     requiredFields.forEach((field) => {
       if (field === "groups") {
         formattedItem[field] = Array.isArray(item[field])
-          ? item[field].map((group) => group.name).join(", ")
+          ? item[field]?.map((group) => group.name).join(", ")
           : "N/A";
       } else if (field === "hobbies" || field === "products_which_inscribed") {
         formattedItem[field] = Array.isArray(item[field])

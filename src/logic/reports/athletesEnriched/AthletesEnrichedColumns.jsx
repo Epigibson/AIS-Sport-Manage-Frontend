@@ -1,5 +1,12 @@
-import { Avatar, Row, Tag, Tooltip } from "antd";
-import { FormatCurrencyUtil } from "../../../utils/FormatCurrencyUtil.jsx";
+import {Avatar, Row, Tag, Tooltip} from "antd";
+import {FormatCurrencyUtil} from "../../../utils/FormatCurrencyUtil.jsx";
+
+/**
+ * @typedef {Object} AthletesEnrichedColumnsProps
+ * @property {string} name
+ * @property {string} status
+ * @property {Object[]} payments
+ */
 
 export const AthletesEnrichedColumns = (filters) => [
   {
@@ -11,7 +18,7 @@ export const AthletesEnrichedColumns = (filters) => [
     sorter: (a, b) => a.tuition - b.tuition,
   },
   {
-    title: "Membresias",
+    title: "Membresías",
     dataIndex: "products_which_inscribed",
     key: "products_which_inscribed",
     align: "center",

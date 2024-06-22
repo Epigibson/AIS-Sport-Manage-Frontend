@@ -8,6 +8,9 @@ import { CustomSelectForConfigComponent } from "../../components/CustomSelectFor
 import { ConfigurationFields } from "./ConfigurationFields.jsx";
 
 export const ConfigurationLogic = () => {
+  /**
+   * @property {string} message
+   */
   const [editingValue, setEditingValue] = useState(false);
   const [editableFields, setEditableFields] = useState({});
   const [editingField, setEditingField] = useState(null);

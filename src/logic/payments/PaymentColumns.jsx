@@ -85,19 +85,19 @@ export const PaymentColumns = ({
       key: "athlete",
       align: "center",
       width: 200,
+      ellipsis: false,
       render: (athlete) =>
         athlete ? (
-          <div className={"overflow-x-hidden"}>
-            <Tooltip title={athlete?.name} color={"blue"}>
-              <Tag color={"blue"} className={"text-style mb-2"}>
-                <Text className="text-style">{athlete?.name}</Text>
-              </Tag>
-            </Tooltip>
-          </div>
+          <Tooltip title={athlete?.name} color={"blue"}>
+            <Tag color={"blue"} className={"text-style mb-2"}>
+              <Text className="text-style">{athlete?.name}</Text>
+            </Tag>
+          </Tooltip>
         ) : (
           <span>Sin Usuario</span>
         ),
     },
+
     // {
     //   title: "Tipo de Pago",
     //   dataIndex: "payment_type",
@@ -119,20 +119,16 @@ export const PaymentColumns = ({
       key: "receipt",
       align: "center",
       width: 150,
+      ellipsis: true,
       render: (_, record) =>
         record?.receipt && record?.receipt?.receipt_package_name ? (
-          <div className={"overflow-x-hidden text-center"}>
-            <Tooltip
-              title={record?.receipt?.receipt_package_name}
-              color={"cyan"}
-            >
-              <Tag color={"cyan"} className={"text-style mb-2"}>
-                <Text className="text-style">
-                  {record?.receipt?.receipt_package_name}
-                </Text>
-              </Tag>
-            </Tooltip>
-          </div>
+          <Tooltip title={record?.receipt?.receipt_package_name} color={"cyan"}>
+            <Tag color={"cyan"} className={"text-style mb-2"}>
+              <Text className="text-style">
+                {record?.receipt?.receipt_package_name}
+              </Text>
+            </Tag>
+          </Tooltip>
         ) : (
           <Tag>Sin datos</Tag>
         ),

@@ -16,7 +16,6 @@ export const CouchColumns = ({
     width: 150,
     render: (_, record) => {
       if (record) {
-        // console.log("SOLO VER", record.avatar);
         return (
           <AvatarComponent
             onImageLoaded={(file) => handleImageLoaded(file, record)}

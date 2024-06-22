@@ -44,14 +44,14 @@ export const CouchLogic = () => {
   });
 
   const enrichedUsersData = couchesData?.map((user) => {
-    // Encuentra todos los grupos que coincidan con los IDs en athletes.group_id
+    // Encuentra todos los grupos que coincidan con los ID en athletes.group_id
     const userGroups = groupsData?.filter((group) =>
       user.groups?.includes(group._id),
     );
     return { ...user, groups: userGroups }; // Añade el array de grupos al objeto de usuario
   });
 
-  // console.log("DATAAAA", enrichedUsersData);
+  // console.log("DATA", enrichedUsersData);
 
   const showModal = () => {
     setIsModalVisible(true);

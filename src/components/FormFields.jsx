@@ -54,7 +54,6 @@ export const FormFields = ({
       <Form.Item
         hidden={field.hidden}
         key={field.name}
-        name={field.name}
         label={field.label}
         rules={field.rules}
         valuePropName={field.inputType === "checkbox" ? "checked" : undefined}
