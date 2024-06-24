@@ -73,9 +73,9 @@ export const DiscountsColumns = ({ onEdit, onDelete, onCancel }) => [
     dataIndex: "athletes",
     align: "center",
     render: (athletes) => {
-      if (athletes && athletes.length > 0) {
-        return athletes.map((athlete) => (
-          <Tag key={athlete._id} color={"blue"}>
+      if (athletes && athletes?.length > 0) {
+        return athletes?.map((athlete, index) => (
+          <Tag key={index} color={"blue"}>
             {athlete.name}
           </Tag>
         ));

@@ -12,9 +12,7 @@ export const exportAthletesToExcel = (athletesEnriched) => {
       "Nombre del Paquete del Recibo": payment.receipt_id
         ? payment.receipt_id.receipt_package_name
         : "",
-      "Monto del Recibo": payment.receipt_id
-        ? payment.receipt_id.receipt_amount
-        : "",
+      "Monto del Recibo": payment.amount ? payment.amount : "",
       "Estatus del Recibo": payment.receipt_id
         ? payment.receipt_id.receipt_status
         : "",

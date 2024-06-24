@@ -18,6 +18,7 @@ import {
   CheckCircleFilled,
   ClockCircleFilled,
   DeleteOutlined,
+  DollarCircleFilled,
   EditFilled,
   ExclamationCircleFilled,
   RollbackOutlined,
@@ -330,24 +331,24 @@ export const PaymentColumns = ({
               <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
                 <div className="flex flex-row items-center justify-center">
                   <Tag>{FormatCurrencyUtil(record.user.positive_balance)}</Tag>
-                  {/*{record.payment_method === "Saldo a favor" ? (*/}
-                  {/*  <Popconfirm*/}
-                  {/*    title="Estas seguro de aplicar el saldo a favor?"*/}
-                  {/*    okText="Si"*/}
-                  {/*    cancelText="No"*/}
-                  {/*    wrapClassName="mi-popconfirm-especifico"*/}
-                  {/*    onConfirm={() => edit(record, "balance_amount")}*/}
-                  {/*  >*/}
-                  {/*    <Button*/}
-                  {/*      hidden={record.payment_method !== "Saldo a favor"}*/}
-                  {/*      type="primary"*/}
-                  {/*      className="flex flex-row items-center justify-center"*/}
-                  {/*      size="small"*/}
-                  {/*    >*/}
-                  {/*      <DollarCircleFilled twoToneColor={"green"} />*/}
-                  {/*    </Button>*/}
-                  {/*  </Popconfirm>*/}
-                  {/*) : null}*/}
+                  {record.payment_method === "Saldo a favor" ? (
+                    <Popconfirm
+                      title="Estas seguro de aplicar el saldo a favor?"
+                      okText="Si"
+                      cancelText="No"
+                      wrapClassName="mi-popconfirm-especifico"
+                      onConfirm={() => edit(record, "balance_amount")}
+                    >
+                      <Button
+                        hidden={record.payment_method !== "Saldo a favor"}
+                        type="primary"
+                        className="flex flex-row items-center justify-center"
+                        size="small"
+                      >
+                        <DollarCircleFilled twoToneColor={"green"} />
+                      </Button>
+                    </Popconfirm>
+                  ) : null}
                 </div>
               </Col>
             </Row>
