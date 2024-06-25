@@ -1,14 +1,23 @@
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllUsersAsAdmin } from "../../api/UserService.jsx";
-import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { UserListColumns } from "./UserListColumns.jsx";
 import { PrepareFiltersColumn } from "../../utils/PrepareFiltersColumn.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { Form } from "antd";
 import { useCallback, useMemo, useState } from "react";
-import { useAddBalance, useSubtractBalance } from "./UserListMutations.jsx";
+import {
+  useAddBalance,
+  useCreateAdmin,
+  useCreateManager,
+  useSubtractBalance,
+} from "./UserListMutations.jsx";
 import { UserListFormFields } from "./UserListFormFields.jsx";
+import { UserListFormFieldsCreate } from "./UserListFormFieldsCreate.jsx";
+import {
+  ManageLoadingAndErrorData,
+  UserListCreationButtons,
+} from "./UserListUtils.jsx";
 
 export const UserListLogic = () => {
   const queryClient = useQueryClient();
@@ -16,6 +25,9 @@ export const UserListLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [recordSelected, setRecordSelected] = useState(null);
   const [typeOfBalance, setTypeOfBalance] = useState(null);
+  const [actionType, setActionType] = useState(null);
+  const [operationForm, setOperationForm] = useState(null);
+  const [modalTitle, setModalTitle] = useState("");
   const {
     data: usersData,
     isLoading: usersIsLoading,
@@ -34,12 +46,34 @@ export const UserListLogic = () => {
     await refetch();
   }, [queryClient, refetch]);
 
+  const userLogged = queryClient.getQueryData(["userLogged"]);
+
   const { mutateAddBalance } = useAddBalance(handleSearch);
   const { mutateSubtractBalance } = useSubtractBalance(handleSearch);
+  const { mutateCreateManager } = useCreateManager(handleSearch);
+  const { mutateCreateAdmin } = useCreateAdmin(handleSearch);
 
-  const handleOpenModal = useCallback((record, typeOfBalance) => {
-    setRecordSelected(record);
-    setTypeOfBalance(typeOfBalance);
+  const handleOpenModal = useCallback((record, typeOfBalance, actionType) => {
+    setRecordSelected(record ? record : null);
+    setTypeOfBalance(typeOfBalance ? typeOfBalance : null);
+    setActionType(actionType);
+    switch (actionType) {
+      case "change_balance":
+        setModalTitle("Agregar Saldo");
+        setOperationForm(UserListFormFields);
+        break;
+      case "create_manager":
+        setModalTitle("Crear Administrador");
+        setOperationForm(UserListFormFieldsCreate);
+        break;
+      case "create_admin":
+        setModalTitle("Crear Super Admin");
+        setOperationForm(UserListFormFieldsCreate);
+        break;
+      default:
+        setOperationForm(null);
+        break;
+    }
     setIsModalVisible(true);
   }, []);
 
@@ -48,28 +82,40 @@ export const UserListLogic = () => {
     setRecordSelected(null);
     setTypeOfBalance(null);
     setIsModalVisible(false);
+    setActionType(null);
+    setModalTitle("");
   }, [form]);
 
-  const submitEditBalance = useCallback(() => {
-    if (typeOfBalance === "add_balance") {
-      mutateAddBalance({
-        user_id: recordSelected.user_id,
-        balance_amount: form.getFieldValue("balance_amount"),
-      });
-    } else if (typeOfBalance === "subtract_balance") {
-      mutateSubtractBalance({
-        user_id: recordSelected.user_id,
-        balance_amount: form.getFieldValue("balance_amount"),
-      });
+  const handleSubmit = useCallback(() => {
+    const formValues = form.getFieldsValue();
+    if (actionType === "change_balance") {
+      if (typeOfBalance === "add_balance") {
+        mutateAddBalance({
+          user_id: recordSelected.user_id,
+          balance_amount: form.getFieldValue("balance_amount"),
+        });
+      } else if (typeOfBalance === "subtract_balance") {
+        mutateSubtractBalance({
+          user_id: recordSelected.user_id,
+          balance_amount: form.getFieldValue("balance_amount"),
+        });
+      }
+    } else if (actionType === "create_manager") {
+      mutateCreateManager(formValues);
+    } else if (actionType === "create_admin") {
+      mutateCreateAdmin(formValues);
     }
     handleCancel();
   }, [
     form,
-    mutateAddBalance,
-    mutateSubtractBalance,
-    recordSelected,
-    typeOfBalance,
+    actionType,
     handleCancel,
+    typeOfBalance,
+    mutateAddBalance,
+    recordSelected,
+    mutateSubtractBalance,
+    mutateCreateManager,
+    mutateCreateAdmin,
   ]);
 
   const columns = useMemo(() => {
@@ -84,22 +130,24 @@ export const UserListLogic = () => {
     });
   }, [usersData, handleOpenModal]);
 
-  if (usersIsLoading) {
-    return <LoaderIconUtils isLoading={true} />;
-  }
-  if (usersIsError) {
-    return <div>Error: {usersError.message}</div>;
-  }
-
   return (
     <>
+      <ManageLoadingAndErrorData
+        dataIsError={usersIsError}
+        dataLoading={usersIsLoading}
+        dataError={usersError}
+      />
       <ModalComponent
         form={form}
-        formFields={UserListFormFields}
-        onOk={submitEditBalance}
-        title={"Agregar Saldo"}
+        formFields={operationForm}
+        onOk={handleSubmit}
+        title={modalTitle}
         onOpen={isModalVisible}
         onClose={handleCancel}
+      />
+      <UserListCreationButtons
+        handleOpenModal={handleOpenModal}
+        userLogged={userLogged}
       />
       <TablesComponent data={usersData} columns={columns} />
     </>

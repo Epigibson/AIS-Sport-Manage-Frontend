@@ -55,9 +55,26 @@ export const createCouch = async (data) => {
   }
 };
 
-export const createUser = async (data) => {
+export const createUserManager = async (data) => {
   try {
-    const response = await apiClient.post("/user/create", data);
+    const response = await apiClient.post(
+      "/user/create_system_user_manager",
+      data,
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.detail || "Un error desconocido ha ocurrido";
+    throw new Error(errorMessage);
+  }
+};
+
+export const createUserAdmin = async (data) => {
+  try {
+    const response = await apiClient.post(
+      "/user/create_system_user_admin",
+      data,
+    );
     return response.data;
   } catch (error) {
     const errorMessage =

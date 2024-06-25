@@ -45,7 +45,9 @@ export const UserListColumns = ({ filters, handleOpenModal }) => [
           <PlusCircleTwoTone
             className={"ml-1"}
             twoToneColor={"green"}
-            onClick={() => handleOpenModal(record, "add_balance")}
+            onClick={() =>
+              handleOpenModal(record, "add_balance", "change_balance")
+            }
           ></PlusCircleTwoTone>
         </Tooltip>
       </div>
