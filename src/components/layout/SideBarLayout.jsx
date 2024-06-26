@@ -1,5 +1,10 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  Avatar,
   Button,
   Divider,
   Grid,
@@ -9,7 +14,7 @@ import {
   theme,
   Typography,
 } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from "../../assets/logo-be.png";
 import PropTypes from "prop-types";
@@ -23,11 +28,34 @@ const { Title } = Typography;
 const { Header, Sider, Footer, Content } = Layout;
 const { useBreakpoint } = Grid;
 
+const useUserSession = () => {
+  return useQuery({
+    queryKey: ["userLogged"],
+    queryFn: getUserSession,
+  });
+};
+
+const useMenuItems = (userLogged) => {
+  return useMemo(() => {
+    const userRole = userLogged?.user_type;
+    return MenuItems.filter(
+      (item) => !item.roles || item.roles.includes(userRole),
+    ).map((item) => ({
+      key: item.key,
+      label: item.label,
+      icon: item.icon,
+      children: item.children?.map((subItem) => ({
+        key: subItem.key,
+        label: subItem.label,
+        icon: subItem.icon,
+      })),
+    }));
+  }, [userLogged]);
+};
+
 export const SideBarLayout = ({ children, title }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [filteredMenuItems, setFilteredMenuItems] = useState([]);
   const [openKeys, setOpenKeys] = useState(() => {
-    // Intenta leer los keys de los menús abiertos desde localStorage
     const storedKeys = localStorage.getItem("openMenuKeys");
     return storedKeys ? JSON.parse(storedKeys) : [];
   });
@@ -39,69 +67,43 @@ export const SideBarLayout = ({ children, title }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const { data: userLogged, isLoading: isLoadingUserLogged } = useQuery({
-    queryKey: ["userLogged"],
-    queryFn: getUserSession,
-  });
-
-  const getUserRole = useCallback(() => {
-    return userLogged?.user_type;
-  }, [userLogged]);
-
-  const updateMenuItems = useCallback(() => {
-    const userRole = getUserRole();
-    setFilteredMenuItems(
-      MenuItems.filter(
-        (item) => !item.roles || item.roles.includes(userRole),
-      ).map((item) => ({
-        key: item.key,
-        label: item.label,
-        icon: item.icon,
-        children: item.children?.map((subItem) => ({
-          key: subItem.key,
-          label: subItem.label,
-          icon: subItem.icon,
-        })),
-      })),
-    );
-  }, [getUserRole]);
+  const { data: userLogged, isLoading: isLoadingUserLogged } = useUserSession();
+  const filteredMenuItems = useMenuItems(userLogged);
 
   useEffect(() => {
-    updateMenuItems();
-  }, [location, updateMenuItems, userLogged]);
-
-  useEffect(() => {
-    if (screens.xs && openKeys.length === 0) {
+    if (screens.xs) {
       setCollapsed(true);
     } else {
       setCollapsed(false);
     }
-    localStorage.setItem("openMenuKeys", JSON.stringify(openKeys));
-  }, [screens, openKeys]);
+  }, [screens]);
 
   useEffect(() => {
-    const key = location.pathname.slice(1) || "defaultKey"; // Añade una key por defecto si necesario
+    const key = location.pathname.slice(1) || "defaultKey";
     setSelectedKeys([key]);
   }, [location]);
 
   useEffect(() => {
     const handleStorageChange = () => {
-      updateMenuItems();
+      const storedKeys = localStorage.getItem("openMenuKeys");
+      if (storedKeys) {
+        setOpenKeys(JSON.parse(storedKeys));
+      }
     };
     window.addEventListener("storage", handleStorageChange);
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, [updateMenuItems]);
+  }, []);
 
   const onOpenChange = (keys) => {
     setOpenKeys(keys);
+    localStorage.setItem("openMenuKeys", JSON.stringify(keys));
   };
 
   const logout = () => {
     clearTokens();
     localStorage.removeItem("userData");
-    setFilteredMenuItems([]);
     navigate("/");
   };
 
@@ -124,12 +126,11 @@ export const SideBarLayout = ({ children, title }) => {
     }
     if (func && func === "logout") {
       logout();
-      updateMenuItems(); // Update menu items immediately after logout
     }
   };
 
   return (
-    <Layout className="min-h-lvh w-full ">
+    <Layout className="min-h-lvh w-full">
       <Sider
         trigger={null}
         collapsible
@@ -137,23 +138,58 @@ export const SideBarLayout = ({ children, title }) => {
         collapsedWidth="0"
         breakpoint={"lg"}
       >
-        <div className="pt-0 flex flex-col items-center justify-center ">
+        <div className="pt-0 flex flex-col items-center justify-center">
           <img src={logoImage} alt="Logo" style={{ maxHeight: "120px" }} />
         </div>
         <Divider className="bg-blue-950" />
         {isLoadingUserLogged ? (
           <LoaderIconUtils isLoading={true} />
         ) : (
-          <Menu
-            style={{ width: "100%" }}
-            openKeys={openKeys}
-            onOpenChange={onOpenChange}
-            theme="dark"
-            mode="inline"
-            selectedKeys={selectedKeys}
-            items={filteredMenuItems}
-            onClick={handleClick}
-          />
+          <>
+            <div
+              className="flex items-center justify-center px-4"
+              // style={{ padding: 1, display: "flex", alignItems: "center" }}
+            >
+              <Avatar
+                size="small"
+                icon={<UserOutlined />}
+                src={userLogged?.avatarUrl} // Assuming avatarUrl is a property of userLogged
+                style={{ marginRight: 12 }}
+              />
+              {!collapsed && (
+                <Row>
+                  <Typography.Text
+                    level={5}
+                    style={{ margin: 0, color: "white", fontWeight: "bold" }}
+                  >
+                    {userLogged?.name ||
+                      userLogged?.username ||
+                      userLogged?.tutors_name_one}
+                  </Typography.Text>
+                  <Typography.Text
+                    ellipsis={{
+                      tooltip: userLogged?.email,
+                    }}
+                    style={{ color: "white" }}
+                    type={"secondary"}
+                  >
+                    {userLogged?.email}
+                  </Typography.Text>
+                </Row>
+              )}
+            </div>
+            <Divider className="bg-blue-950" />
+            <Menu
+              style={{ width: "100%" }}
+              openKeys={openKeys}
+              onOpenChange={onOpenChange}
+              theme="dark"
+              mode="inline"
+              selectedKeys={selectedKeys}
+              items={filteredMenuItems}
+              onClick={handleClick}
+            />
+          </>
         )}
       </Sider>
       <Layout>
@@ -185,8 +221,6 @@ export const SideBarLayout = ({ children, title }) => {
           style={{
             margin: "16px 16px",
             padding: 24,
-            // padding: 24,
-            // maxHeight: "100%",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
@@ -202,6 +236,6 @@ export const SideBarLayout = ({ children, title }) => {
 };
 
 SideBarLayout.propTypes = {
-  children: PropTypes.node, // 'node' cubre cualquier cosa que pueda ser renderizada: números, strings, elementos o fragmentos
+  children: PropTypes.node,
   title: PropTypes.string,
 };

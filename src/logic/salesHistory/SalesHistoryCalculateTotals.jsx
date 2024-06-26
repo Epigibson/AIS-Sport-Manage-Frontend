@@ -1,7 +1,7 @@
 export const SalesHistoryCalculateTotals = (data) => {
   // Asegúrate de que 'data' es un array antes de proceder
   if (!Array.isArray(data)) {
-    console.error("Data no es un array:", data);
+    // console.error("Data no es un array:", data);
     return { total: 0, cortesias: 0, ventas: 0 };
   }
   const totals = {

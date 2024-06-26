@@ -5,7 +5,7 @@ import { HistoryBalanceLogic } from "../logic/historyBalance/HistoryBalanceLogic
 export const HistoryBalancePage = () => {
   return (
     <SideBarLayout>
-      <MainContainerLayout title={"Historial de Pagos con Saldo"}>
+      <MainContainerLayout title={"Historial de Pagos Parciales"}>
         <HistoryBalanceLogic />
       </MainContainerLayout>
     </SideBarLayout>

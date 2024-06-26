@@ -94,6 +94,7 @@ export const FormComponent = ({
         options = field.options;
       }
 
+      // Manejo de dependencias de tipo relación
       if (field.dependentOn && field.dependentOn.type === "relation") {
         const dependentFieldValue = selectedValues[field.dependentOn.field];
         if (dependentFieldValue) {
@@ -128,15 +129,17 @@ export const FormComponent = ({
     });
 
     formFields.forEach((field) => {
+      // Manejo de visibilidad de campos dependientes
       if (field.dependentOn && field.dependentOn.type === "visible") {
         const dependentFieldValue = selectedValues[field.dependentOn.field];
         visibility[field.name] =
-          dependentFieldValue === field.dependentOn.value;
+          dependentFieldValue === field.dependentOn.value ||
+          dependentFieldValue === undefined; // Visibilidad basada en el valor del checkbox
       }
     });
 
-    setDependentFieldsVisibility(visibility);
-    setSelectOptions(newSelectOptions);
+    setDependentFieldsVisibility(visibility); // Actualizar la visibilidad de los campos dependientes
+    setSelectOptions(newSelectOptions); // Actualizar las opciones de los campos select
   }, [
     selectedValues,
     form,
@@ -184,6 +187,7 @@ export const FormComponent = ({
     }
 
     formFields.forEach((field) => {
+      // Actualizar valores dependientes
       if (field.dependentFields) {
         updatedValues = handleFieldDependencies(
           field,
@@ -203,7 +207,9 @@ export const FormComponent = ({
         const dependentFieldValue = allValues[field.dependentOn.field];
         setDependentFieldsVisibility((prevVisibility) => ({
           ...prevVisibility,
-          [field.name]: dependentFieldValue === field.dependentOn.value,
+          [field.name]:
+            dependentFieldValue === field.dependentOn.value ||
+            dependentFieldValue === undefined, // Visibilidad basada en el valor del checkbox
         }));
       }
     });
@@ -223,13 +229,13 @@ export const FormComponent = ({
       style={{
         maxWidth: 600,
       }}
-      onValuesChange={handleValuesChange}
+      onValuesChange={handleValuesChange} // Manejo de cambios en los valores del formulario
     >
       <FormFields
         form={form}
         formFields={formFields}
-        selectOptions={selectOptions}
-        dependentFieldsVisibility={dependentFieldsVisibility}
+        selectOptions={selectOptions} // Pasar opciones de selección a los campos del formulario
+        dependentFieldsVisibility={dependentFieldsVisibility} // Pasar visibilidad de campos dependientes
         handleImageLoaded={null} // Cambia esto si necesitas manejar la carga de imágenes
         screen={screen}
       />
@@ -261,8 +267,8 @@ export const FormComponent = ({
 FormComponent.propTypes = {
   form: PropTypes.object,
   formFields: PropTypes.array.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func,
+  handleClose: PropTypes.func,
   isLogin: PropTypes.bool,
   confirmLoading: PropTypes.bool,
 };

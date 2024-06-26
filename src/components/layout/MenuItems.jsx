@@ -54,7 +54,7 @@ export const MenuItems = [
   {
     key: "5",
     icon: <HistoryOutlined />,
-    label: "Hisotrial de Saldos",
+    label: "Historial de Pagos Parciales",
     path: "/historial_de_saldos",
     roles: ["Admin", "Manager"],
   },
