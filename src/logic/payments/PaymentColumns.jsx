@@ -456,7 +456,9 @@ export const PaymentColumns = ({
               <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
                 <div className="flex flex-row items-center justify-center">
                   <Tag>{FormatCurrencyUtil(record.user.positive_balance)}</Tag>
-                  {record.payment_method === "Saldo a favor" ? (
+                  {record.payment_method === "Saldo a favor" &&
+                  (record.status === "Pagado" ||
+                    record.status === "Cancelado") ? (
                     <Popconfirm
                       title="Estas seguro de aplicar el saldo a favor?"
                       okText="Si"
@@ -465,7 +467,11 @@ export const PaymentColumns = ({
                       onConfirm={() => edit(record, "balance_amount")}
                     >
                       <Button
-                        hidden={record.payment_method !== "Saldo a favor"}
+                        hidden={
+                          record.payment_method !== "Saldo a favor" ||
+                          record.status === "Pagado" ||
+                          record.status === "Cancelado"
+                        }
                         type="primary"
                         className="flex flex-row items-center justify-center"
                         size="small"
