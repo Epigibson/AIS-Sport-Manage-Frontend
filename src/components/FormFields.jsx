@@ -110,22 +110,21 @@ export const FormFields = ({
           </Checkbox>
         )}
         {field.inputType === "select" && (
-          <>
-            <Select
-              allowClear={true}
-              className={"text-left"}
-              placeholder={`-- Seleccionar ${field.label} --`}
-            >
-              {selectOptions[field.name]?.map((option, index) => (
-                <Option key={option.value || index} value={option.value}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
-          </>
+          <Select
+            allowClear={true}
+            className={"text-left"}
+            placeholder={`-- Seleccionar ${field.label} --`}
+          >
+            {selectOptions[field.name]?.map((option, index) => (
+              <Option key={option.value || index} value={option.value}>
+                {option.label}
+              </Option>
+            ))}
+          </Select>
         )}
         {field.inputType === "multipleSelect" && (
           <Select
+            allowClear={true}
             className={"text-left"}
             placeholder={` --Seleccionar ${field.label} --`}
             mode="multiple"

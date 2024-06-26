@@ -25,7 +25,7 @@ export const PaymentFormFields = [
     label: "Paquete",
     rules: [{ required: true, message: "Ingresa la membresia." }],
     inputType: "select",
-    optionsSource: "products",
+    optionsSource: "packages",
   },
   {
     name: "receipt_type",

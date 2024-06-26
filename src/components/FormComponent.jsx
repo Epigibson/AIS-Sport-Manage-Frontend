@@ -1,15 +1,13 @@
 import { Button, Form, Grid } from "antd";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
-import { getAllGroups } from "../api/GroupService.jsx";
-import { getAllPackages } from "../api/ProductService.jsx";
-import { getAllCategories } from "../api/CategoryService.jsx";
-import { getAllAthletes } from "../api/AtheleService.jsx";
-import { getAllSalesProducts } from "../api/ProductsService.jsx";
 import PropTypes from "prop-types";
 import { FormFields } from "./FormFields.jsx";
-import { getDataSource, handleFieldDependencies } from "./FormUtils.jsx";
+import {
+  getDataSource,
+  handleFieldDependencies,
+  handleRelationDependency,
+} from "./FormUtils.jsx";
+import { useFetchData } from "../utils/useFetchData"; // Asegúrate de ajustar la ruta según la ubicación del archivo useFetchData
 
 const { useBreakpoint } = Grid;
 
@@ -22,34 +20,7 @@ export const FormComponent = ({
   confirmLoading,
 }) => {
   const screen = useBreakpoint();
-  const { data: categories } = useQuery({
-    queryKey: ["callCategories"],
-    queryFn: getAllCategories,
-  });
-  const { data: couches } = useQuery({
-    queryKey: ["couchList"],
-    queryFn: getAllCouches,
-  });
-  const { data: groups } = useQuery({
-    queryKey: ["allGroups"],
-    queryFn: getAllGroups,
-  });
-  const { data: users } = useQuery({
-    queryKey: ["allUsers"],
-    queryFn: getAllUsers,
-  });
-  const { data: athletes } = useQuery({
-    queryKey: ["allAthletes"],
-    queryFn: getAllAthletes,
-  });
-  const { data: packages } = useQuery({
-    queryKey: ["allPackages"],
-    queryFn: getAllPackages,
-  });
-  const { data: products } = useQuery({
-    queryKey: ["productList"],
-    queryFn: getAllSalesProducts,
-  });
+  const dataQueries = useFetchData(); // Usar el hook personalizado para obtener datos
 
   const [selectOptions, setSelectOptions] = useState({});
   const [selectedValues, setSelectedValues] = useState({});
@@ -63,17 +34,17 @@ export const FormComponent = ({
 
     formFields.forEach((field) => {
       let options = [];
-      const dataSource = getDataSource(field.optionsSource, {
-        categories,
-        couches,
-        groups,
-        users,
-        athletes,
-        packages,
-        products,
-      });
+      const dataSource = getDataSource(field.optionsSource, dataQueries);
 
-      visibility[field.name] = true; // Predeterminado a true a menos que las dependencias digan lo contrario
+      // Determina la visibilidad inicial del campo
+      if (field.dependentOn && field.dependentOn.type === "visible") {
+        visibility[field.name] =
+          field.dependentOn.initialValueVisible !== undefined
+            ? field.dependentOn.initialValueVisible
+            : true;
+      } else {
+        visibility[field.name] = true; // Predeterminado a true a menos que las dependencias digan lo contrario
+      }
 
       if (Array.isArray(field.optionsSource)) {
         options = field.optionsSource.map((option) => ({
@@ -96,33 +67,7 @@ export const FormComponent = ({
 
       // Manejo de dependencias de tipo relación
       if (field.dependentOn && field.dependentOn.type === "relation") {
-        const dependentFieldValue = selectedValues[field.dependentOn.field];
-        if (dependentFieldValue) {
-          const originData = getDataSource(field.dependentOn.fromCollection, {
-            categories,
-            couches,
-            groups,
-            users,
-            athletes,
-            packages,
-            products,
-          });
-
-          const selectedParent = originData.find(
-            (item) => item._id === dependentFieldValue,
-          );
-
-          if (selectedParent && selectedParent[field.dependentOn.relatedKey]) {
-            options = athletes
-              .filter((item) =>
-                selectedParent[field.dependentOn.relatedKey].includes(item._id),
-              )
-              .map((item) => ({
-                label: item.name || item.username || item.product_name,
-                value: item._id,
-              }));
-          }
-        }
+        options = handleRelationDependency(field, selectedValues, dataQueries);
       }
 
       newSelectOptions[field.name] = options;
@@ -133,24 +78,28 @@ export const FormComponent = ({
       if (field.dependentOn && field.dependentOn.type === "visible") {
         const dependentFieldValue = selectedValues[field.dependentOn.field];
         visibility[field.name] =
-          dependentFieldValue === field.dependentOn.value ||
-          dependentFieldValue === undefined; // Visibilidad basada en el valor del checkbox
+          field.dependentOn.initialValueVisible !== undefined
+            ? field.dependentOn.initialValueVisible
+            : dependentFieldValue === field.dependentOn.value;
       }
     });
 
-    setDependentFieldsVisibility(visibility); // Actualizar la visibilidad de los campos dependientes
-    setSelectOptions(newSelectOptions); // Actualizar las opciones de los campos select
+    // Evitar ciclos infinitos comprobando si los valores realmente cambiaron
+    setDependentFieldsVisibility((prevVisibility) => {
+      const hasVisibilityChanged =
+        JSON.stringify(prevVisibility) !== JSON.stringify(visibility);
+      return hasVisibilityChanged ? visibility : prevVisibility;
+    });
+
+    setSelectOptions((prevSelectOptions) => {
+      const hasOptionsChanged =
+        JSON.stringify(prevSelectOptions) !== JSON.stringify(newSelectOptions);
+      return hasOptionsChanged ? newSelectOptions : prevSelectOptions;
+    });
   }, [
     selectedValues,
-    form,
     formFields,
-    categories,
-    couches,
-    groups,
-    users,
-    packages,
-    products,
-    athletes,
+    dataQueries, // Utilizar datos obtenidos dinámicamente
   ]);
 
   const handleValuesChange = (_, allValues) => {
@@ -158,59 +107,48 @@ export const FormComponent = ({
 
     let updatedValues = { ...allValues };
 
-    // Verificar si el checkbox 'is_lost' está marcado
-    if (allValues.is_lost !== undefined) {
-      if (allValues.is_lost) {
-        updatedValues.product_price = 0;
-        updatedValues.total_price = 0;
-      } else {
-        // Restablecer el precio original si 'is_lost' se desmarca
-        const selectedProduct = products?.find(
-          (product) => product._id === allValues.product_id,
-        );
-        if (selectedProduct) {
-          updatedValues.product_price = selectedProduct.price;
-          updatedValues.total_price =
-            selectedProduct.price * (allValues.product_quantity || 1);
-        }
-      }
-      form.setFieldsValue({
-        product_price: updatedValues.product_price,
-        total_price: updatedValues.total_price,
-      });
-
-      // Actualizar visibilidad del campo payment_method
-      setDependentFieldsVisibility((prevVisibility) => ({
-        ...prevVisibility,
-        payment_method: !allValues.is_lost,
-      }));
-    }
-
     formFields.forEach((field) => {
+      if (field.inputType === "checkbox" && field.dependentFields) {
+        field.dependentFields.forEach((dependentField) => {
+          const { name, defaultValue } = dependentField;
+          updatedValues[name] = allValues[field.name]
+            ? defaultValue
+            : allValues[name];
+        });
+      }
+
       // Actualizar valores dependientes
       if (field.dependentFields) {
         updatedValues = handleFieldDependencies(
           field,
           updatedValues,
-          { salesProducts: products },
+          dataQueries,
           form,
         );
       }
     });
 
-    setSelectedValues(updatedValues);
+    setSelectedValues((prevValues) => {
+      const hasValuesChanged =
+        JSON.stringify(prevValues) !== JSON.stringify(updatedValues);
+      return hasValuesChanged ? updatedValues : prevValues;
+    });
+
     form.setFieldsValue(updatedValues);
 
     // Actualizar visibilidad de campos dependientes
     formFields.forEach((field) => {
       if (field.dependentOn && field.dependentOn.type === "visible") {
         const dependentFieldValue = allValues[field.dependentOn.field];
-        setDependentFieldsVisibility((prevVisibility) => ({
-          ...prevVisibility,
-          [field.name]:
-            dependentFieldValue === field.dependentOn.value ||
-            dependentFieldValue === undefined, // Visibilidad basada en el valor del checkbox
-        }));
+        setDependentFieldsVisibility((prevVisibility) => {
+          const newVisibility = {
+            ...prevVisibility,
+            [field.name]: dependentFieldValue !== field.dependentOn.value,
+          };
+          const hasVisibilityChanged =
+            JSON.stringify(prevVisibility) !== JSON.stringify(newVisibility);
+          return hasVisibilityChanged ? newVisibility : prevVisibility;
+        });
       }
     });
   };

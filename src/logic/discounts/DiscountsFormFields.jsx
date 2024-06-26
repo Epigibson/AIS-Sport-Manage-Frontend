@@ -45,19 +45,21 @@ export const DiscountsFormFields = [
     label: "Atletas",
     inputType: "multipleSelect",
     optionsSource: "athletes",
-    dependencies: {
-      fieldName: "is_recurrent",
+    dependentOn: {
+      field: "is_recurrent",
       value: true,
+      type: "visible",
     },
   },
   {
     name: "product_id",
     label: "Membresia",
     inputType: "select",
-    optionsSource: "products",
-    dependencies: {
-      fieldName: "is_recurrent",
+    optionsSource: "packages",
+    dependentOn: {
+      field: "is_recurrent",
       value: true,
+      type: "visible",
     },
   },
 ];

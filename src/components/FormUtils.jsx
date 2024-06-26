@@ -14,21 +14,12 @@ export const parsePercentage = (value) => {
   return value ? value.replace("%", "") : "";
 };
 
-export const getDataSource = (
-  source,
-  { categories, couches, groups, users, athletes, packages, products },
-) => {
-  return {
-    categories: categories || [],
-    couches: couches || [],
-    groups: groups || [],
-    users: users || [],
-    athletes: athletes || [],
-    products: (packages || []).filter((p) => p.product_name !== "Inscripcion"),
-    salesProducts: products || [],
-  }[source];
+// Función para obtener la fuente de datos de manera más genérica
+export const getDataSource = (source, dataQueries) => {
+  return dataQueries[source] || [];
 };
 
+// Función para manejar las dependencias de los campos de manera más genérica
 export const handleFieldDependencies = (
   field,
   allValues,
@@ -59,4 +50,34 @@ export const handleFieldDependencies = (
     return updatedValues;
   }
   return allValues;
+};
+
+// Función para manejar las dependencias de tipo relación
+export const handleRelationDependency = (field, allValues, dataQueries) => {
+  if (field.dependentOn && field.dependentOn.type === "relation") {
+    const dependentFieldValue = allValues[field.dependentOn.field];
+    if (dependentFieldValue) {
+      const originData = getDataSource(
+        field.dependentOn.fromCollection,
+        dataQueries,
+      );
+
+      const selectedParent = originData.find(
+        (item) => item._id === dependentFieldValue,
+      );
+
+      if (selectedParent && selectedParent[field.dependentOn.relatedKey]) {
+        return selectedParent[field.dependentOn.relatedKey]
+          .map((athleteId) =>
+            dataQueries.athletes.find((athlete) => athlete._id === athleteId),
+          )
+          .filter((athlete) => athlete !== undefined)
+          .map((athlete) => ({
+            label: athlete.name || athlete.username,
+            value: athlete._id,
+          }));
+      }
+    }
+  }
+  return [];
 };
