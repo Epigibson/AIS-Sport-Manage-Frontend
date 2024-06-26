@@ -76,6 +76,7 @@ export const UserListColumns = ({ filters, handleOpenModal }) => [
       { text: "Admin", value: "Admin" },
       { text: "Manager", value: "Manager" },
       { text: "User", value: "User" },
+      { text: "Coach", value: "Couch" },
     ],
     onFilter: (value, record) => record.user_type === value,
     render: (_, record) => <Tag color={"cyan"}>{record.user_type}</Tag>,

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllHistoryBalance } from "../../api/HistoryBalanceService.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
-import { HistoryBalanceColumns } from "./HistoryBalanceColumns.jsx";
+import { useHistoryBalanceColumns } from "./useHistoryBalanceColumns.jsx";
 
 export const HistoryBalanceLogic = () => {
   const {
@@ -14,10 +14,10 @@ export const HistoryBalanceLogic = () => {
     queryFn: getAllHistoryBalance,
   });
 
+  const columns = useHistoryBalanceColumns();
+
   if (isLoading) return <LoaderIconUtils isLoading={true} />;
   if (error) return <p>Error: {error.message}</p>;
 
-  return (
-    <TablesComponent data={historyBalance} columns={HistoryBalanceColumns} />
-  );
+  return <TablesComponent data={historyBalance} columns={columns} />;
 };

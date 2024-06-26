@@ -12,16 +12,15 @@ import {
 } from "./AthleteLogicMutations.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { athleteFormFields } from "./AthleteFormFields.jsx";
-import { AthleteColumns } from "./AthleteColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { useNavigate } from "react-router-dom";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
 import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllPackages } from "../../api/ProductService.jsx";
-import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
 import dayjs from "dayjs";
 import { exportToExcel } from "./ExportAthletesExcel.jsx";
 import { AthletePrepareFilters } from "./AthletePrepareFilters.jsx";
+import { useAthleteColumns } from "./useAthletesColumns.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -34,10 +33,6 @@ export const AthleteLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
   const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
-
-  /**
-   * @property {string} _id
-   */
 
   const {
     data: athletesData,
@@ -215,58 +210,20 @@ export const AthleteLogic = () => {
     [handleChangeAvatar],
   );
 
-  const nameSearchProps = useColumnSearchProps("name", "athlete", "Nombre");
-  const phoneSearchProps = useColumnSearchProps("phone", "athlete", "Celular");
-  const statusSearchProps = useColumnSearchProps(
-    "status",
-    "athlete",
-    "Estatus",
-  );
-  const tuitionSearchProps = useColumnSearchProps(
-    "tuition",
-    "athlete",
-    "Matricula",
-  );
-  const columns = useMemo(
-    () =>
-      enrichedUsersData
-        ? AthleteColumns({
-            filters: {
-              products_which_inscribed: AthletePrepareFilters(
-                enrichedUsersData,
-                "products_which_inscribed",
-                (item) =>
-                  item.products_which_inscribed.map((p) => p.name).join(", "),
-              ),
-            },
-            onEdit: handleEdit,
-            onDelete: handleDelete,
-            onCancel: cancel,
-            handleImageLoaded: handleImageLoaded,
-            setSelectedRecord,
-            screen,
-            navigate,
-            nameSearchProps,
-            phoneSearchProps,
-            statusSearchProps,
-            tuitionSearchProps,
-            handleChangeStatus,
-          })
-        : [],
-    [
-      enrichedUsersData,
-      handleChangeStatus,
-      handleDelete,
-      handleEdit,
-      handleImageLoaded,
-      nameSearchProps,
-      navigate,
-      phoneSearchProps,
-      screen,
-      statusSearchProps,
-      tuitionSearchProps,
-    ],
-  );
+  const columns = useAthleteColumns({
+    onEdit: handleEdit,
+    handleChangeStatus,
+    onCancel: cancel,
+    handleImageLoaded,
+    navigate,
+    filters: {
+      products_which_inscribed: AthletePrepareFilters(
+        enrichedUsersData,
+        "products_which_inscribed",
+        (item) => item.products_which_inscribed.map((p) => p.name).join(", "),
+      ),
+    },
+  });
 
   if (isAthletesLoading || isLoadingEnrichedData)
     return <LoaderIconUtils isLoading={true} />;

@@ -2,12 +2,30 @@ import { Tag } from "antd";
 import { FormatCurrencyUtil } from "../../utils/FormatCurrencyUtil.jsx";
 import { convertToMexicoCityTimeAndSubtractSixHours } from "../../utils/ConvertDateToMexicoTimeUtil.jsx";
 
-export const HistoryBalanceColumns = [
+export const HistoryBalanceColumns = ({
+  folioSearchProps,
+  paymentMethodSearchProps,
+  packageSearchProps,
+  responsibleSearchProps,
+}) => [
+  {
+    title: "Recibo (Folio)",
+    dataIndex: "receipt_id",
+    key: "receipt_id",
+    align: "center",
+    ...folioSearchProps,
+    render: (receipt_id) => {
+      // Mostrar los primeros 4 y los últimos 4 caracteres del folio
+      const shortenedReceiptId = `${receipt_id.slice(0, 4)}...${receipt_id.slice(-4)}`;
+      return <Tag color={"blue"}>{shortenedReceiptId}</Tag>;
+    },
+  },
   {
     title: "Responsable",
     dataIndex: "responsible_name",
     key: "responsible_name",
     align: "center",
+    ...responsibleSearchProps,
     render: (responsible_name) => {
       return <Tag color={"blue"}>{responsible_name}</Tag>;
     },
@@ -33,8 +51,19 @@ export const HistoryBalanceColumns = [
     dataIndex: "package_name",
     key: "package_name",
     align: "center",
+    ...packageSearchProps,
     render: (package_name) => {
       return <Tag color={"lime"}>{package_name}</Tag>;
+    },
+  },
+  {
+    title: "Metodo de Pago",
+    dataIndex: "payment_method",
+    key: "payment_method",
+    align: "center",
+    ...paymentMethodSearchProps,
+    render: (payment_method) => {
+      return <Tag color={"purple"}>{payment_method}</Tag>;
     },
   },
   {
@@ -44,7 +73,7 @@ export const HistoryBalanceColumns = [
     align: "center",
     render: (original_amount_price) => {
       return (
-        <Tag color={"blue"}>{FormatCurrencyUtil(original_amount_price)}</Tag>
+        <Tag color={"cyan"}>{FormatCurrencyUtil(original_amount_price)}</Tag>
       );
     },
   },
@@ -55,7 +84,7 @@ export const HistoryBalanceColumns = [
     align: "center",
     render: (amount_balance_applied) => {
       return (
-        <Tag color={"purple"}>{FormatCurrencyUtil(amount_balance_applied)}</Tag>
+        <Tag color={"orange"}>{FormatCurrencyUtil(amount_balance_applied)}</Tag>
       );
     },
   },

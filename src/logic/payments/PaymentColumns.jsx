@@ -4,6 +4,7 @@ import {
   DatePicker,
   Input,
   InputNumber,
+  message,
   Popconfirm,
   Row,
   Select,
@@ -22,6 +23,7 @@ import {
   EditFilled,
   ExclamationCircleFilled,
   RollbackOutlined,
+  ScheduleFilled,
   StopOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -38,11 +40,13 @@ export const PaymentColumns = ({
 
   editingKeyPaymentMethod,
   editingKeyBalanceAmount,
+  editingKeyBalancePayment,
   editingKeyAmount,
   editingKeyLimitDate,
   editingKeyPeriodMonth,
   editingKeyDiscountCode,
 
+  editingBalancePayment, // Nuevo estado para manejar la edición del saldo a favor
   editingPaymentMethod,
   editingBalanceAmount,
   editingAmount,
@@ -50,6 +54,7 @@ export const PaymentColumns = ({
   editingPeriodMonth,
   editingDiscountCode,
 
+  setEditingBalancePayment, // Nueva función para manejar el cambio del saldo a favor
   setEditingPaymentMethod,
   setEditingBalanceAmount,
   setEditingAmount,
@@ -147,12 +152,11 @@ export const PaymentColumns = ({
               value={editingAmount}
               onChange={(value) => setEditingAmount(value)}
             />
-            <Space compact className="mt-2">
+            <Space className="mt-2">
               <Button
                 onClick={() => handleSave(record, "amount")}
                 size="small"
                 style={{ marginRight: 8 }}
-                success
               >
                 Guardar
               </Button>
@@ -168,37 +172,69 @@ export const PaymentColumns = ({
                 style: "currency",
                 currency: "MXN",
               }).format(record?.amount); // Asegúrate de que 'record.amount' está definido correctamente
+              const formattedAmountUpdated = new Intl.NumberFormat("es-MX", {
+                style: "currency",
+                currency: "MXN",
+              }).format(
+                record?.amount_balance_updated
+                  ? record.amount_balance_updated
+                  : null,
+              );
 
               return (
                 <>
-                  <Tooltip title={"Monto actualizado"}>
-                    <CheckCircleFilled
-                      color={"green"}
-                      className={"mr-2 text-green-500"}
-                      hidden={
-                        !record?.amount_updated || record?.status === "Pagado"
-                      }
-                    />
-                  </Tooltip>
-                  <Text className={"mr-2"}>{formattedAmount}</Text>
-                  {record.status !== "Pagado" &&
-                  record.status !== "Cancelado" ? (
-                    <Tooltip
-                      title={
-                        "Al editar el monto solo se ajustara el recibo actual. La recurrencia del monto " +
-                        "original del paquete se respetara en los recibos consecuentes."
-                      }
-                      color={record.extension ? "blue" : "gray"}
-                    >
-                      <EditFilled
-                        onClick={() => edit(record, "amount")}
-                        size="small"
-                        disabled={editingAmount !== ""}
+                  <Row justify={"center"} align={"middle"}>
+                    <Col>
+                      <Tooltip
+                        color={"orange"}
+                        title={"Recibo con pagos parciales."}
                       >
-                        Editar
-                      </EditFilled>
-                    </Tooltip>
-                  ) : null}
+                        <ScheduleFilled
+                          color={"orange"}
+                          className={"mr-2 text-orange-500"}
+                          hidden={record?.receipt?.times_applied_balance === 0}
+                        />
+                      </Tooltip>
+                      <Tooltip title={"Monto actualizado"}>
+                        <CheckCircleFilled
+                          color={"green"}
+                          className={"mr-2 text-green-500"}
+                          hidden={
+                            !record?.amount_updated ||
+                            record?.status === "Pagado"
+                          }
+                        />
+                      </Tooltip>
+                    </Col>
+                    <Col span={14}>
+                      <Tag className={"mb-1"}>Total: {formattedAmount}</Tag>
+                      {formattedAmount !== formattedAmountUpdated &&
+                        formattedAmountUpdated !== "$0.00" && (
+                          <Tag>Restante: {formattedAmountUpdated}</Tag>
+                        )}
+                    </Col>
+                    {record.status !== "Pagado" &&
+                    record.status !== "Cancelado" &&
+                    record.status !== "Parcial" ? (
+                      <Col>
+                        <Tooltip
+                          title={
+                            "Al editar el monto solo se ajustara el recibo actual. La recurrencia del monto " +
+                            "original del paquete se respetara en los recibos consecuentes."
+                          }
+                          color={record.extension ? "blue" : "gray"}
+                        >
+                          <EditFilled
+                            onClick={() => edit(record, "amount")}
+                            size="small"
+                            disabled={editingAmount !== ""}
+                          >
+                            Editar
+                          </EditFilled>
+                        </Tooltip>
+                      </Col>
+                    ) : null}
+                  </Row>
                 </>
               );
             })()}
@@ -212,14 +248,38 @@ export const PaymentColumns = ({
       align: "center",
       searchable: true,
       width: 100,
-      render: (status) => {
+      render: (status, record) => {
+        const handleTagClick = () => {
+          navigator.clipboard
+            .writeText(record.receipt._id)
+            .then(() => {
+              message.success("ID copiado al portapapeles");
+            })
+            .catch(() => {
+              message.error("Error al copiar ID");
+            });
+        };
+
+        let color;
         if (status === "Pagado") {
-          return <Tag color={"green"}>{status}</Tag>;
+          color = "green";
         } else if (status === "Cancelado") {
-          return <Tag color={"red"}>{status}</Tag>;
+          color = "red";
         } else {
-          return <Tag color={"warning"}>{status}</Tag>;
+          color = "warning";
         }
+
+        return (
+          <Tooltip title="Haz clic para copiar el ID">
+            <Tag
+              color={color}
+              onClick={handleTagClick}
+              style={{ cursor: "pointer" }}
+            >
+              {status}
+            </Tag>
+          </Tooltip>
+        );
       },
     },
     {
@@ -230,7 +290,7 @@ export const PaymentColumns = ({
       editable: true,
       width: 200,
       render: (_, record) =>
-        editingKeyPaymentMethod === record._id ? ( // Asumimos que usas _id como identificador único
+        editingKeyPaymentMethod === record._id ? (
           <span>
             <Select
               value={editingPaymentMethod}
@@ -253,7 +313,6 @@ export const PaymentColumns = ({
                 onClick={() => handleSave(record, "payment_method")}
                 size="small"
                 style={{ marginRight: 8 }}
-                success
               >
                 Guardar
               </Button>
@@ -264,30 +323,95 @@ export const PaymentColumns = ({
           </span>
         ) : (
           <div>
-            <Tag color="blue">
-              <Tooltip
-                title={
-                  record.payment_method === "Saldo a favor" &&
-                  record.user.positive_balance
-                    ? `Saldo a favor: ${FormatCurrencyUtil(record.user.positive_balance)}`
-                    : null
-                }
-                color={
-                  record.payment_method === "Saldo a favor" ? "blue" : null
-                }
-              >
-                {record?.payment_method || "No especificado"}
-              </Tooltip>
-            </Tag>
-            {record?.status !== "Pagado" && record?.status !== "Cancelado" ? (
-              <EditFilled
-                onClick={() => edit(record, "payment_method")}
-                size="small"
-                disabled={editingPaymentMethod !== ""}
-              >
-                Editar
-              </EditFilled>
-            ) : null}
+            <Row justify={"center"} align={"middle"}>
+              <Col>
+                {record?.payment_method !== "Saldo a favor" ? (
+                  <Popconfirm
+                    title="Estas a punto de realizar un pago parcial, estas seguro??"
+                    okText="Si"
+                    cancelText="No"
+                    wrapClassName="mi-popconfirm-especifico"
+                    onConfirm={() =>
+                      edit(record, "balance_payment", record.payment_method)
+                    }
+                  >
+                    <Button
+                      hidden={
+                        record.payment_method === "Saldo a favor" ||
+                        record.status === "Pagado" ||
+                        record.status === "Cancelado"
+                      }
+                      type="primary"
+                      className="flex flex-row items-center justify-center mr-2"
+                      size="small"
+                    >
+                      <DollarCircleFilled twoToneColor={"green"} />
+                    </Button>
+                  </Popconfirm>
+                ) : null}
+              </Col>
+              <Col>
+                <Tag color="blue">
+                  <Tooltip
+                    title={
+                      record.payment_method === "Saldo a favor" &&
+                      record.user.positive_balance
+                        ? `Saldo a favor: ${FormatCurrencyUtil(record.user.positive_balance)}`
+                        : null
+                    }
+                    color={
+                      record.payment_method === "Saldo a favor" ? "blue" : null
+                    }
+                  >
+                    {record?.payment_method || "No especificado"}
+                  </Tooltip>
+                </Tag>
+              </Col>
+              <Col>
+                {record?.status !== "Pagado" &&
+                record?.status !== "Cancelado" ? (
+                  <EditFilled
+                    onClick={() => edit(record, "payment_method")}
+                    size="small"
+                    disabled={editingPaymentMethod !== ""}
+                    hidden={
+                      record.status === "Cancelado" ||
+                      record.status === "Pagado"
+                    }
+                  >
+                    Editar
+                  </EditFilled>
+                ) : null}
+              </Col>
+            </Row>
+            {editingKeyBalancePayment === record._id && (
+              <div>
+                <InputNumber
+                  value={editingBalancePayment}
+                  onChange={(value) => setEditingBalancePayment(value)}
+                  min={0}
+                  max={record.amount}
+                />
+                <Space className="mt-2">
+                  <Button
+                    onClick={() =>
+                      handleSave(
+                        record,
+                        "balance_amount",
+                        record.payment_method,
+                      )
+                    }
+                    size="small"
+                    style={{ marginRight: 8 }}
+                  >
+                    Guardar
+                  </Button>
+                  <Button onClick={cancel} danger size="small">
+                    Cancelar
+                  </Button>
+                </Space>
+              </div>
+            )}
           </div>
         ),
     },
@@ -308,10 +432,11 @@ export const PaymentColumns = ({
 
             <Space.Compact className={"mt-2"}>
               <Button
-                onClick={() => handleSave(record, "balance_amount")}
+                onClick={() =>
+                  handleSave(record, "balance_amount", record.payment_method)
+                }
                 size="small"
                 style={{ marginRight: 8 }}
-                success
               >
                 Guardar
               </Button>
@@ -391,11 +516,13 @@ export const PaymentColumns = ({
                 ? "Cupon aplicado"
                 : "Sin cupon"}
             </Tag>
-            {record.status !== "Pagado" && record.status !== "Cancelado" ? (
+            {record.status !== "Pagado" &&
+            record.status !== "Cancelado" &&
+            record.status !== "Parcial" ? (
               <EditFilled
                 onClick={() => edit(record, "discount_code")}
                 size="small"
-                hidden={record?.discount_code_is_applied}
+                hidden={record.discount_code_is_applied}
               >
                 Editar
               </EditFilled>
@@ -438,7 +565,6 @@ export const PaymentColumns = ({
                 onClick={() => handleSave(record, "limit_date")}
                 size="small"
                 style={{ marginRight: 8 }}
-                success
               >
                 Guardar
               </Button>
@@ -541,7 +667,6 @@ export const PaymentColumns = ({
                 onClick={() => handleSave(record, "period_month")}
                 size="small"
                 style={{ marginRight: 8 }}
-                success
               >
                 Guardar
               </Button>
@@ -570,26 +695,23 @@ export const PaymentColumns = ({
                   "Diciembre",
                 ];
                 const formattedMonthName = monthNames[date.getMonth()];
-                if (
-                  record.status !== "Pagado" ||
-                  record.status === "Cancelado"
-                ) {
-                  return (
-                    <>
-                      <Tag color={"purple"}>{formattedMonthName}</Tag>
-                      <EditFilled
-                        className={"ml-2"}
-                        onClick={() => edit(record, "period_month")}
-                        size="small"
-                        disabled={editingPeriodMonth !== ""}
-                      >
-                        Editar
-                      </EditFilled>
-                    </>
-                  );
-                } else {
-                  return <Tag color={"purple"}>{formattedMonthName}</Tag>;
-                }
+                return (
+                  <>
+                    <Tag color={"purple"}>{formattedMonthName}</Tag>
+                    <EditFilled
+                      className={"ml-2"}
+                      onClick={() => edit(record, "period_month")}
+                      size="small"
+                      disabled={editingPeriodMonth !== ""}
+                      hidden={
+                        record?.status === "Cancelado" ||
+                        record?.status === "Pagado"
+                      }
+                    >
+                      Editar
+                    </EditFilled>
+                  </>
+                );
               } else {
                 return (
                   <>
@@ -620,7 +742,7 @@ export const PaymentColumns = ({
           <div className={"flex flex-row items-center justify-center"}>
             <Popconfirm
               title="Confirmar Pago"
-              description={`Estas seguro de pagar $${record?.amount}?`}
+              description={`Estas seguro de confirmar el pago de $${record?.amount}?`}
               onConfirm={() =>
                 handlePayReceipt(
                   record,
@@ -635,9 +757,9 @@ export const PaymentColumns = ({
             >
               <Tooltip
                 title={
-                  record?.payment_method === "Saldo a favor" &&
-                  record?.user.positive_balance < record?.amount
-                    ? "No se puede confirmar el pago ya que el saldo es menor al monto del recibo"
+                  record?.status === "Parcial" &&
+                  record?.amount_balance_updated > 0
+                    ? `No se puede confirmar el pago debido a que aun restan $${record.amount_balance_updated} por pagar.`
                     : null
                 }
               >
@@ -645,8 +767,8 @@ export const PaymentColumns = ({
                   disabled={
                     record?.status === "Pagado" ||
                     record?.status === "Cancelado" ||
-                    (record?.payment_method === "Saldo a favor" &&
-                      record?.user.positive_balance < record?.amount)
+                    (record?.status === "Parcial" &&
+                      record?.amount_balance_updated > 0)
                   }
                   type={"primary"}
                   danger={
@@ -657,6 +779,7 @@ export const PaymentColumns = ({
                   style={
                     record?.status !== "Pagado" &&
                     record?.status !== "Cancelado" &&
+                    record?.status !== "Parcial" &&
                     record?.payment_method !== "Saldo a favor"
                       ? { backgroundColor: "#48bb78" }
                       : null

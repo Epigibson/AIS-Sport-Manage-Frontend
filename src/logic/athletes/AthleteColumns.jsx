@@ -1,13 +1,10 @@
 import { Button, Popconfirm, Space, Tag, Typography } from "antd";
 import { AvatarComponent } from "../../components/AvatarComponent.jsx";
 import { EyeFilled } from "@ant-design/icons";
-import { filterByNameTutors } from "../../utils/FilterUtils.jsx";
-import { useColumnSearchProps } from "../../utils/useColumnSearchProps.jsx";
 
 const { Text } = Typography;
 
 export const AthleteColumns = ({
-  // onDelete,
   onEdit,
   handleChangeStatus,
   onCancel,
@@ -17,6 +14,7 @@ export const AthleteColumns = ({
   nameSearchProps,
   phoneSearchProps,
   tuitionSearchProps,
+  tutorSearchProps,
 }) => [
   {
     title: "Avatar",
@@ -27,7 +25,6 @@ export const AthleteColumns = ({
     width: 150,
     render: (_, record) => {
       if (record) {
-        // console.log(“SOLO VER", record.avatar);
         return (
           <AvatarComponent
             onImageLoaded={(file) => handleImageLoaded(file, record)}
@@ -69,7 +66,7 @@ export const AthleteColumns = ({
     key: "tutors",
     align: "center",
     width: 200,
-    ...useColumnSearchProps("tutors", filterByNameTutors, "Tutor"),
+    ...tutorSearchProps,
     render: (_, record) =>
       record.tutors ? (
         record.tutors?.map((tutors) => (
@@ -77,16 +74,6 @@ export const AthleteColumns = ({
             key={tutors?._id}
             className={"flex flex-col justify-center items-center gap-1"}
           >
-            {/*<Button*/}
-            {/*  onClick={() => navigate("/asignación_de_grupos")}*/}
-            {/*  icon={<EyeFilled />}*/}
-            {/*  type="primary"*/}
-            {/*  shape="circle"*/}
-            {/*  size={"middle"}*/}
-            {/*  title={"Editar"}*/}
-            {/*  style={{ backgroundColor: "#fcba03" }}*/}
-            {/*  key={group?._id}*/}
-            {/*/>*/}
             <Tag color="blue" key={tutors?._id}>
               {tutors.tutors_name_one}
             </Tag>
@@ -154,7 +141,6 @@ export const AthleteColumns = ({
         <Tag color={"volcano"}>Sin Paquete</Tag>
       ),
   },
-
   {
     title: "Fecha de Inicio",
     dataIndex: "start_date",
@@ -184,7 +170,7 @@ export const AthleteColumns = ({
     render: (_, record) => (
       <Button
         className={"bg-primary-700"}
-        onClick={() => navigate(`/atleta/${record.athlete_id}`)} // Asegúrate de que `record.key` es el ID del usuario
+        onClick={() => navigate(`/atleta/${record.athlete_id}`)}
         icon={<EyeFilled />}
         type="primary"
         shape="round"
@@ -199,7 +185,6 @@ export const AthleteColumns = ({
     key: "action",
     align: "center",
     width: 200,
-    // fixed: screen.xs ? undefined : "right",
     render: (_, record) => (
       <Space>
         <Button

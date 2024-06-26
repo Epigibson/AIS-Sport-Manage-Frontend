@@ -55,8 +55,10 @@ export const PaymentLogic = () => {
   const [editingKeyLimitDate, setEditingKeyLimitDate] = useState("");
   const [editingKeyPeriodMonth, setEditingKeyPeriodMonth] = useState("");
   const [editingKeyDiscountCode, setEditingKeyDiscountCode] = useState("");
+  const [editingKeyBalancePayment, setEditingKeyBalancePayment] = useState("");
   const [editingPaymentMethod, setEditingPaymentMethod] = useState("");
   const [editingBalanceAmount, setEditingBalanceAmount] = useState("");
+  const [editingBalancePayment, setEditingBalancePayment] = useState("");
   const [editingAmount, setEditingAmount] = useState("");
   const [editingLimitDate, setEditingLimitDate] = useState("");
   const [editingPeriodMonth, setEditingPeriodMonth] = useState("");
@@ -444,7 +446,7 @@ export const PaymentLogic = () => {
     // console.log(`selected ${value}`);
   };
 
-  const edit = (record, type) => {
+  const edit = (record, type, paymentMethod) => {
     if (type === "payment_method") {
       setEditingKeyPaymentMethod(record?._id);
       setEditingPaymentMethod(record?.payment_method);
@@ -465,6 +467,10 @@ export const PaymentLogic = () => {
     } else if (type === "balance_amount") {
       setEditingKeyBalanceAmount(record?._id);
       setEditingBalanceAmount(record?.amount);
+    } else if (type === "balance_payment") {
+      setEditingKeyBalancePayment(record?._id);
+      setEditingBalancePayment(record?.amount_balance_updated);
+      setEditingPaymentMethod(paymentMethod);
     }
   };
 
@@ -476,15 +482,17 @@ export const PaymentLogic = () => {
     setEditingKeyAmount("");
     setEditingKeyPeriodMonth("");
     setEditingKeyDiscountCode("");
+    setEditingKeyBalancePayment("");
     setEditingPaymentMethod("");
     setEditingBalanceAmount("");
     setEditingAmount("");
     setEditingLimitDate("");
     setEditingDiscountCode("");
+    setEditingBalancePayment("");
   };
 
   const handleSave = useCallback(
-    async (record, field) => {
+    async (record, field, paymentMethod) => {
       if (field === "payment_method") {
         const data = {
           history_payment_id: record?.history_payment_id,
@@ -528,25 +536,30 @@ export const PaymentLogic = () => {
       if (field === "balance_amount") {
         const data = {
           receipt_id: record?.receipt._id,
-          amount_to_apply: editingBalanceAmount,
+          amount_to_apply: editingBalancePayment || editingBalanceAmount,
+          payment_method: editingPaymentMethod
+            ? editingPaymentMethod
+            : paymentMethod,
         };
         console.log("Balance Amount", data);
-        // await mutateSubtractAmountReceiptWithBalance(data);
+        await mutateSubtractAmountReceiptWithBalance(data);
       }
       cancel(); // Restablece el estado de edición
     },
     [
-      editingAmount,
-      editingBalanceAmount,
-      editingDiscountCode,
-      editingLimitDate,
       editingPaymentMethod,
-      editingPeriodMonth,
-      mutateAddHistoryPaymentDiscountCode,
-      mutateEditHistoryPaymentAmount,
-      mutateEditHistoryPaymentLimitDate,
-      mutateEditHistoryPaymentPeriodMonth,
       mutateUpdatePaymentMethod,
+      editingAmount,
+      mutateEditHistoryPaymentAmount,
+      editingLimitDate,
+      mutateEditHistoryPaymentLimitDate,
+      editingPeriodMonth,
+      mutateEditHistoryPaymentPeriodMonth,
+      editingDiscountCode,
+      mutateAddHistoryPaymentDiscountCode,
+      editingBalancePayment,
+      editingBalanceAmount,
+      mutateSubtractAmountReceiptWithBalance,
     ],
   );
 
@@ -567,6 +580,7 @@ export const PaymentLogic = () => {
 
         editingKeyPaymentMethod: editingKeyPaymentMethod,
         editingKeyBalanceAmount: editingKeyBalanceAmount,
+        editingKeyBalancePayment: editingKeyBalancePayment,
         editingKeyAmount: editingKeyAmount,
         editingKeyLimitDate: editingKeyLimitDate,
         editingKeyPeriodMonth: editingKeyPeriodMonth,
@@ -574,11 +588,13 @@ export const PaymentLogic = () => {
 
         editingPaymentMethod: editingPaymentMethod,
         editingBalanceAmount: editingBalanceAmount,
+        editingBalancePayment: editingBalancePayment,
         editingAmount: editingAmount,
         editingLimitDate: editingLimitDate,
         editingPeriodMonth: editingPeriodMonth,
         editingDiscountCode: editingDiscountCode,
 
+        setEditingBalancePayment: setEditingBalancePayment,
         setEditingPaymentMethod: setEditingPaymentMethod,
         setEditingBalanceAmount: setEditingBalanceAmount,
         setEditingAmount: setEditingAmount,
@@ -589,9 +605,11 @@ export const PaymentLogic = () => {
     [
       editingAmount,
       editingBalanceAmount,
+      editingBalancePayment,
       editingDiscountCode,
       editingKeyAmount,
       editingKeyBalanceAmount,
+      editingKeyBalancePayment,
       editingKeyDiscountCode,
       editingKeyLimitDate,
       editingKeyPaymentMethod,
@@ -608,91 +626,14 @@ export const PaymentLogic = () => {
     ],
   );
 
-  // const totals = getAmountsByStatus();
-  // const total = getTotal();
-  //
-  // const parseMoney = (money) => {
-  //   const parsedMoney = parseFloat(money).toLocaleString("es-MX", {
-  //     minimumFractionDigits: 2,
-  //     maximumFractionDigits: 2,
-  //   });
-  //   return `$${parsedMoney} MXN`;
-  // };
-
   if (isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading)
     return <LoaderIconUtils isLoading={true} />;
   if (isError) return <h1>Error...</h1>;
-
-  // console.log("RECIBO", selectedReceipt);
 
   return (
     <>
       {userLogged?.user_type === "Admin" ||
       userLogged?.user_type === "SuperAdmin" ? (
-        // <Row
-        //   gutter={[16, 16]}
-        //   wrap={true}
-        //   align={"middle"}
-        //   justify={"center"}
-        //   className={"mb-6"}
-        // >
-        //   <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-        //     <Card
-        //       className={
-        //         "mt-3 shadow-md bg-gradient-to-r from-cyan-50 to-blue-200"
-        //       }
-        //     >
-        //       <Statistic
-        //         title={
-        //           <div style={{ fontSize: 12 }}>
-        //             Ingreso Estimado: (Pendiente + Pagado)
-        //           </div>
-        //         }
-        //         value={parseMoney(total.total)}
-        //         valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-        //       />
-        //     </Card>
-        //   </Col>
-        //   <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-        //     <Card
-        //       className={
-        //         "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-yellow-200"
-        //       }
-        //     >
-        //       <Statistic
-        //         title="No Pagado: (Creado + Pendiente)"
-        //         value={parseMoney(totals?.pending)}
-        //         valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-        //       />
-        //     </Card>
-        //   </Col>
-        //   <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-        //     <Card
-        //       className={
-        //         "mt-3 shadow-md bg-gradient-to-r from-yellow-100 to-green-200"
-        //       }
-        //     >
-        //       <Statistic
-        //         title="Pagado"
-        //         value={parseMoney(totals?.paid)}
-        //         valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-        //       />
-        //     </Card>
-        //   </Col>
-        //   <Col className="gutter-row" xs={24} sm={12} md={10} lg={6} xl={4}>
-        //     <Card
-        //       className={
-        //         "mt-3 shadow-md bg-gradient-to-r from-orange-50 to-red-200"
-        //       }
-        //     >
-        //       <Statistic
-        //         title="Cancelado"
-        //         value={parseMoney(totals?.cancelled)}
-        //         valueStyle={{ fontSize: 18 }} // Asegúrate de pasar fontSize correctamente
-        //       />
-        //     </Card>
-        //   </Col>
-        // </Row>
         <></>
       ) : (
         <></>
