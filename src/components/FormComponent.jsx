@@ -19,6 +19,9 @@ export const FormComponent = ({
   isLogin,
   confirmLoading,
 }) => {
+  /**
+   * @property {string} initialValueVisible - Valor inicial de visibilidad del campo dependiente
+   */
   const screen = useBreakpoint();
   const dataQueries = useFetchData(); // Usar el hook personalizado para obtener datos
 
