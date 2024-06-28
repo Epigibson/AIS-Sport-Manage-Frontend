@@ -102,7 +102,7 @@ export const SalesHistoryFormFields = [
     dependentOn: {
       field: "is_lost",
       value: false,
-      // initialValueVisible: true,
+      initialValueVisible: true,
       type: "visible",
     },
   },

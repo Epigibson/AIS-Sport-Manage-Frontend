@@ -82,20 +82,24 @@ export const SalesHistoryLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
-      console.log("SE EDITA");
-      console.log("VER SI CAMBIA", values);
+      // console.log("SE EDITA");
+      // console.log("VER SI CAMBIA", values);
       await mutateUpdateSalesHistory({
         ...values,
         sales_history_id: selectedRecord.sales_history_id,
       });
     }
     if (modalContext === "create") {
-      console.log("SE CREA");
+      // console.log("SE CREA");
       const productSelected = await productData.find(
         (product) => product._id === values.product_id,
       );
       values.product_name = productSelected.name;
-      console.log("VER SI CAMBIA", values);
+      values.payment_method =
+        values.payment_method === undefined
+          ? "Cortesia"
+          : values.payment_method;
+      // console.log("VER SI CAMBIA", values);
       await mutateCreateSalesHistory(values);
     }
     form.resetFields();
