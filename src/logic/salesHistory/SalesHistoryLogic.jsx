@@ -82,8 +82,6 @@ export const SalesHistoryLogic = () => {
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (modalContext === "edit") {
-      // console.log("SE EDITA");
-      // console.log("VER SI CAMBIA", values);
       await mutateUpdateSalesHistory({
         ...values,
         sales_history_id: selectedRecord.sales_history_id,
@@ -95,12 +93,19 @@ export const SalesHistoryLogic = () => {
         (product) => product._id === values.product_id,
       );
       values.product_name = productSelected.name;
-      values.payment_method =
-        values.payment_method === undefined
-          ? "Cortesia"
-          : values.payment_method;
-      // console.log("VER SI CAMBIA", values);
-      await mutateCreateSalesHistory(values);
+      values.is_lost = values.is_lost || false;
+      // Lógica del checkbox
+      if (values.is_lost) {
+        values.product_price = 0;
+        values.total_price = 0;
+        values.payment_method = "Cortesia";
+      } else {
+        const productPrice = values.product_price || 0;
+        const quantity = values.product_quantity || 1;
+        values.total_price = productPrice * quantity;
+      }
+      console.log("VER SI CAMBIA", values);
+      // await mutateCreateSalesHistory(values);
     }
     form.resetFields();
     setModalContext("");

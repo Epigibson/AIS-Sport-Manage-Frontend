@@ -17,8 +17,8 @@ export const PaymentFormFields = [
       fromCollection: "users", // Collection to get data from
       relatedKey: "athletes", // Key in the user data to filter athletes
       type: "relation", // Indicate this is a relation dependency
+      initialValueVisible: false, // Campo inicialmente oculto
     },
-    visible: true,
   },
   {
     name: "package",

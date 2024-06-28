@@ -7,7 +7,7 @@ import {
   handleFieldDependencies,
   handleRelationDependency,
 } from "./FormUtils.jsx";
-import { useFetchData } from "../utils/useFetchData"; // Asegúrate de ajustar la ruta según la ubicación del archivo useFetchData
+import { useFetchData } from "../utils/useFetchData"; // Ajusta la ruta según la ubicación del archivo useFetchData
 
 const { useBreakpoint } = Grid;
 
@@ -19,9 +19,6 @@ export const FormComponent = ({
   isLogin,
   confirmLoading,
 }) => {
-  /**
-   * @property {string} initialValueVisible - Valor inicial de visibilidad del campo dependiente
-   */
   const screen = useBreakpoint();
   const dataQueries = useFetchData(); // Usar el hook personalizado para obtener datos
 
@@ -39,15 +36,10 @@ export const FormComponent = ({
       let options = [];
       const dataSource = getDataSource(field.optionsSource, dataQueries);
 
-      // Determina la visibilidad inicial del campo
-      if (field.dependentOn && field.dependentOn.type === "visible") {
-        visibility[field.name] =
-          field.dependentOn.initialValueVisible !== undefined
-            ? field.dependentOn.initialValueVisible
-            : true;
-      } else {
-        visibility[field.name] = true; // Predeterminado a true a menos que las dependencias digan lo contrario
-      }
+      // Establecer la visibilidad inicial del campo basado en las dependencias
+      visibility[field.name] = field.dependentOn
+        ? field.dependentOn.initialValueVisible
+        : true;
 
       if (Array.isArray(field.optionsSource)) {
         options = field.optionsSource.map((option) => ({
@@ -68,7 +60,6 @@ export const FormComponent = ({
         options = field.options;
       }
 
-      // Manejo de dependencias de tipo relación
       if (field.dependentOn && field.dependentOn.type === "relation") {
         options = handleRelationDependency(field, selectedValues, dataQueries);
       }
@@ -76,18 +67,21 @@ export const FormComponent = ({
       newSelectOptions[field.name] = options;
     });
 
+    // Actualizar visibilidad de campos dependientes basados en los valores seleccionados
     formFields.forEach((field) => {
-      // Manejo de visibilidad de campos dependientes
-      if (field.dependentOn && field.dependentOn.type === "visible") {
+      if (
+        field.dependentOn &&
+        (field.dependentOn.type === "visible" ||
+          field.dependentOn.type === "relation")
+      ) {
         const dependentFieldValue = selectedValues[field.dependentOn.field];
         visibility[field.name] =
-          field.dependentOn.initialValueVisible !== undefined
-            ? field.dependentOn.initialValueVisible
-            : dependentFieldValue === field.dependentOn.value;
+          dependentFieldValue !== undefined
+            ? dependentFieldValue !== field.dependentOn.value
+            : field.dependentOn.initialValueVisible;
       }
     });
 
-    // Evitar ciclos infinitos comprobando si los valores realmente cambiaron
     setDependentFieldsVisibility((prevVisibility) => {
       const hasVisibilityChanged =
         JSON.stringify(prevVisibility) !== JSON.stringify(visibility);
@@ -99,15 +93,9 @@ export const FormComponent = ({
         JSON.stringify(prevSelectOptions) !== JSON.stringify(newSelectOptions);
       return hasOptionsChanged ? newSelectOptions : prevSelectOptions;
     });
-  }, [
-    selectedValues,
-    formFields,
-    dataQueries, // Utilizar datos obtenidos dinámicamente
-  ]);
+  }, [selectedValues, formFields, dataQueries]);
 
   const handleValuesChange = (_, allValues) => {
-    console.log("Values Changed: ", allValues); // Depuración
-
     let updatedValues = { ...allValues };
 
     formFields.forEach((field) => {
@@ -120,7 +108,6 @@ export const FormComponent = ({
         });
       }
 
-      // Actualizar valores dependientes
       if (field.dependentFields) {
         updatedValues = handleFieldDependencies(
           field,
@@ -139,21 +126,18 @@ export const FormComponent = ({
 
     form.setFieldsValue(updatedValues);
 
-    // Actualizar visibilidad de campos dependientes
+    // Actualizar visibilidad de campos dependientes basados en los nuevos valores
+    const visibility = { ...dependentFieldsVisibility };
     formFields.forEach((field) => {
       if (field.dependentOn && field.dependentOn.type === "visible") {
-        const dependentFieldValue = allValues[field.dependentOn.field];
-        setDependentFieldsVisibility((prevVisibility) => {
-          const newVisibility = {
-            ...prevVisibility,
-            [field.name]: dependentFieldValue !== field.dependentOn.value,
-          };
-          const hasVisibilityChanged =
-            JSON.stringify(prevVisibility) !== JSON.stringify(newVisibility);
-          return hasVisibilityChanged ? newVisibility : prevVisibility;
-        });
+        const dependentFieldValue = updatedValues[field.dependentOn.field];
+        visibility[field.name] =
+          dependentFieldValue !== undefined
+            ? dependentFieldValue !== field.dependentOn.value
+            : field.dependentOn.initialValueVisible;
       }
     });
+    setDependentFieldsVisibility(visibility);
   };
 
   return (
@@ -167,17 +151,15 @@ export const FormComponent = ({
       size={!screen.xs ? "middle" : "small"}
       autoComplete={"on"}
       labelWrap={true}
-      style={{
-        maxWidth: 600,
-      }}
-      onValuesChange={handleValuesChange} // Manejo de cambios en los valores del formulario
+      style={{ maxWidth: 600 }}
+      onValuesChange={handleValuesChange}
     >
       <FormFields
         form={form}
         formFields={formFields}
-        selectOptions={selectOptions} // Pasar opciones de selección a los campos del formulario
-        dependentFieldsVisibility={dependentFieldsVisibility} // Pasar visibilidad de campos dependientes
-        handleImageLoaded={null} // Cambia esto si necesitas manejar la carga de imágenes
+        selectOptions={selectOptions}
+        dependentFieldsVisibility={dependentFieldsVisibility}
+        handleImageLoaded={null}
         screen={screen}
       />
       {formFields?.map(

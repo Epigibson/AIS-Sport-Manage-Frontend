@@ -22,34 +22,22 @@ const { Option } = Select;
 const { RangePicker } = TimePicker;
 
 export const FormFields = ({
-  form,
   formFields,
   selectOptions,
   dependentFieldsVisibility,
   handleImageLoaded,
   screen,
 }) => {
-  const handleCheckboxChange = (field, checked) => {
-    if (checked) {
-      form.setFieldsValue({
-        product_price: 0,
-        total_price: 0,
-        payment_method: "Cortesia",
-      });
-    } else {
-      const productPrice = form.getFieldValue("product_price");
-      const quantity = form.getFieldValue("product_quantity");
-      form.setFieldsValue({
-        total_price: productPrice * quantity,
-        payment_method: "",
-      });
-    }
-  };
-
   return formFields.map((field) => {
     if (!dependentFieldsVisibility[field.name]) {
       return null;
     }
+
+    const commonProps = {
+      placeholder: screen.xs ? field.label : undefined,
+      className: "rounded-md py-0.5 my-0 border-gray-300 w-full",
+    };
+
     return (
       <Form.Item
         hidden={field.hidden}
@@ -58,17 +46,14 @@ export const FormFields = ({
         label={field.label}
         rules={field.rules}
         valuePropName={field.inputType === "checkbox" ? "checked" : undefined}
-        className={`${field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : ""}`}
+        className={
+          field.inputType === "avatar" ? "place-items-center mt-5 mb-0" : ""
+        }
       >
-        {field.inputType === "input" && (
-          <Input
-            placeholder={screen.xs ? field.label : undefined}
-            className="rounded-md py-0.5 my-0 border-gray-300"
-          />
-        )}
+        {field.inputType === "input" && <Input {...commonProps} />}
         {field.inputType === "number" && (
           <InputNumber
-            placeholder={screen.xs ? field.label : undefined}
+            {...commonProps}
             defaultValue={field.formatter === "percentage" ? 100 : undefined}
             min={field.formatter === "percentage" ? 0 : undefined}
             max={field.formatter === "percentage" ? 100 : undefined}
@@ -87,7 +72,6 @@ export const FormFields = ({
                   : undefined
             }
             disabled={field.disabled}
-            className="rounded-md py-0.5 my-0 border-gray-300 w-full"
           />
         )}
         {field.inputType === "password" && (
@@ -100,10 +84,7 @@ export const FormFields = ({
           />
         )}
         {field.inputType === "checkbox" && (
-          <Checkbox
-            className={"mr-2"}
-            onChange={(e) => handleCheckboxChange(field, e.target.checked)}
-          >
+          <Checkbox className={"mr-2"}>
             <Tooltip title={field.tooltip}>
               <QuestionCircleOutlined />
             </Tooltip>
