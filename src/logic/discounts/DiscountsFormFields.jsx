@@ -2,25 +2,40 @@ export const DiscountsFormFields = [
   {
     name: "discount_name",
     label: "Nombre del descuento",
-    rules: [{ required: true }],
+    rules: [
+      {
+        required: true,
+        message: "Porfavor introduce el nombre del descuento.",
+      },
+    ],
     inputType: "input", // Indica el tipo de control de entrada
   },
   {
     name: "discount_description",
     label: "Descripcion",
-    rules: [{ required: true }],
+    rules: [{ required: true, message: "Porfavor introduce una descripcion." }],
     inputType: "input",
   },
   {
     name: "discount_percentage",
     label: "Porcentaje",
-    rules: [{ required: true }],
+    rules: [
+      {
+        required: true,
+        message: "Porfavor introduce el porcentaje del descuento.",
+      },
+    ],
     inputType: "number", // Indica el tipo de control de entrada
   },
   {
     name: "discount_code",
     label: "Codigo de Descuento",
-    rules: [{ required: true }],
+    rules: [
+      {
+        required: true,
+        message: "Porfavor introduce el código que se utilizará.",
+      },
+    ],
     inputType: "input",
   },
   {
@@ -44,10 +59,27 @@ export const DiscountsFormFields = [
     name: "athletes",
     label: "Atletas",
     inputType: "multipleSelect",
+    rules: [
+      ({ getFieldValue }) => {
+        return {
+          validator: (_, value) => {
+            const is_recurrent = getFieldValue("is_recurrent");
+            if (is_recurrent && !value) {
+              return Promise.reject(
+                new Error("Debe seleccionar al menos un atleta"),
+              );
+            } else {
+              return Promise.resolve();
+            }
+          },
+        };
+      },
+    ],
     optionsSource: "athletes",
     dependentOn: {
       field: "is_recurrent",
-      value: true,
+      value: false,
+      initialValueVisible: true,
       type: "visible",
     },
   },
@@ -58,7 +90,8 @@ export const DiscountsFormFields = [
     optionsSource: "packages",
     dependentOn: {
       field: "is_recurrent",
-      value: true,
+      value: false,
+      initialValueVisible: true,
       type: "visible",
     },
   },

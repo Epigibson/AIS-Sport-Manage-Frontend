@@ -4,9 +4,13 @@ export const enrichDiscounts = (discounts, packagesData, athletesData) => {
     const membershipData = packagesData.find(
       (membership) => membership._id === discount.product_id,
     );
-    const athletesNewData = athletesData.filter((athleteObject) =>
-      discount.athletes.some((athlete) => athlete === athleteObject._id),
-    );
+    let athletesNewData = [];
+    if (discount?.athletes?.length > 0) {
+      athletesNewData = athletesData.filter((athleteObject) =>
+        discount.athletes.some((athlete) => athlete === athleteObject._id),
+      );
+    }
+
     return {
       ...discount,
       membership: membershipData,

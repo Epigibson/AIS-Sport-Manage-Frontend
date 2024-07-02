@@ -23,6 +23,13 @@ import { SalesHistoryCalculateTotals } from "./SalesHistoryCalculateTotals.jsx";
 import { StatisticCard } from "../../components/StatisticCardComponent.jsx";
 
 export const SalesHistoryLogic = () => {
+  /**
+   * @property {int} product_quantity
+   * @property {boolean} is_lost
+   * @property {string} product_name
+   * @property {string} product_id
+   * @property statisticCardsDataUsed
+   */
   const queryClient = useQueryClient();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -105,7 +112,7 @@ export const SalesHistoryLogic = () => {
         values.total_price = productPrice * quantity;
       }
       console.log("VER SI CAMBIA", values);
-      // await mutateCreateSalesHistory(values);
+      await mutateCreateSalesHistory(values);
     }
     form.resetFields();
     setModalContext("");

@@ -57,7 +57,8 @@ export const packageFormFields = [
     inputType: "input",
     dependentOn: {
       field: "is_temporary",
-      value: true,
+      value: false,
+      initialValueVisible: false,
       type: "visible",
     },
   },
@@ -68,7 +69,8 @@ export const packageFormFields = [
     inputType: "datePicker",
     dependentOn: {
       field: "is_temporary",
-      value: true,
+      value: false,
+      initialValueVisible: false,
       type: "visible",
     },
   },
@@ -79,7 +81,8 @@ export const packageFormFields = [
     inputType: "datePicker",
     dependentOn: {
       field: "is_temporary",
-      value: true,
+      value: false,
+      initialValueVisible: false,
       type: "visible",
     },
   },
