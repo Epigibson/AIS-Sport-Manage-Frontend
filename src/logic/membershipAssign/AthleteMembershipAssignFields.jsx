@@ -4,6 +4,6 @@ export const AthleteMembershipAssignFields = [
     label: "Membresias",
     inputType: "select",
     rules: [{ required: true, message: "Por favor ingrese la membresia." }],
-    optionsSource: "products",
+    optionsSource: "packages",
   },
 ];
