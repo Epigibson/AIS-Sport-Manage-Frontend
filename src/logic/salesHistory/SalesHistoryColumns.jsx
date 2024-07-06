@@ -4,9 +4,9 @@ import { convertToMexicoCityTimeAndSubtractSixHours } from "../../utils/ConvertD
 
 export const SalesHistoryColumns = ({
   filters,
-  onEdit,
-  onDelete,
-  onCancel,
+  // onEdit,
+  // onDelete,
+  // onCancel,
 }) => [
   {
     title: "Fecha de Venta",

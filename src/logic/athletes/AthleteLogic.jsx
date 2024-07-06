@@ -1,13 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
 import { getAllGroups } from "../../api/GroupService.jsx";
-import { Button, Form, Grid, message, Row } from "antd";
+import { Button, Form, message, Row } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useChangeAthleteStatus,
   useChangeAvatar,
   useCreateAthlete,
-  useDeleteAthlete,
   useUpdateAthlete,
 } from "./AthleteLogicMutations.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
@@ -22,11 +21,10 @@ import { exportToExcel } from "./ExportAthletesExcel.jsx";
 import { AthletePrepareFilters } from "./AthletePrepareFilters.jsx";
 import { useAthleteColumns } from "./useAthletesColumns.jsx";
 
-const { useBreakpoint } = Grid;
+// const { useBreakpoint } = Grid;
 
 export const AthleteLogic = () => {
   const navigate = useNavigate();
-  const screen = useBreakpoint();
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const [modalContext, setModalContext] = useState(""); // "create" o "edit"
@@ -120,7 +118,7 @@ export const AthleteLogic = () => {
   const { mutateCreate } = useCreateAthlete(handleSearch);
   const { mutateUpdate } = useUpdateAthlete(handleSearch);
   const { mutateUpdateStatus } = useChangeAthleteStatus(handleSearch);
-  const { mutateDelete } = useDeleteAthlete(handleSearch);
+  // const { mutateDelete } = useDeleteAthlete(handleSearch);
   const { mutateUpdateAvatar } = useChangeAvatar(handleSearch);
 
   const handleCancel = useCallback(() => {
@@ -175,13 +173,13 @@ export const AthleteLogic = () => {
     [mutateUpdateStatus],
   );
 
-  const handleDelete = useCallback(
-    async (record) => {
-      setModalContext("delete");
-      await mutateDelete(record.athlete_id);
-    },
-    [mutateDelete],
-  );
+  // const handleDelete = useCallback(
+  //   async (record) => {
+  //     setModalContext("delete");
+  //     await mutateDelete(record.athlete_id);
+  //   },
+  //   [mutateDelete],
+  // );
 
   const cancel = () => {
     message.error("Click on No").then((e) => e);

@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Divider, Row, Select, Space } from "antd";
 import { ArrowDownOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
-import { DatePresets } from "../../utils/DatesUtils.jsx";
+import { DatePresets } from "../../utils/DatePresets.jsx";
 
 const { RangePicker } = DatePicker;
 

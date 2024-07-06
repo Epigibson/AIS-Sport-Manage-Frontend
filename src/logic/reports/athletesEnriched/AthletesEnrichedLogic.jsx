@@ -9,12 +9,12 @@ import { AthletesEnrichedStatisticCards } from "./AthletesEnrichedStatisticCards
 import { getAmountsByStatus } from "./AthletesEnrichedCalculateTotals.jsx";
 import { Button, Col, DatePicker, Row, Select, Space } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
-import { DatePresets } from "../../../utils/DatesUtils.jsx";
 import { TablesComponent } from "../../../components/TablesComponent.jsx";
 import { useLoading } from "../../../hooks/LoadingContext/useLoading.jsx";
 import { PrepareFilters } from "./AthletesEnrichedPrepareFilters.jsx";
 import { getAllPackages } from "../../../api/ProductService.jsx";
 import { exportAthletesToExcel } from "./AthletesEnrichedToExcel.jsx";
+import { DatePresets } from "../../../utils/DatePresets.jsx";
 
 export const AthletesEnrichedLogic = () => {
   const [startDate, setStartDate] = useState(null);

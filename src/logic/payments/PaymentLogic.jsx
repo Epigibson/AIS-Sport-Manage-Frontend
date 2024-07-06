@@ -622,8 +622,9 @@ export const PaymentLogic = () => {
       handlePayReceipt,
       handleRevertReceipt,
       handleSave,
+      navigate,
       showExtensionModal,
-      userLogged?.email,
+      userLogged,
     ],
   );
 

@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { Button, Col, DatePicker, Row, Space } from "antd";
 import { StatisticCard } from "../../../components/StatisticCardComponent.jsx";
-import { DatePresets } from "../../../utils/DatesUtils.jsx";
 import { TablesComponent } from "../../../components/TablesComponent.jsx";
 import { useLoading } from "../../../hooks/LoadingContext/useLoading.jsx";
 import * as XLSX from "xlsx";
@@ -15,6 +14,7 @@ import { AthletesPaymentsReportColumns } from "./AthletesPaymentsReportColumns.j
 import { PrepareStatisticCardsData } from "./PrepareStaticCards.jsx";
 import { CategorizePayments } from "./CategorizePayments.jsx";
 import { AthletesPaymentMonthSelector } from "./AthletesPaymentMonthSelector.jsx";
+import { DatePresets } from "../../../utils/DatePresets.jsx";
 
 export const AthletesPaymentsReportLogic = () => {
   const [startDate, setStartDate] = useState(null);

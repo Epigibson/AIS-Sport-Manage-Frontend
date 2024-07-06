@@ -33,7 +33,6 @@ export const FormFields = ({
   formFields,
   selectOptions,
   isLoading,
-  isError,
   dependentFieldsVisibility,
   handleImageLoaded,
   screen,
