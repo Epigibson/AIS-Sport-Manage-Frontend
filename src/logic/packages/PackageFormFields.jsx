@@ -44,6 +44,15 @@ export const packageFormFields = [
       "Selecciona esta opción para aplicar el descuento de mitad de precio del paquete si se inscribe despues del dia 15 del mes.",
   },
   {
+    name: "is_active",
+    label: "Estatus",
+    inputType: "select",
+    options: [
+      { label: "Activo", value: true },
+      { label: "Inactivo", value: false },
+    ],
+  },
+  {
     name: "is_temporary",
     label: "Es temporal",
     inputType: "checkbox",

@@ -29,6 +29,7 @@ import { SalesHistoryPage } from "./pages/SalesHistoryPage.jsx";
 import { UserListPage } from "./pages/UserListPage.jsx";
 import { HistoryBalancePage } from "./pages/HistoryBalancePage.jsx";
 import { AttendancePage } from "./pages/AttendancePage.jsx";
+import { WalletPage } from "./pages/WalletPage.jsx";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/pase_de_lista" element={<AttendancePage />} />
           <Route path="/productos" element={<ProductsPage />} />
           <Route path="/ventas_indirectas" element={<SalesHistoryPage />} />
+          <Route path="/wallet" element={<WalletPage />} />
           <Route path="/grupos" element={<GroupsPage />} />
           <Route
             path="/asignacion_de_grupos/:athleteId"

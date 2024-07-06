@@ -4,7 +4,6 @@ import {
   DatePicker,
   Input,
   InputNumber,
-  message,
   Popconfirm,
   Row,
   Select,
@@ -25,9 +24,12 @@ import {
   RollbackOutlined,
   ScheduleFilled,
   StopOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { FormatCurrencyUtil } from "../../utils/FormatCurrencyUtil.jsx";
+import { TagCopyLink } from "../../utils/TagCopyLink.jsx";
+import { NavigateToUtil } from "../../utils/NavigateToUtil.jsx";
 
 const { Text, Link } = Typography;
 
@@ -66,6 +68,7 @@ export const PaymentColumns = ({
   handleSave,
   handleDeleteReceipt,
   checkUser,
+  navigate,
 }) => {
   const columns = [
     {
@@ -77,7 +80,7 @@ export const PaymentColumns = ({
       render: (athlete) =>
         athlete ? (
           <>
-            <Tag color={"blue"} className={"mb-2"}>
+            <Tag color={"blue"}>
               <Text>{athlete?.tuition}</Text>
             </Tag>
           </>
@@ -92,16 +95,50 @@ export const PaymentColumns = ({
       align: "center",
       width: 200,
       ellipsis: false,
-      render: (athlete) =>
-        athlete ? (
-          <Tooltip title={athlete?.name} color={"blue"}>
-            <Tag color={"blue"} className={"text-style mb-2"}>
-              <Text className="text-style">{athlete?.name}</Text>
-            </Tag>
-          </Tooltip>
+      render: (athlete, record) => {
+        return athlete ? (
+          <Row align={"middle"} justify={"space-evenly"}>
+            <Tooltip title={athlete?.name} color={"blue"}>
+              <Tag color={"blue"} className={"text-style"}>
+                <Text className="text-style">{athlete?.name}</Text>
+              </Tag>
+            </Tooltip>
+            <Tooltip
+              title={() => {
+                const tutorsName =
+                  record?.user?.tutors_name_one ||
+                  record?.user?.tutors_name_two;
+                return (
+                  <>
+                    <div>
+                      {" "}
+                      Tutor: {tutorsName ? tutorsName : "Sin datos del tutor"}
+                    </div>
+                    <div style={{ fontSize: "8px" }}>
+                      {" "}
+                      (Puedes dar click para copiar el nombre del tutor del
+                      atleta.)
+                    </div>
+                  </>
+                );
+              }}
+              color={"blue"}
+            >
+              <Button
+                size={"small"}
+                shape={"circle"}
+                onClick={() =>
+                  TagCopyLink(record, record?.user?.tutors_name_one, "Dato")
+                }
+              >
+                <UserOutlined />
+              </Button>
+            </Tooltip>
+          </Row>
         ) : (
           <span>Sin Usuario</span>
-        ),
+        );
+      },
     },
 
     // {
@@ -129,7 +166,7 @@ export const PaymentColumns = ({
       render: (_, record) =>
         record?.receipt && record?.receipt?.receipt_package_name ? (
           <Tooltip title={record?.receipt?.receipt_package_name} color={"cyan"}>
-            <Tag color={"cyan"} className={"text-style mb-2"}>
+            <Tag color={"cyan"} className={"text-style"}>
               <Text className="text-style">
                 {record?.receipt?.receipt_package_name}
               </Text>
@@ -249,17 +286,6 @@ export const PaymentColumns = ({
       searchable: true,
       width: 100,
       render: (status, record) => {
-        const handleTagClick = () => {
-          navigator.clipboard
-            .writeText(record.receipt._id)
-            .then(() => {
-              message.success("ID copiado al portapapeles");
-            })
-            .catch(() => {
-              message.error("Error al copiar ID");
-            });
-        };
-
         let color;
         if (status === "Pagado") {
           color = "green";
@@ -273,7 +299,7 @@ export const PaymentColumns = ({
           <Tooltip title="Haz clic para copiar el ID">
             <Tag
               color={color}
-              onClick={handleTagClick}
+              onClick={() => TagCopyLink(record, record?.receipt_id, "ID")}
               style={{ cursor: "pointer" }}
             >
               {status}
@@ -420,13 +446,17 @@ export const PaymentColumns = ({
       key: "saldo",
       align: "center",
       width: 200,
-      render: (_, record) =>
-        editingKeyBalanceAmount === record._id ? ( // Asumimos que usas _id como identificador único
+      render: (_, record) => {
+        return editingKeyBalanceAmount === record._id ? ( // Asumimos que usas _id como identificador único
           <span>
             <InputNumber
               value={editingBalanceAmount}
               onChange={(value) => setEditingBalanceAmount(value)}
-              max={record.amount}
+              max={
+                record?.user.positive_balance < record.amount
+                  ? record.user.positive_balance
+                  : record.amount
+              }
               min={0}
             />
 
@@ -445,7 +475,7 @@ export const PaymentColumns = ({
               </Button>
             </Space.Compact>
           </span>
-        ) : record.user.positive_balance > 0 ? (
+        ) : record?.user?.positive_balance > 0 ? (
           <Space>
             <Row
               gutter={[16, 16]}
@@ -455,12 +485,14 @@ export const PaymentColumns = ({
             >
               <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
                 <div className="flex flex-row items-center justify-center">
-                  <Tag>{FormatCurrencyUtil(record.user.positive_balance)}</Tag>
+                  <Tag>
+                    {FormatCurrencyUtil(record?.user?.positive_balance)}
+                  </Tag>
                   {record.payment_method === "Saldo a favor" &&
-                  (record.status === "Pagado" ||
-                    record.status === "Cancelado") ? (
+                  (record.status === "Parcial" ||
+                    record.status === "Pendiente") ? (
                     <Popconfirm
-                      title="Estas seguro de aplicar el saldo a favor?"
+                      title="Estas seguro de aplicar un pago con saldo a favor?"
                       okText="Si"
                       cancelText="No"
                       wrapClassName="mi-popconfirm-especifico"
@@ -485,8 +517,28 @@ export const PaymentColumns = ({
             </Row>
           </Space>
         ) : (
-          <Tag color={"warning"}>Sin saldo a favor</Tag>
-        ),
+          <Tooltip
+            title={`Haz clic para agregar saldo a favor al tutor: ${
+              record?.user?.tutors_name_one || record?.user?.tutors_name_two
+            }`}
+          >
+            <Tag
+              color={"warning"}
+              style={{ cursor: "pointer" }}
+              onClick={async () => {
+                await TagCopyLink(
+                  record,
+                  record?.user?.tutors_name_one,
+                  "Dato",
+                );
+                NavigateToUtil(navigate, "/wallet");
+              }}
+            >
+              Sin saldo a favor
+            </Tag>
+          </Tooltip>
+        );
+      },
     },
     {
       title: "Cupon de Descuento",

@@ -1,14 +1,22 @@
 import {
+  Button,
   Checkbox,
   DatePicker,
   Form,
   Input,
   InputNumber,
+  Row,
   Select,
+  Space,
   TimePicker,
   Tooltip,
 } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  QuestionCircleOutlined,
+} from "@ant-design/icons";
 import PropTypes from "prop-types";
 import { AvatarComponent } from "./AvatarComponent.jsx";
 import {
@@ -24,6 +32,8 @@ const { RangePicker } = TimePicker;
 export const FormFields = ({
   formFields,
   selectOptions,
+  isLoading,
+  isError,
   dependentFieldsVisibility,
   handleImageLoaded,
   screen,
@@ -40,6 +50,7 @@ export const FormFields = ({
 
     return (
       <Form.Item
+        wrapperCol={{ span: 24 }}
         hidden={field.hidden}
         key={field.name || field._id}
         name={field.name}
@@ -94,21 +105,44 @@ export const FormFields = ({
           <Select
             allowClear={true}
             className={"text-left"}
-            placeholder={`-- Seleccionar ${field.label} --`}
+            showSearch={true}
+            placeholder={
+              isLoading
+                ? "Cargando datos, porfavor espere..."
+                : selectOptions[field.name]?.length <= 0
+                  ? " -- Sin datos -- "
+                  : ` --Seleccionar ${field.label} --`
+            }
+            loading={isLoading}
+            disabled={isLoading || selectOptions[field.name]?.length <= 0}
+            filterOption={(inputValue, option) =>
+              option?.children?.toLowerCase().includes(inputValue.toLowerCase())
+            }
           >
-            {selectOptions[field.name]?.map((option, index) => (
-              <Option key={option.value || index} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
+            {selectOptions
+              ? selectOptions[field.name]?.map((option, index) => (
+                  <Option key={option.value || index} value={option.value}>
+                    {option.label}
+                  </Option>
+                ))
+              : "No se encontraron datos."}
           </Select>
         )}
         {field.inputType === "multipleSelect" && (
           <Select
             allowClear={true}
             className={"text-left"}
-            placeholder={` --Seleccionar ${field.label} --`}
+            placeholder={
+              isLoading
+                ? "Cargando datos, porfavor espere..."
+                : selectOptions[field.name] === []
+                  ? "-- Sin datos --"
+                  : ` --Seleccionar ${field.label} --`
+            }
             mode="multiple"
+            onChange={field.onChange}
+            loading={isLoading}
+            disabled={isLoading}
           >
             {selectOptions[field.name]?.map((option, index) => (
               <Option key={option.value || index} value={option.value}>
@@ -132,6 +166,29 @@ export const FormFields = ({
             picker={field.picker ? field.picker : "date"}
           />
         )}
+        {field.inputType === "editOrDelete" && (
+          <Row justify={"center"} align={"middle"}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                width: "100vw",
+              }}
+            >
+              <Space.Compact size={"large"}>
+                <Button type="primary" htmlType="submit" size={"large"}>
+                  <EyeOutlined color={"green"} />
+                </Button>
+                <Button type="primary" htmlType="submit" size={"large"}>
+                  <EditOutlined color={"yellow"} />
+                </Button>
+                <Button type="primary" size={"large"} danger>
+                  <DeleteOutlined />
+                </Button>
+              </Space.Compact>
+            </div>
+          </Row>
+        )}
       </Form.Item>
     );
   });
@@ -144,4 +201,6 @@ FormFields.propTypes = {
   dependentFieldsVisibility: PropTypes.object.isRequired,
   handleImageLoaded: PropTypes.func,
   screen: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  isError: PropTypes.bool,
 };

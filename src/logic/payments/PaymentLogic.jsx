@@ -24,15 +24,17 @@ import {
   useUpdatePaymentMethod,
 } from "./PaymentLogicMutations.jsx";
 import { getAllAthletes } from "../../api/AtheleService.jsx";
-import { Col, FloatButton, Form, Row } from "antd";
+import { Col, FloatButton, Form, message, Row } from "antd";
 import { PaymentExtensionFields } from "./PaymentExtensionFields.jsx";
 import { PaymentFormFields } from "./PaymentFormFields.jsx";
 import dayjs from "dayjs";
 import { FileAddOutlined } from "@ant-design/icons";
 import { PaymentCancelFields } from "./PaymentCancelFields.jsx";
 import { getAllPackages } from "../../api/ProductService.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const PaymentLogic = () => {
+  const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isExtensionModalVisible, setIsExtensionModalVisible] = useState(false);
@@ -240,50 +242,6 @@ export const PaymentLogic = () => {
 
   const { mutateAddHistoryPaymentDiscountCode } =
     useAddPaymentHistoryDiscountCode(handleSearch);
-
-  // const getTotal = () => {
-  //   let total = 0;
-  //   let totalCanceled = 0;
-  //   historyPaymentData?.forEach((payment) => {
-  //     if (payment.status === "Cancelado") {
-  //       totalCanceled += payment.amount;
-  //     } else {
-  //       total += payment.amount;
-  //     }
-  //   });
-  //   return { total: total, totalCanceled: totalCanceled };
-  // };
-
-  // const getAmountsByStatus = () => {
-  //   const totals = {
-  //     pending: 0,
-  //     paid: 0,
-  //     cancelled: 0,
-  //     created: 0,
-  //   };
-  //
-  //   historyPaymentData?.forEach((payment) => {
-  //     switch (payment.status){
-  //       case "Pendiente":
-  //         totals.pending += payment.amount;
-  //         break;
-  //       case "Pagado":
-  //         totals.paid += payment.amount;
-  //         break;
-  //       case "Cancelado":
-  //         totals.cancelled += payment.amount;
-  //         break;
-  //       case "Creado":
-  //         totals.pending += payment.amount;
-  //         break;
-  //       default:
-  //         totals.total += payment.amount;
-  //         break; // Handle unexpected status or do nothing
-  //     }
-  //   });
-  //
-  //   return totals;
-  // };
 
   const showCreateModal = () => {
     setIsCreateModalVisible(true);
@@ -534,6 +492,49 @@ export const PaymentLogic = () => {
         await mutateAddHistoryPaymentDiscountCode(data);
       }
       if (field === "balance_amount") {
+        let values = 0;
+        const saldoAFavor = record?.user?.positive_balance;
+        const montoRestante = record?.amount_balance_updated;
+        const monto = record?.amount;
+        if (saldoAFavor === 0 || monto === 0) {
+          values = 0;
+        } else if (saldoAFavor > monto) {
+          if (montoRestante === 0) {
+            values = monto;
+          } else {
+            values = montoRestante;
+          }
+        } else if (saldoAFavor < monto) {
+          // 194 < 300 = Si
+          if (montoRestante === 0) {
+            // 294 === 0 = No
+            values = saldoAFavor; // 194
+          } else {
+            values = montoRestante; // 294
+          }
+        } else if (montoRestante === 0) {
+          values = 0;
+        }
+        console.log("valor", values);
+        if (editingBalanceAmount < 0 || editingBalanceAmount > values) {
+          message.error(`El valor del pago debe estar entre $0 y $${values}`);
+          return;
+        }
+
+        if (editingBalanceAmount > montoRestante) {
+          message.error(
+            `El valor del pago parcial no puede ser mayor que el monto restante`,
+          );
+          return;
+        }
+
+        if (editingBalanceAmount > saldoAFavor) {
+          message.error(
+            `El valor del pago parcial no puede ser mayor que el saldo a favor del usuario`,
+          );
+          return;
+        }
+
         const data = {
           receipt_id: record?.receipt._id,
           amount_to_apply: editingBalancePayment || editingBalanceAmount,
@@ -541,7 +542,6 @@ export const PaymentLogic = () => {
             ? editingPaymentMethod
             : paymentMethod,
         };
-        console.log("Balance Amount", data);
         await mutateSubtractAmountReceiptWithBalance(data);
       }
       cancel(); // Restablece el estado de edición
@@ -577,6 +577,7 @@ export const PaymentLogic = () => {
         handleDeleteReceipt: handleDeleteReceipt,
 
         checkUser: userLogged?.email,
+        navigate: navigate,
 
         editingKeyPaymentMethod: editingKeyPaymentMethod,
         editingKeyBalanceAmount: editingKeyBalanceAmount,

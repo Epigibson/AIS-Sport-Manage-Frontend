@@ -229,7 +229,7 @@ export const AthleteLogic = () => {
     return <LoaderIconUtils isLoading={true} />;
   if (isAthletesError) return <h1>Error...</h1>;
 
-  console.log("DATA", enrichedUsersData);
+  // console.log("DATA", enrichedUsersData);
 
   return (
     <>

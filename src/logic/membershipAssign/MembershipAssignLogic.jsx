@@ -101,6 +101,7 @@ export const MembershipAssignLogic = () => {
         </Button>
       </Row>
       <ModalComponent
+        title={"Asignar Membresia"}
         form={form}
         formFields={AthleteMembershipAssignFields}
         onOk={handleSubmit}

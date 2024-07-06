@@ -20,6 +20,7 @@ import {
   UsergroupAddOutlined,
   UserOutlined,
   UserSwitchOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 
 export const MenuItems = [
@@ -166,6 +167,13 @@ export const MenuItems = [
     label: "Mis Pagos",
     path: "/mis_pagos",
     roles: ["Normal", "User"],
+  },
+  {
+    key: "22",
+    icon: <WalletOutlined />,
+    label: "Administrar Wallets",
+    path: "/wallet",
+    roles: ["Admin", "Manager"],
   },
   {
     key: "21",

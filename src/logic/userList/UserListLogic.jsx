@@ -93,6 +93,7 @@ export const UserListLogic = () => {
         mutateAddBalance({
           user_id: recordSelected.user_id,
           balance_amount: form.getFieldValue("balance_amount"),
+          payment_method: form.getFieldValue("payment_method"),
         });
       } else if (typeOfBalance === "subtract_balance") {
         mutateSubtractBalance({

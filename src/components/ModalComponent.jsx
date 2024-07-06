@@ -99,6 +99,7 @@ export const ModalComponent = ({
       footer={false}
       confirmLoading={confirmLoading}
       width={getModalWidth(screen, dataTable)}
+      loading={confirmLoading}
     >
       {external &&
         renderExternalButton(

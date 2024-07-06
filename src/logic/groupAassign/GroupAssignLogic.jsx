@@ -109,6 +109,7 @@ export const GroupAssignLogic = () => {
         </Button>
       </Row>
       <ModalComponent
+        title={"Asignar a un Grupo"}
         form={form}
         formFields={AthleteGroupAssignFields}
         onOk={handleSubmit}
