@@ -43,37 +43,6 @@ export const ProductsLogic = () => {
   const { mutateUpdateSalesProduct } = useUpdateSalesProduct(handleSearch);
   const { mutateDeleteSalesProduct } = useDeleteSalesProduct(handleSearch);
 
-  const handleSubmit = async () => {
-    const values = await form.validateFields();
-    if (modalContext === "edit") {
-      // console.log("SE EDITA");
-      // console.log("VER SI CAMBIA", values);
-      await mutateUpdateSalesProduct({
-        ...values,
-        sales_product_id: selectedRecord.product_id,
-      });
-    }
-    if (modalContext === "create") {
-      // console.log("SE CREA");
-      // console.log("VER SI CAMBIA", values);
-      await mutateCreateSalesProduct(values);
-    }
-    if (modalContext === "addStock") {
-      // console.log("SE CREA");
-      // console.log("VER SI CAMBIA", values);
-      values.quantity_stock = previousStock + values.quantity_stock;
-      await mutateUpdateSalesProduct({
-        ...values,
-        sales_product_id: selectedRecord.product_id,
-      });
-    }
-    form.resetFields();
-    setModalContext("");
-    setSelectedRecord(null);
-    setIsModalVisible(false);
-    setIsModalAddStockVisible(false);
-  };
-
   const handleEdit = (record) => {
     setModalContext("edit");
     form.setFieldsValue(record);
@@ -83,6 +52,7 @@ export const ProductsLogic = () => {
 
   const handleAddStock = (record) => {
     setModalContext("addStock");
+    form.setFieldValue("quantity_stock", 0);
     setPreviousStock(record.quantity_stock);
     setSelectedRecord(record);
     setIsModalAddStockVisible(true);
@@ -110,6 +80,44 @@ export const ProductsLogic = () => {
     setModalContext("create");
     setIsModalVisible(true);
   };
+
+  const handleSubmit = async () => {
+    const values = await form.validateFields();
+    console.log("Contexto", modalContext);
+    console.log("Valores", values);
+    if (modalContext === "edit") {
+      // console.log("SE EDITA");
+      // console.log("VER SI CAMBIA", values);
+      await mutateUpdateSalesProduct({
+        ...values,
+        sales_product_id: selectedRecord.product_id,
+      });
+      handleCancel();
+    }
+    if (modalContext === "create") {
+      // console.log("SE CREA");
+      // console.log("VER SI CAMBIA", values);
+      await mutateCreateSalesProduct(values);
+    }
+    if (modalContext === "addStock") {
+      console.log("SE ADICIONA");
+      console.log("VER SI CAMBIA", values);
+      values.quantity_stock = previousStock + values.quantity_stock;
+      await mutateUpdateSalesProduct({
+        ...values,
+        sales_product_id: selectedRecord.product_id,
+      });
+    }
+    form.resetFields();
+    setModalContext("");
+    setSelectedRecord(null);
+    setIsModalVisible(false);
+    setIsModalAddStockVisible(false);
+    // console.log("Valores al finalizar", selectedRecord);
+  };
+
+  console.log("Modal Context", modalContext);
+  console.log("Selected Record", selectedRecord);
 
   const columns = ProductsColumns({
     filters: { name: PrepareFilters(productData, "name") },

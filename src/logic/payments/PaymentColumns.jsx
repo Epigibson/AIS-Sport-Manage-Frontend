@@ -105,6 +105,7 @@ export const PaymentColumns = ({
             </Tooltip>
             <Tooltip
               title={() => {
+                console.log(record);
                 const tutorsName =
                   record?.user?.tutors_name_one ||
                   record?.user?.tutors_name_two;
@@ -326,8 +327,8 @@ export const PaymentColumns = ({
             >
               <Select.Option value="Transferencia">Transferencia</Select.Option>
               <Select.Option value="Efectivo">Efectivo</Select.Option>
-              {record.user.positive_balance &&
-              record.user.positive_balance > 0 ? (
+              {record?.user?.positive_balance &&
+              record?.user?.positive_balance > 0 ? (
                 <Select.Option value="Saldo a favor">
                   Saldo a favor
                 </Select.Option>
@@ -381,8 +382,8 @@ export const PaymentColumns = ({
                   <Tooltip
                     title={
                       record.payment_method === "Saldo a favor" &&
-                      record.user.positive_balance
-                        ? `Saldo a favor: ${FormatCurrencyUtil(record.user.positive_balance)}`
+                      record?.user?.positive_balance
+                        ? `Saldo a favor: ${FormatCurrencyUtil(record?.user?.positive_balance)}`
                         : null
                     }
                     color={

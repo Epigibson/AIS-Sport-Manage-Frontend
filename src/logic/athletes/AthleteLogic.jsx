@@ -31,6 +31,7 @@ export const AthleteLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
   const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
+  const [clearFilters, setCelarFilters] = useState(false);
 
   const {
     data: athletesData,
@@ -208,6 +209,10 @@ export const AthleteLogic = () => {
     [handleChangeAvatar],
   );
 
+  const handleClearFilters = useCallback(() => {
+    setCelarFilters(true);
+  }, []);
+
   const columns = useAthleteColumns({
     onEdit: handleEdit,
     handleChangeStatus,
@@ -221,7 +226,13 @@ export const AthleteLogic = () => {
         (item) => item.products_which_inscribed.map((p) => p.name).join(", "),
       ),
     },
+    clearFilters: clearFilters,
+    setClearFilters: setCelarFilters,
   });
+
+  useEffect(() => {
+    console.log("Clear filters", clearFilters);
+  }, [clearFilters]);
 
   if (isAthletesLoading || isLoadingEnrichedData)
     return <LoaderIconUtils isLoading={true} />;
@@ -238,6 +249,13 @@ export const AthleteLogic = () => {
           onClick={() => navigate("/inscripciones")}
         >
           Registrar Atleta
+        </Button>
+        <Button
+          className={"bg-primary-700 mb-3"}
+          type={"primary"}
+          onClick={handleClearFilters}
+        >
+          Limpiar filtros
         </Button>
         <Button
           className={"bg-primary-700 mb-3 ml-2"}

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Input, Space, Tooltip } from "antd";
 import { ExclamationCircleFilled, SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -8,9 +8,14 @@ export const useColumnSearchProps = (
   filterFunctionOrProperty,
   fieldName,
   filterType,
+  clearFilters,
+  setClearFiltersRefs,
+  index,
 ) => {
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef(null);
+  const clearFiltersRef = useRef(null);
+  const confirmRef = useRef(null);
 
   const handleSearch = useCallback((selectedKeys, confirm) => {
     confirm();
@@ -21,6 +26,25 @@ export const useColumnSearchProps = (
     clearFilters();
     setSearchText("");
   }, []);
+
+  useEffect(() => {
+    setClearFiltersRefs((prevRefs) => {
+      const newRefs = [...prevRefs];
+      newRefs[index] = {
+        clearFilters: clearFiltersRef.current,
+        confirm: confirmRef.current,
+      };
+      return newRefs;
+    });
+  }, [setClearFiltersRefs, index]);
+
+  useEffect(() => {
+    if (clearFilters && clearFiltersRef.current && confirmRef.current) {
+      clearFiltersRef.current();
+      confirmRef.current();
+      setSearchText("");
+    }
+  }, [clearFilters]);
 
   const isFilterFunction = typeof filterFunctionOrProperty === "function";
 
@@ -55,39 +79,45 @@ export const useColumnSearchProps = (
 
   return {
     filterDropdown: useCallback(
-      ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-          <Input
-            ref={searchInput}
-            placeholder={`Buscar por ${fieldName}`}
-            value={selectedKeys[0]}
-            onChange={(e) =>
-              setSelectedKeys(e.target.value ? [e.target.value] : [])
-            }
-            onPressEnter={() => handleSearch(selectedKeys, confirm)}
-            style={{ marginBottom: 8, display: "block" }}
-          />
-          <Space>
-            <Button
-              type={"primary"}
-              onClick={() => handleSearch(selectedKeys, confirm)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90 }}
-              className={"bg-primary-700"}
-            >
-              Buscar
-            </Button>
-            <Button
-              onClick={() => handleReset(clearFilters)}
-              size="small"
-              style={{ width: 90 }}
-            >
-              Limpiar
-            </Button>
-          </Space>
-        </div>
-      ),
+      ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
+        // Guardar referencias a clearFilters y confirm
+        clearFiltersRef.current = clearFilters;
+        confirmRef.current = confirm;
+
+        return (
+          <div style={{ padding: 8 }}>
+            <Input
+              ref={searchInput}
+              placeholder={`Buscar por ${fieldName}`}
+              value={selectedKeys[0]}
+              onChange={(e) =>
+                setSelectedKeys(e.target.value ? [e.target.value] : [])
+              }
+              onPressEnter={() => handleSearch(selectedKeys, confirm)}
+              style={{ marginBottom: 8, display: "block" }}
+            />
+            <Space>
+              <Button
+                type={"primary"}
+                onClick={() => handleSearch(selectedKeys, confirm)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+                className={"bg-primary-700"}
+              >
+                Buscar
+              </Button>
+              <Button
+                onClick={() => handleReset(clearFilters)}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Limpiar
+              </Button>
+            </Space>
+          </div>
+        );
+      },
       [fieldName, handleSearch, handleReset],
     ),
 
