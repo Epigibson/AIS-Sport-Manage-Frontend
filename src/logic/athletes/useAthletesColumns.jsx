@@ -54,16 +54,19 @@ export const useAthleteColumns = ({
 
   useEffect(() => {
     if (clearFilters) {
-      clearFiltersRefs.forEach(({ clearFilters, confirm }) => {
-        if (clearFilters && confirm) {
-          clearFilters();
-          confirm();
-        }
-      });
+      console.log("clearFilters is true, clearing all filters");
+      let i = 4;
+      for (i = 3; i > 0; i--) {
+        clearFiltersRefs.forEach(({ clearFilters, confirm }, index) => {
+          if (clearFilters && confirm) {
+            console.log(`Clearing filter ${index}`);
+            clearFilters();
+            confirm();
+          }
+        });
+        setClearFilters(true);
+      }
     }
-    setTimeout(() => {
-      setClearFilters(false);
-    }, 1000);
   }, [clearFilters, clearFiltersRefs, setClearFilters]);
 
   return AthleteColumns({

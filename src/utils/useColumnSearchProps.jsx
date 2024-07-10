@@ -39,10 +39,12 @@ export const useColumnSearchProps = (
   }, [setClearFiltersRefs, index]);
 
   useEffect(() => {
-    if (clearFilters && clearFiltersRef.current && confirmRef.current) {
-      clearFiltersRef.current();
-      confirmRef.current();
-      setSearchText("");
+    if (clearFilters) {
+      if (clearFiltersRef.current && confirmRef.current) {
+        clearFiltersRef.current();
+        confirmRef.current();
+        setSearchText("");
+      }
     }
   }, [clearFilters]);
 

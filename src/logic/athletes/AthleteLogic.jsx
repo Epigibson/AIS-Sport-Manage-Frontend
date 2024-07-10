@@ -31,7 +31,7 @@ export const AthleteLogic = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Para guardar el registro seleccionado al editar
   const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
-  const [clearFilters, setCelarFilters] = useState(false);
+  const [clearFilters, setClearFilters] = useState(false);
 
   const {
     data: athletesData,
@@ -210,7 +210,13 @@ export const AthleteLogic = () => {
   );
 
   const handleClearFilters = useCallback(() => {
-    setCelarFilters(true);
+    let i = 3;
+    for (i = 3; i > 0; i--) {
+      setClearFilters(true);
+      setTimeout(() => {
+        setClearFilters(false);
+      }, 1000);
+    }
   }, []);
 
   const columns = useAthleteColumns({
@@ -227,7 +233,7 @@ export const AthleteLogic = () => {
       ),
     },
     clearFilters: clearFilters,
-    setClearFilters: setCelarFilters,
+    setClearFilters: setClearFilters,
   });
 
   useEffect(() => {
@@ -251,7 +257,7 @@ export const AthleteLogic = () => {
           Registrar Atleta
         </Button>
         <Button
-          className={"bg-primary-700 mb-3"}
+          className={"bg-primary-700 mb-3 ml-2"}
           type={"primary"}
           onClick={handleClearFilters}
         >
