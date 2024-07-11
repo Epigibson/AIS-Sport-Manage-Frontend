@@ -312,10 +312,10 @@ export const PaymentLogic = () => {
           receipt_id: record?.receipt._id,
           amount_to_apply: record?.receipt.receipt_amount,
         };
-        console.log("Balance Amount con Saldo", data);
+        // console.log("Balance Amount con Saldo", data);
         await mutateSubtractAmountReceiptWithBalance(data);
       } else if (type === "payment") {
-        console.log("Balance Amount con tro tipo de pago");
+        // console.log("Balance Amount con tro tipo de pago");
         await mutateUpdate(record.receipt_id);
       }
       await handleSearch();
@@ -354,7 +354,7 @@ export const PaymentLogic = () => {
 
   const handleDeleteReceipt = useCallback(
     async (record) => {
-      console.log("RECORD", record);
+      // console.log("RECORD", record);
       await mutateDeleteHistoryPayment(record.history_payment_id);
       await handleSearch();
       await refetch();
@@ -456,7 +456,7 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           payment_method: editingPaymentMethod,
         };
-        console.log("Payment Method", data);
+        // console.log("Payment Method", data);
         await mutateUpdatePaymentMethod(data);
       }
       if (field === "amount") {
@@ -464,7 +464,7 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           amount: editingAmount,
         };
-        console.log("Cantidad", data);
+        // console.log("Cantidad", data);
         await mutateEditHistoryPaymentAmount(data);
       }
       if (field === "limit_date") {
@@ -472,7 +472,7 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
         };
-        console.log("Limit Date", data);
+        // console.log("Limit Date", data);
         await mutateEditHistoryPaymentLimitDate(data);
       }
       if (field === "period_month") {
@@ -480,7 +480,7 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           period_month: dayjs(editingPeriodMonth).format("YYYY-MM-DD HH:mm"),
         };
-        console.log("Period Month", data);
+        // console.log("Period Month", data);
         await mutateEditHistoryPaymentPeriodMonth(data);
       }
       if (field === "discount_code") {
@@ -488,7 +488,7 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           discount_code: editingDiscountCode,
         };
-        console.log("Código de Descuento", data);
+        // console.log("Código de Descuento", data);
         await mutateAddHistoryPaymentDiscountCode(data);
       }
       if (field === "balance_amount") {
@@ -498,14 +498,15 @@ export const PaymentLogic = () => {
         const monto = record?.amount;
         if (saldoAFavor === 0 || monto === 0) {
           values = 0;
+          // console.log("Entro en el primer if", values);
         } else if (saldoAFavor > monto) {
           if (montoRestante === 0) {
             values = monto;
           } else {
             values = montoRestante;
           }
-        } else if (saldoAFavor < monto) {
-          // 194 < 300 = Si
+        } else if (saldoAFavor <= monto) {
+          // 1400 <= 1400 = Si
           if (montoRestante === 0) {
             // 294 === 0 = No
             values = saldoAFavor; // 194
@@ -514,8 +515,9 @@ export const PaymentLogic = () => {
           }
         } else if (montoRestante === 0) {
           values = 0;
+          // console.log("Entro en el ultimo if", values);
         }
-        console.log("valor", values);
+        // console.log("valor", values);
         if (editingBalanceAmount < 0 || editingBalanceAmount > values) {
           message.error(`El valor del pago debe estar entre $0 y $${values}`);
           return;
