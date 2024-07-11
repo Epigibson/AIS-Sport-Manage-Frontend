@@ -491,7 +491,8 @@ export const PaymentColumns = ({
                   </Tag>
                   {record.payment_method === "Saldo a favor" &&
                   (record.status === "Parcial" ||
-                    record.status === "Pendiente") ? (
+                    record.status === "Pendiente" ||
+                    record.status === "Creado") ? (
                     <Popconfirm
                       title="Estas seguro de aplicar un pago con saldo a favor?"
                       okText="Si"
