@@ -15,6 +15,8 @@ export const TablesComponent = ({
   headerFixed,
   loading,
   expandable,
+  pagination,
+  onChange,
 }) => {
   // console.log("DATA ANTES DE PASAR", data);
 
@@ -61,11 +63,12 @@ export const TablesComponent = ({
       size={"small"}
       loading={loading}
       className={modifiedTable ? "my-dark-table" : "mt-4"}
-      pagination={!modifiedTable}
+      pagination={pagination}
       scroll={{
         x: 1200,
         y: headerFixed ? 800 : "100%",
       }}
+      onChange={onChange}
     />
   );
 };
@@ -78,4 +81,6 @@ TablesComponent.propTypes = {
   modifiedTable: PropTypes.bool,
   loading: PropTypes.bool,
   expandable: PropTypes.bool,
+  pagination: PropTypes.object,
+  onChange: PropTypes.func,
 };

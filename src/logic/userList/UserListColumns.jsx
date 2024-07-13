@@ -1,8 +1,8 @@
-import { Tag, Tooltip } from "antd";
+import { Tag } from "antd";
 import { FormatCurrencyUtil } from "../../utils/FormatCurrencyUtil.jsx";
-import { PlusCircleTwoTone } from "@ant-design/icons";
+import PropTypes from "prop-types";
 
-export const UserListColumns = ({ filters, handleOpenModal }) => [
+export const UserListColumns = ({ filters }) => [
   {
     title: "Nombre",
     dataIndex: "tutors_name_one",
@@ -41,15 +41,15 @@ export const UserListColumns = ({ filters, handleOpenModal }) => [
     render: (_, record) => (
       <div>
         <Tag>{FormatCurrencyUtil(record.positive_balance)}</Tag>
-        <Tooltip title={"Agregar saldo"}>
-          <PlusCircleTwoTone
-            className={"ml-1"}
-            twoToneColor={"green"}
-            onClick={() =>
-              handleOpenModal(record, "add_balance", "change_balance")
-            }
-          ></PlusCircleTwoTone>
-        </Tooltip>
+        {/*<Tooltip title={"Agregar saldo"}>*/}
+        {/*  <PlusCircleTwoTone*/}
+        {/*    className={"ml-1"}*/}
+        {/*    twoToneColor={"green"}*/}
+        {/*    onClick={() =>*/}
+        {/*      handleOpenModal(record, "add_balance", "change_balance")*/}
+        {/*    }*/}
+        {/*  ></PlusCircleTwoTone>*/}
+        {/*</Tooltip>*/}
       </div>
     ),
   },
@@ -82,3 +82,7 @@ export const UserListColumns = ({ filters, handleOpenModal }) => [
     render: (_, record) => <Tag color={"cyan"}>{record.user_type}</Tag>,
   },
 ];
+
+UserListColumns.propTypes = {
+  filters: PropTypes.object,
+};

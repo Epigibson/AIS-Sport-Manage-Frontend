@@ -1,6 +1,5 @@
 import {
   AccountBookOutlined,
-  BookOutlined,
   CarryOutOutlined,
   ControlFilled,
   CopyrightOutlined,
@@ -52,13 +51,7 @@ export const MenuItems = [
     path: "/ventas_indirectas",
     roles: ["Admin", "Manager"],
   },
-  {
-    key: "5",
-    icon: <HistoryOutlined />,
-    label: "Historial de Pagos Parciales",
-    path: "/historial_de_saldos",
-    roles: ["Admin", "Manager"],
-  },
+
   {
     key: "6",
     icon: <UserOutlined />,
@@ -112,26 +105,26 @@ export const MenuItems = [
       },
     ],
   },
+  // {
+  //   key: "13",
+  //   icon: <BookOutlined />,
+  //   label: "Pase de Lista",
+  //   path: "/pase_de_lista",
+  //   roles: ["Admin", "Manager"],
+  // },
   {
-    key: "13",
-    icon: <BookOutlined />,
-    label: "Pase de Lista",
-    path: "/pase_de_lista",
+    key: "22",
+    icon: <WalletOutlined />,
+    label: "Administrar Wallets",
+    path: "/wallet",
     roles: ["Admin", "Manager"],
   },
   {
-    key: "14",
-    icon: <UsergroupAddOutlined />,
-    label: "Usuarios con Adeudos",
-    path: "/adeudos",
+    key: "5",
+    icon: <HistoryOutlined />,
+    label: "Historial de Pagos Parciales",
+    path: "/historial_de_saldos",
     roles: ["Admin", "Manager"],
-  },
-  {
-    key: "15",
-    icon: <ControlFilled />,
-    label: "Configuracion",
-    path: "/configuracion",
-    roles: ["Admin"],
   },
   {
     key: "16",
@@ -145,6 +138,14 @@ export const MenuItems = [
     icon: <AccountBookOutlined />,
     label: "Reportes",
     path: "/reportes",
+    roles: ["Admin", "Manager"],
+  },
+
+  {
+    key: "14",
+    icon: <UsergroupAddOutlined />,
+    label: "Usuarios con Adeudos",
+    path: "/adeudos",
     roles: ["Admin", "Manager"],
   },
   {
@@ -169,11 +170,11 @@ export const MenuItems = [
     roles: ["Normal", "User"],
   },
   {
-    key: "22",
-    icon: <WalletOutlined />,
-    label: "Administrar Wallets",
-    path: "/wallet",
-    roles: ["Admin", "Manager"],
+    key: "15",
+    icon: <ControlFilled />,
+    label: "Configuracion",
+    path: "/configuracion",
+    roles: ["Admin"],
   },
   {
     key: "21",

@@ -18,6 +18,7 @@ import {
   ManageLoadingAndErrorData,
   UserListCreationButtons,
 } from "./UserListUtils.jsx";
+import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 
 export const UserListLogic = () => {
   const queryClient = useQueryClient();
@@ -131,6 +132,13 @@ export const UserListLogic = () => {
     });
   }, [usersData, handleOpenModal]);
 
+  if (usersIsError) {
+    return <h1>Error</h1>;
+  }
+  if (usersIsLoading) {
+    return <LoaderIconUtils isLoading={true} />;
+  }
+
   return (
     <>
       <ManageLoadingAndErrorData
@@ -150,7 +158,11 @@ export const UserListLogic = () => {
         handleOpenModal={handleOpenModal}
         userLogged={userLogged}
       />
-      <TablesComponent data={usersData} columns={columns} />
+      <TablesComponent
+        data={usersData}
+        columns={columns}
+        loading={usersIsLoading}
+      />
     </>
   );
 };

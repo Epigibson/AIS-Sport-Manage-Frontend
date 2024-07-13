@@ -21,6 +21,12 @@ export const PaymentFilters = ({
   handleResetFilters,
   handleChangeReceiptPackageName,
   receiptPackageNames,
+  handleUserChange,
+  userFilter,
+  athleteFilter,
+  statusPayFilter,
+  paymentMethodFilter,
+  membershipFilter,
 }) => {
   return (
     <>
@@ -73,15 +79,13 @@ export const PaymentFilters = ({
               onChange={handleAthleteChange}
               loading={isLoading}
               filterOption={filterOption}
-              options={athletesData?.map((athlete) =>
-                // console.log("ATLETAAAAA", athlete),
-                ({
-                  value: athlete?._id,
-                  key: athlete?._id,
-                  label: <span>{athlete?.name}</span>,
-                  search: athlete?.name.toLowerCase(), // Este campo se usará para el filtrado
-                }),
-              )}
+              options={athletesData?.map((athlete) => ({
+                value: athlete?._id,
+                key: athlete?._id,
+                label: <span>{athlete?.name}</span>,
+                search: athlete?.name.toLowerCase(),
+              }))}
+              value={athleteFilter}
             />
           </Col>
           <Col xs={24} sm={12} md={10} lg={6} xl={4}>
@@ -99,6 +103,7 @@ export const PaymentFilters = ({
                 { value: "Vencido", label: "Vencido" },
                 { value: "Cancelado", label: "Cancelado" },
               ]}
+              value={statusPayFilter}
             />
           </Col>
           <Col xs={24} sm={12} md={10} lg={6} xl={4}>
@@ -114,6 +119,7 @@ export const PaymentFilters = ({
                 key: product._id,
                 label: <span>{product.product_name}</span>,
               }))}
+              value={membershipFilter}
             />
           </Col>
           <Col xs={24} sm={12} md={10} lg={6} xl={4}>
@@ -138,6 +144,7 @@ export const PaymentFilters = ({
                     label: "Tienda de Conveniencia",
                   },
                 ]}
+                value={paymentMethodFilter}
               />
               <Button
                 size={"small"}
@@ -175,7 +182,6 @@ PaymentFilters.propTypes = {
   filterOption: PropTypes.func,
   athletesData: PropTypes.array,
   handleChangeStatus: PropTypes.func,
-  handleChangePaymentType: PropTypes.func,
   handleChangePaymentMethod: PropTypes.func,
   handleSearch: PropTypes.func,
   handleResetFilters: PropTypes.func,
@@ -184,4 +190,9 @@ PaymentFilters.propTypes = {
   showCreateModal: PropTypes.func,
   handleChangeReceiptPackageName: PropTypes.func,
   receiptPackageNames: PropTypes.array,
+  userFilter: PropTypes.string,
+  athleteFilter: PropTypes.string,
+  statusPayFilter: PropTypes.string,
+  paymentMethodFilter: PropTypes.string,
+  membershipFilter: PropTypes.string,
 };

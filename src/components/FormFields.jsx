@@ -133,8 +133,9 @@ export const FormFields = ({
             className={"text-left"}
             placeholder={
               isLoading
-                ? "Cargando datos, porfavor espere..."
-                : selectOptions[field.name] === []
+                ? "Cargando datos, por favor espere..."
+                : Array.isArray(selectOptions[field.name]) &&
+                    selectOptions[field.name].length === 0
                   ? "-- Sin datos --"
                   : ` --Seleccionar ${field.label} --`
             }

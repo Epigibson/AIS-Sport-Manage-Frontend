@@ -3,7 +3,6 @@ import { getAllHistoryPayments } from "../../api/PaymentService.jsx";
 import { PaymentColumns } from "./PaymentColumns.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { TablesComponent } from "../../components/TablesComponent.jsx";
-import { getAllUsers } from "../../api/UserService.jsx";
 import { getAllReceipts } from "../../api/ReceiptsService.jsx";
 import { ModalComponent } from "../../components/ModalComponent.jsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -32,6 +31,7 @@ import { FileAddOutlined } from "@ant-design/icons";
 import { PaymentCancelFields } from "./PaymentCancelFields.jsx";
 import { getAllPackages } from "../../api/ProductService.jsx";
 import { useNavigate } from "react-router-dom";
+import { useUsers } from "../../hooks/UserContext/useUsers.jsx";
 
 export const PaymentLogic = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const PaymentLogic = () => {
   const [statusPayFilter, setStatusPayFilter] = useState("");
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("");
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
-  const [MembershipFilter, setMembershipFilter] = useState("");
+  const [membershipFilter, setMembershipFilter] = useState("");
   const [showFilters, setShowFilters] = useState(true);
   const [editingKeyPaymentMethod, setEditingKeyPaymentMethod] = useState("");
   const [editingKeyBalanceAmount, setEditingKeyBalanceAmount] = useState("");
@@ -66,10 +66,31 @@ export const PaymentLogic = () => {
   const [editingPeriodMonth, setEditingPeriodMonth] = useState("");
   const [editingDiscountCode, setEditingDiscountCode] = useState("");
   const [dateRange, setDateRange] = useState([]);
-  const [autoFetchEnabled, setAutoFetchEnabled] = useState(true);
+  const [appliedFilters, setAppliedFilters] = useState({});
   const [firstCharge, setFirstCharge] = useState(0);
   const [isLoadingEnrichedData, setIsLoadingEnrichedData] = useState(true);
   const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10); // Tamaño de página fijo, puedes hacerlo dinámico si es necesario
+
+  const fetchPayments = useCallback(() => {
+    return getAllHistoryPayments({
+      user: appliedFilters.userFilter || undefined,
+      athlete: appliedFilters.athleteFilter || undefined,
+      status_pay: appliedFilters.statusPayFilter || undefined,
+      payment_type: appliedFilters.paymentTypeFilter || undefined,
+      payment_method: appliedFilters.paymentMethodFilter || undefined,
+      init_date: appliedFilters.dateRange
+        ? appliedFilters.dateRange[0]
+        : undefined,
+      end_date: appliedFilters.dateRange
+        ? appliedFilters.dateRange[1]
+        : undefined,
+      page,
+      page_size: pageSize,
+    });
+  }, [appliedFilters, page, pageSize]);
+
   const {
     data: historyPaymentData,
     isLoading,
@@ -78,35 +99,35 @@ export const PaymentLogic = () => {
   } = useQuery({
     queryKey: [
       "allHistoryPayments",
-      userFilter,
-      athleteFilter,
-      statusPayFilter,
-      paymentTypeFilter,
-      paymentMethodFilter,
-      dateRange.length > 0 ? dateRange[0] : undefined,
-      dateRange.length > 1 ? dateRange[1] : undefined,
+      appliedFilters.userFilter || "",
+      appliedFilters.athleteFilter || "",
+      appliedFilters.statusPayFilter || "",
+      appliedFilters.paymentTypeFilter || "",
+      appliedFilters.paymentMethodFilter || "",
+      appliedFilters.dateRange?.length > 0
+        ? appliedFilters.dateRange[0]
+        : undefined,
+      appliedFilters.dateRange?.length > 1
+        ? appliedFilters.dateRange[1]
+        : undefined,
+      page,
+      pageSize,
     ],
-    queryFn: () =>
-      getAllHistoryPayments({
-        user: userFilter,
-        athlete: athleteFilter,
-        status_pay: statusPayFilter,
-        payment_type: paymentTypeFilter,
-        payment_method: paymentMethodFilter,
-        init_date: dateRange[0],
-        end_date: dateRange[1],
-      }),
-    enabled: autoFetchEnabled,
+    queryFn: fetchPayments,
+    enabled: true,
+    keepPreviousData: true, // Mantener datos anteriores mientras se cargan nuevos
   });
 
-  const {
-    data: usersData,
-    isLoading: isUsersLoading,
-    refetch: refetchUsers,
-  } = useQuery({
-    queryKey: ["allUsers"],
-    queryFn: getAllUsers,
-  });
+  const { users, isLoadingUsers, isErrorUsers, refetchUsers } = useUsers();
+  const usersData = users;
+  // const {
+  //   data: usersData,
+  //   isLoading: isUsersLoading,
+  //   refetch: refetchUsers,
+  // } = useQuery({
+  //   queryKey: ["allUsers"],
+  //   queryFn: getAllUsers,
+  // });
 
   const {
     data: athletesData,
@@ -134,19 +155,66 @@ export const PaymentLogic = () => {
   const userLogged = queryClient.getQueryData(["userLogged"]);
 
   const handleSearch = useCallback(async () => {
-    await queryClient.invalidateQueries({
-      queryKey: [
-        "allHistoryPayments",
-        "allAthletes",
-        "allUsers",
-        "allReceipts",
-      ],
+    setAppliedFilters({
+      userFilter,
+      athleteFilter,
+      statusPayFilter,
+      paymentTypeFilter,
+      paymentMethodFilter,
+      dateRange,
     });
     await refetch();
     await refetchUsers();
     await refetchAthletes();
     await refetchReceipts();
-  }, [queryClient, refetch, refetchAthletes, refetchReceipts, refetchUsers]);
+    setPage(1); // Reset page to 1 when applying new filters
+  }, [
+    userFilter,
+    athleteFilter,
+    statusPayFilter,
+    paymentTypeFilter,
+    paymentMethodFilter,
+    dateRange,
+    refetch,
+    refetchUsers,
+    refetchAthletes,
+    refetchReceipts,
+  ]);
+
+  const handleResetFilters = useCallback(() => {
+    setAthleteFilter("");
+    setUserFilter("");
+    setStatusPayFilter("");
+    setPaymentTypeFilter("");
+    setPaymentMethodFilter("");
+    setMembershipFilter("");
+    setDateRange([]);
+    setAppliedFilters({});
+    setPage(1); // Reset page to 1 when resetting filters
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(appliedFilters).length > 0) {
+      refetch();
+    }
+  }, [appliedFilters, refetch]);
+
+  const cancel = useCallback(() => {
+    setEditingKeyPaymentMethod("");
+    setEditingKeyBalanceAmount("");
+    setEditingKeyLimitDate("");
+    setEditingKeyPeriodMonth("");
+    setEditingKeyAmount("");
+    setEditingKeyPeriodMonth("");
+    setEditingKeyDiscountCode("");
+    setEditingKeyBalancePayment("");
+    setEditingPaymentMethod("");
+    setEditingBalanceAmount("");
+    setEditingAmount("");
+    setEditingLimitDate("");
+    setEditingDiscountCode("");
+    setEditingBalancePayment("");
+  }, []);
 
   useEffect(() => {
     if (
@@ -171,7 +239,7 @@ export const PaymentLogic = () => {
       return [];
     }
 
-    let filteredData = historyPaymentData?.map((historyPayment) => {
+    let filteredData = historyPaymentData?.results?.map((historyPayment) => {
       const user = usersData?.find(
         (user) => user?._id === historyPayment?.user,
       );
@@ -190,9 +258,9 @@ export const PaymentLogic = () => {
         updated_at: receipt?.updated_at,
       };
     });
-    if (MembershipFilter) {
+    if (membershipFilter) {
       filteredData = filteredData.filter(
-        (payment) => payment.receipt?.receipt_package === MembershipFilter,
+        (payment) => payment.receipt?.receipt_package === membershipFilter,
       );
     }
 
@@ -202,46 +270,43 @@ export const PaymentLogic = () => {
     usersData,
     athletesData,
     receiptsData,
-    MembershipFilter,
+    membershipFilter,
   ]);
-
-  // console.log(“DATA”, enrichedHistoryPaymentsData);
 
   useEffect(() => {
-    // console.log("AUTO FETCH", autoFetchEnabled);
     if (historyPaymentData && firstCharge <= 0) {
       setFirstCharge(firstCharge + 2);
-    } else {
-      setAutoFetchEnabled(false);
     }
-  }, [
-    receiptsData,
-    historyPaymentData,
-    usersData,
-    athletesData,
-    firstCharge,
-    autoFetchEnabled,
-  ]);
+  }, [receiptsData, historyPaymentData, usersData, athletesData, firstCharge]);
 
-  const { mutateUpdatePaymentMethod } = useUpdatePaymentMethod(handleSearch);
+  const { mutateUpdatePaymentMethod, updatePaymentMethodPending } =
+    useUpdatePaymentMethod(handleSearch, cancel);
   const { mutateUpdate } = usePayReceipt(handleSearch);
-  const { mutateSubtractAmountReceiptWithBalance } =
-    useSubtractAmountReceiptWithBalance(handleSearch);
+  const {
+    mutateSubtractAmountReceiptWithBalance,
+    mutateSubtractAmountReceiptWithBalancePending,
+  } = useSubtractAmountReceiptWithBalance(handleSearch, cancel);
   const { mutateDeleteHistoryPayment } = useDeletePaymentHistory(handleSearch);
   const { mutateUpdateCancelReceipt } = useCancelReceipt(handleSearch);
   const { mutateRevertReceipt } = useRevertReceipt(handleSearch);
-  const { mutateEditHistoryPaymentExtension } =
-    useEditPaymentHistoryExtension(handleSearch);
-  const { mutateEditHistoryPaymentAmount } =
-    useEditPaymentHistoryAmount(handleSearch);
-  const { mutateCreate } = useCreatePayment(handleSearch);
-  const { mutateEditHistoryPaymentLimitDate } =
-    useEditPaymentHistoryLimitDate(handleSearch);
+  const { mutateEditHistoryPaymentExtension } = useEditPaymentHistoryExtension(
+    handleSearch,
+    cancel,
+  );
+  const { mutateEditHistoryPaymentAmount } = useEditPaymentHistoryAmount(
+    handleSearch,
+    cancel,
+  );
+  const { mutateCreate } = useCreatePayment(handleSearch, cancel);
+  const { mutateEditHistoryPaymentLimitDate } = useEditPaymentHistoryLimitDate(
+    handleSearch,
+    cancel,
+  );
   const { mutateEditHistoryPaymentPeriodMonth } =
-    useEditPaymentHistoryPeriodMonth(handleSearch);
+    useEditPaymentHistoryPeriodMonth(handleSearch, cancel);
 
   const { mutateAddHistoryPaymentDiscountCode } =
-    useAddPaymentHistoryDiscountCode(handleSearch);
+    useAddPaymentHistoryDiscountCode(handleSearch, cancel);
 
   const showCreateModal = () => {
     setIsCreateModalVisible(true);
@@ -280,16 +345,6 @@ export const PaymentLogic = () => {
     setIsModalVisible(false);
   };
 
-  const handleResetFilters = async () => {
-    setAthleteFilter("");
-    setUserFilter("");
-    setStatusPayFilter("");
-    setPaymentTypeFilter("");
-    setPaymentMethodFilter("");
-    setMembershipFilter("");
-    setDateRange([]);
-  };
-
   const handleCreatePayment = async () => {
     const values = await formCreate.validateFields();
     await mutateCreate(values);
@@ -312,10 +367,8 @@ export const PaymentLogic = () => {
           receipt_id: record?.receipt._id,
           amount_to_apply: record?.receipt.receipt_amount,
         };
-        // console.log("Balance Amount con Saldo", data);
         await mutateSubtractAmountReceiptWithBalance(data);
       } else if (type === "payment") {
-        // console.log("Balance Amount con tro tipo de pago");
         await mutateUpdate(record.receipt_id);
       }
       await handleSearch();
@@ -354,7 +407,6 @@ export const PaymentLogic = () => {
 
   const handleDeleteReceipt = useCallback(
     async (record) => {
-      // console.log("RECORD", record);
       await mutateDeleteHistoryPayment(record.history_payment_id);
       await handleSearch();
       await refetch();
@@ -375,33 +427,28 @@ export const PaymentLogic = () => {
     }
   };
 
-  const handleUserChange = async (value, option) => {
-    await setUserFilter(option.key);
+  const handleUserChange = (value, option) => {
+    setUserFilter(option.key);
   };
 
-  const handleAthleteChange = async (value) => {
-    await setAthleteFilter(value);
-    // console.log(`selected ${value}`);
+  const handleAthleteChange = (value) => {
+    setAthleteFilter(value);
   };
 
-  const handleChangeStatus = async (value) => {
-    await setStatusPayFilter(value);
-    // console.log(`selected ${value}`);
+  const handleChangeStatus = (value) => {
+    setStatusPayFilter(value);
   };
 
-  const handleChangePaymentType = async (value) => {
-    await setPaymentTypeFilter(value);
-    // console.log(`selected ${value}`);
+  const handleChangePaymentType = (value) => {
+    setPaymentTypeFilter(value);
   };
 
-  const handleChangePaymentMethod = async (value) => {
-    await setPaymentMethodFilter(value);
-    // console.log(`selected ${value}`);
+  const handleChangePaymentMethod = (value) => {
+    setPaymentMethodFilter(value);
   };
 
-  const handleChangeMembership = async (value) => {
-    await setMembershipFilter(value);
-    // console.log(`selected ${value}`);
+  const handleChangeMembership = (value) => {
+    setMembershipFilter(value);
   };
 
   const edit = (record, type, paymentMethod) => {
@@ -424,29 +471,12 @@ export const PaymentLogic = () => {
       setEditingDiscountCode(record?.discount_code);
     } else if (type === "balance_amount") {
       setEditingKeyBalanceAmount(record?._id);
-      setEditingBalanceAmount(record?.amount);
+      setEditingBalanceAmount(0);
     } else if (type === "balance_payment") {
       setEditingKeyBalancePayment(record?._id);
       setEditingBalancePayment(record?.amount_balance_updated);
       setEditingPaymentMethod(paymentMethod);
     }
-  };
-
-  const cancel = () => {
-    setEditingKeyPaymentMethod("");
-    setEditingKeyBalanceAmount("");
-    setEditingKeyLimitDate("");
-    setEditingKeyPeriodMonth("");
-    setEditingKeyAmount("");
-    setEditingKeyPeriodMonth("");
-    setEditingKeyDiscountCode("");
-    setEditingKeyBalancePayment("");
-    setEditingPaymentMethod("");
-    setEditingBalanceAmount("");
-    setEditingAmount("");
-    setEditingLimitDate("");
-    setEditingDiscountCode("");
-    setEditingBalancePayment("");
   };
 
   const handleSave = useCallback(
@@ -456,7 +486,6 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           payment_method: editingPaymentMethod,
         };
-        // console.log("Payment Method", data);
         await mutateUpdatePaymentMethod(data);
       }
       if (field === "amount") {
@@ -464,7 +493,6 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           amount: editingAmount,
         };
-        // console.log("Cantidad", data);
         await mutateEditHistoryPaymentAmount(data);
       }
       if (field === "limit_date") {
@@ -472,7 +500,6 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           limit_date: dayjs(editingLimitDate).format("YYYY-MM-DD HH:mm"),
         };
-        // console.log("Limit Date", data);
         await mutateEditHistoryPaymentLimitDate(data);
       }
       if (field === "period_month") {
@@ -480,7 +507,6 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           period_month: dayjs(editingPeriodMonth).format("YYYY-MM-DD HH:mm"),
         };
-        // console.log("Period Month", data);
         await mutateEditHistoryPaymentPeriodMonth(data);
       }
       if (field === "discount_code") {
@@ -488,7 +514,6 @@ export const PaymentLogic = () => {
           history_payment_id: record?.history_payment_id,
           discount_code: editingDiscountCode,
         };
-        // console.log("Código de Descuento", data);
         await mutateAddHistoryPaymentDiscountCode(data);
       }
       if (field === "balance_amount") {
@@ -498,7 +523,6 @@ export const PaymentLogic = () => {
         const monto = record?.amount;
         if (saldoAFavor === 0 || monto === 0) {
           values = 0;
-          // console.log("Entro en el primer if", values);
         } else if (saldoAFavor > monto) {
           if (montoRestante === 0) {
             values = monto;
@@ -506,18 +530,14 @@ export const PaymentLogic = () => {
             values = montoRestante;
           }
         } else if (saldoAFavor <= monto) {
-          // 1400 <= 1400 = Si
           if (montoRestante === 0) {
-            // 294 === 0 = No
-            values = saldoAFavor; // 194
+            values = saldoAFavor;
           } else {
-            values = montoRestante; // 294
+            values = montoRestante;
           }
         } else if (montoRestante === 0) {
           values = 0;
-          // console.log("Entro en el ultimo if", values);
         }
-        // console.log("valor", values);
         if (editingBalanceAmount < 0 || editingBalanceAmount > values) {
           message.error(`El valor del pago debe estar entre $0 y $${values}`);
           return;
@@ -544,9 +564,9 @@ export const PaymentLogic = () => {
             ? editingPaymentMethod
             : paymentMethod,
         };
+        console.log("Balance Amount", data);
         await mutateSubtractAmountReceiptWithBalance(data);
       }
-      cancel(); // Restablece el estado de edición
     },
     [
       editingPaymentMethod,
@@ -559,8 +579,8 @@ export const PaymentLogic = () => {
       mutateEditHistoryPaymentPeriodMonth,
       editingDiscountCode,
       mutateAddHistoryPaymentDiscountCode,
-      editingBalancePayment,
       editingBalanceAmount,
+      editingBalancePayment,
       mutateSubtractAmountReceiptWithBalance,
     ],
   );
@@ -604,33 +624,46 @@ export const PaymentLogic = () => {
         setEditingLimitDate: setEditingLimitDate,
         setEditingPeriodMonth: setEditingPeriodMonth,
         setEditingDiscountCode: setEditingDiscountCode,
+
+        mutateSubtractAmountReceiptWithBalancePending:
+          mutateSubtractAmountReceiptWithBalancePending,
+        updatePaymentMethodPending: updatePaymentMethodPending,
       }),
     [
-      editingAmount,
-      editingBalanceAmount,
-      editingBalancePayment,
-      editingDiscountCode,
-      editingKeyAmount,
-      editingKeyBalanceAmount,
-      editingKeyBalancePayment,
-      editingKeyDiscountCode,
-      editingKeyLimitDate,
-      editingKeyPaymentMethod,
-      editingKeyPeriodMonth,
-      editingLimitDate,
-      editingPaymentMethod,
-      editingPeriodMonth,
-      handleDeleteReceipt,
+      updatePaymentMethodPending,
+      showExtensionModal,
       handlePayReceipt,
       handleRevertReceipt,
+      cancel,
       handleSave,
+      handleDeleteReceipt,
+      userLogged?.email,
       navigate,
-      showExtensionModal,
-      userLogged,
+      editingKeyPaymentMethod,
+      editingKeyBalanceAmount,
+      editingKeyBalancePayment,
+      editingKeyAmount,
+      editingKeyLimitDate,
+      editingKeyPeriodMonth,
+      editingKeyDiscountCode,
+      editingPaymentMethod,
+      editingBalanceAmount,
+      editingBalancePayment,
+      editingAmount,
+      editingLimitDate,
+      editingPeriodMonth,
+      editingDiscountCode,
+      mutateSubtractAmountReceiptWithBalancePending,
     ],
   );
 
-  if (isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading)
+  const handleTableChange = (pagination, filters, sorter) => {
+    console.log("Table change:", pagination, filters, sorter);
+    setPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
+
+  if (isLoading || isLoadingUsers || isAthletesLoading || isReceiptsLoading)
     return <LoaderIconUtils isLoading={true} />;
   if (isError) return <h1>Error...</h1>;
 
@@ -709,8 +742,15 @@ export const PaymentLogic = () => {
         data={enrichedHistoryPaymentsData}
         columns={columns}
         loading={
-          isLoading || isUsersLoading || isAthletesLoading || isReceiptsLoading
+          isLoading || isLoadingUsers || isAthletesLoading || isReceiptsLoading
         }
+        pagination={{
+          current: page,
+          pageSize: pageSize,
+          total: historyPaymentData?.total || 0, // Asumiendo que el backend devuelve el total de registros
+          showSizeChanger: true, // Permite cambiar el tamaño de página
+        }}
+        onChange={handleTableChange}
       />
     </>
   );

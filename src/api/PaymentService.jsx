@@ -2,6 +2,7 @@ import { apiClient } from "./index.jsx";
 
 export const getAllHistoryPayments = async (options = {}) => {
   try {
+    console.log("options", options);
     // Construir los parámetros de la consulta
     const queryParams = new URLSearchParams();
 
@@ -25,6 +26,8 @@ export const getAllHistoryPayments = async (options = {}) => {
     if (options.payment_method) {
       queryParams.append("payment_method", options.payment_method);
     }
+    queryParams.append("page", options.page);
+    queryParams.append("page_size", options.page_size);
 
     const response = await apiClient.get(
       queryParams ? `/history_payment/?${queryParams}` : "/history_payment/",

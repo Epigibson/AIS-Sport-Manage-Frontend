@@ -24,6 +24,7 @@ import {
   RollbackOutlined,
   ScheduleFilled,
   StopOutlined,
+  SyncOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -69,7 +70,11 @@ export const PaymentColumns = ({
   handleDeleteReceipt,
   checkUser,
   navigate,
+  mutateSubtractAmountReceiptWithBalancePending,
+  updatePaymentMethodPending,
 }) => {
+  // console.log("ESTA PROCESANDO LA MUTACION", updatePaymentMethodPending);
+  // console.log("RECORD QUE SE ESTA EDITANDO", editingKeyPaymentMethod);
   const columns = [
     {
       title: "Matricula",
@@ -105,7 +110,7 @@ export const PaymentColumns = ({
             </Tooltip>
             <Tooltip
               title={() => {
-                console.log(record);
+                // console.log(record);
                 const tutorsName =
                   record?.user?.tutors_name_one ||
                   record?.user?.tutors_name_two;
@@ -188,6 +193,10 @@ export const PaymentColumns = ({
           <span>
             <InputNumber
               value={editingAmount}
+              formatter={(value) =>
+                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
               onChange={(value) => setEditingAmount(value)}
             />
             <Space className="mt-2">
@@ -206,14 +215,8 @@ export const PaymentColumns = ({
         ) : (
           <div>
             {(() => {
-              const formattedAmount = new Intl.NumberFormat("es-MX", {
-                style: "currency",
-                currency: "MXN",
-              }).format(record?.amount); // Asegúrate de que 'record.amount' está definido correctamente
-              const formattedAmountUpdated = new Intl.NumberFormat("es-MX", {
-                style: "currency",
-                currency: "MXN",
-              }).format(
+              const formattedAmount = FormatCurrencyUtil(record?.amount); // Asegúrate de que 'record.amount' está definido correctamente
+              const formattedAmountUpdated = FormatCurrencyUtil(
                 record?.amount_balance_updated
                   ? record.amount_balance_updated
                   : null,
@@ -221,58 +224,65 @@ export const PaymentColumns = ({
 
               return (
                 <>
-                  <Row justify={"center"} align={"middle"}>
-                    <Col>
-                      <Tooltip
-                        color={"orange"}
-                        title={"Recibo con pagos parciales."}
-                      >
-                        <ScheduleFilled
-                          color={"orange"}
-                          className={"mr-2 text-orange-500"}
-                          hidden={record?.receipt?.times_applied_balance === 0}
-                        />
-                      </Tooltip>
-                      <Tooltip title={"Monto actualizado"}>
-                        <CheckCircleFilled
-                          color={"green"}
-                          className={"mr-2 text-green-500"}
-                          hidden={
-                            !record?.amount_updated ||
-                            record?.status === "Pagado"
-                          }
-                        />
-                      </Tooltip>
-                    </Col>
-                    <Col span={14}>
-                      <Tag className={"mb-1"}>Total: {formattedAmount}</Tag>
-                      {formattedAmount !== formattedAmountUpdated &&
-                        formattedAmountUpdated !== "$0.00" && (
-                          <Tag>Restante: {formattedAmountUpdated}</Tag>
-                        )}
-                    </Col>
-                    {record.status !== "Pagado" &&
-                    record.status !== "Cancelado" &&
-                    record.status !== "Parcial" ? (
+                  {mutateSubtractAmountReceiptWithBalancePending &&
+                  editingKeyBalanceAmount === record?._id ? (
+                    <SyncOutlined twoToneColor={"#1d4ed8"} spin />
+                  ) : (
+                    <Row justify={"center"} align={"middle"}>
                       <Col>
                         <Tooltip
-                          title={
-                            "Al editar el monto solo se ajustara el recibo actual. La recurrencia del monto " +
-                            "original del paquete se respetara en los recibos consecuentes."
-                          }
-                          color={record.extension ? "blue" : "gray"}
+                          color={"orange"}
+                          title={"Recibo con pagos parciales."}
                         >
-                          <EditFilled
-                            onClick={() => edit(record, "amount")}
-                            size="small"
-                            disabled={editingAmount !== ""}
-                          >
-                            Editar
-                          </EditFilled>
+                          <ScheduleFilled
+                            color={"orange"}
+                            className={"mr-2 text-orange-500"}
+                            hidden={
+                              record?.receipt?.times_applied_balance === 0
+                            }
+                          />
+                        </Tooltip>
+                        <Tooltip title={"Monto actualizado"}>
+                          <CheckCircleFilled
+                            color={"green"}
+                            className={"mr-2 text-green-500"}
+                            hidden={
+                              !record?.amount_updated ||
+                              record?.status === "Pagado"
+                            }
+                          />
                         </Tooltip>
                       </Col>
-                    ) : null}
-                  </Row>
+                      <Col span={14}>
+                        <Tag className={"mb-1"}>Total: {formattedAmount}</Tag>
+                        {formattedAmount !== formattedAmountUpdated &&
+                          formattedAmountUpdated !== "$0.00" && (
+                            <Tag>Restante: {formattedAmountUpdated}</Tag>
+                          )}
+                      </Col>
+                      {record.status !== "Pagado" &&
+                      record.status !== "Cancelado" &&
+                      record.status !== "Parcial" ? (
+                        <Col>
+                          <Tooltip
+                            title={
+                              "Al editar el monto solo se ajustara el recibo actual. La recurrencia del monto " +
+                              "original del paquete se respetara en los recibos consecuentes."
+                            }
+                            color={record.extension ? "blue" : "gray"}
+                          >
+                            <EditFilled
+                              onClick={() => edit(record, "amount")}
+                              size="small"
+                              disabled={editingAmount !== ""}
+                            >
+                              Editar
+                            </EditFilled>
+                          </Tooltip>
+                        </Col>
+                      ) : null}
+                    </Row>
+                  )}
                 </>
               );
             })()}
@@ -317,7 +327,7 @@ export const PaymentColumns = ({
       editable: true,
       width: 200,
       render: (_, record) =>
-        editingKeyPaymentMethod === record._id ? (
+        editingKeyPaymentMethod === record?._id ? (
           <span>
             <Select
               value={editingPaymentMethod}
@@ -350,94 +360,118 @@ export const PaymentColumns = ({
           </span>
         ) : (
           <div>
-            <Row justify={"center"} align={"middle"}>
-              <Col>
-                {record?.payment_method !== "Saldo a favor" ? (
-                  <Popconfirm
-                    title="Estas a punto de realizar un pago parcial, estas seguro??"
-                    okText="Si"
-                    cancelText="No"
-                    wrapClassName="mi-popconfirm-especifico"
-                    onConfirm={() =>
-                      edit(record, "balance_payment", record.payment_method)
-                    }
-                  >
-                    <Button
-                      hidden={
-                        record.payment_method === "Saldo a favor" ||
-                        record.status === "Pagado" ||
-                        record.status === "Cancelado"
-                      }
-                      type="primary"
-                      className="flex flex-row items-center justify-center mr-2"
-                      size="small"
-                    >
-                      <DollarCircleFilled twoToneColor={"green"} />
-                    </Button>
-                  </Popconfirm>
-                ) : null}
-              </Col>
-              <Col>
-                <Tag color="blue">
-                  <Tooltip
-                    title={
-                      record.payment_method === "Saldo a favor" &&
-                      record?.user?.positive_balance
-                        ? `Saldo a favor: ${FormatCurrencyUtil(record?.user?.positive_balance)}`
-                        : null
-                    }
-                    color={
-                      record.payment_method === "Saldo a favor" ? "blue" : null
-                    }
-                  >
-                    {record?.payment_method || "No especificado"}
-                  </Tooltip>
-                </Tag>
-              </Col>
-              <Col>
-                {record?.status !== "Pagado" &&
-                record?.status !== "Cancelado" ? (
-                  <EditFilled
-                    onClick={() => edit(record, "payment_method")}
-                    size="small"
-                    disabled={editingPaymentMethod !== ""}
-                    hidden={
-                      record.status === "Cancelado" ||
-                      record.status === "Pagado"
-                    }
-                  >
-                    Editar
-                  </EditFilled>
-                ) : null}
-              </Col>
-            </Row>
-            {editingKeyBalancePayment === record._id && (
-              <div>
-                <InputNumber
-                  value={editingBalancePayment}
-                  onChange={(value) => setEditingBalancePayment(value)}
-                  min={0}
-                  max={record.amount}
-                />
-                <Space className="mt-2">
-                  <Button
-                    onClick={() =>
-                      handleSave(
-                        record,
-                        "balance_amount",
-                        record.payment_method,
-                      )
-                    }
-                    size="small"
-                    style={{ marginRight: 8 }}
-                  >
-                    Guardar
-                  </Button>
-                  <Button onClick={cancel} danger size="small">
-                    Cancelar
-                  </Button>
-                </Space>
-              </div>
+            {updatePaymentMethodPending &&
+            editingKeyPaymentMethod === record?._id ? (
+              <SyncOutlined twoToneColor={"#1d4ed8"} spin />
+            ) : (
+              <>
+                {!updatePaymentMethodPending &&
+                editingKeyPaymentMethod === record?._id ? (
+                  <></>
+                ) : (
+                  <>
+                    <Row justify={"center"} align={"middle"}>
+                      <Col>
+                        {record?.payment_method !== "Saldo a favor" ? (
+                          <Popconfirm
+                            title="Estas a punto de realizar un pago parcial, estas seguro??"
+                            okText="Si"
+                            cancelText="No"
+                            wrapClassName="mi-popconfirm-especifico"
+                            onConfirm={() =>
+                              edit(
+                                record,
+                                "balance_payment",
+                                record.payment_method,
+                              )
+                            }
+                          >
+                            <Button
+                              hidden={
+                                record.payment_method === "Saldo a favor" ||
+                                record.status === "Pagado" ||
+                                record.status === "Cancelado"
+                              }
+                              type="primary"
+                              className="flex flex-row items-center justify-center mr-2"
+                              size="small"
+                            >
+                              <DollarCircleFilled twoToneColor={"green"} />
+                            </Button>
+                          </Popconfirm>
+                        ) : null}
+                      </Col>
+                      <Col>
+                        <Tag color="blue">
+                          <Tooltip
+                            title={
+                              record.payment_method === "Saldo a favor" &&
+                              record?.user?.positive_balance
+                                ? `Saldo a favor: ${FormatCurrencyUtil(record?.user?.positive_balance)}`
+                                : null
+                            }
+                            color={
+                              record.payment_method === "Saldo a favor"
+                                ? "blue"
+                                : null
+                            }
+                          >
+                            {record?.payment_method || "No especificado"}
+                          </Tooltip>
+                        </Tag>
+                      </Col>
+                      <Col>
+                        {record?.status !== "Pagado" &&
+                        record?.status !== "Cancelado" ? (
+                          <EditFilled
+                            onClick={() => edit(record, "payment_method")}
+                            size="small"
+                            disabled={editingPaymentMethod !== ""}
+                            hidden={
+                              record.status === "Cancelado" ||
+                              record.status === "Pagado"
+                            }
+                          >
+                            Editar
+                          </EditFilled>
+                        ) : null}
+                      </Col>
+                    </Row>
+                    {editingKeyBalancePayment === record._id && (
+                      <div>
+                        <InputNumber
+                          value={editingBalancePayment}
+                          onChange={(value) => setEditingBalancePayment(value)}
+                          formatter={(value) =>
+                            `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          }
+                          parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
+                          min={0}
+                          max={record.amount}
+                        />
+                        <Space className="mt-2">
+                          <Button
+                            onClick={() =>
+                              handleSave(
+                                record,
+                                "balance_amount",
+                                record.payment_method,
+                              )
+                            }
+                            size="small"
+                            style={{ marginRight: 8 }}
+                          >
+                            Guardar
+                          </Button>
+                          <Button onClick={cancel} danger size="small">
+                            Cancelar
+                          </Button>
+                        </Space>
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
             )}
           </div>
         ),
@@ -448,17 +482,28 @@ export const PaymentColumns = ({
       align: "center",
       width: 200,
       render: (_, record) => {
-        return editingKeyBalanceAmount === record._id ? ( // Asumimos que usas _id como identificador único
+        return editingKeyBalanceAmount === record._id &&
+          !mutateSubtractAmountReceiptWithBalancePending ? ( // Asumimos que usas _id como identificador único
           <span>
             <InputNumber
               value={editingBalanceAmount}
               onChange={(value) => setEditingBalanceAmount(value)}
-              max={
-                record?.user.positive_balance < record.amount
-                  ? record.user.positive_balance
-                  : record.amount
+              status={
+                editingBalanceAmount > record?.amount_balance_updated
+                  ? "error"
+                  : null
               }
+              formatter={(value) =>
+                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
+              // max={
+              //   record?.user.positive_balance < record.amount
+              //     ? record.user.positive_balance
+              //     : record.amount_balance_updated
+              // }
               min={0}
+              title={"Prueba"}
             />
 
             <Space.Compact className={"mt-2"}>
@@ -476,69 +521,83 @@ export const PaymentColumns = ({
               </Button>
             </Space.Compact>
           </span>
-        ) : record?.user?.positive_balance > 0 ? (
-          <Space>
-            <Row
-              gutter={[16, 16]}
-              wrap={true}
-              align={"middle"}
-              justify={"center"}
-            >
-              <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
-                <div className="flex flex-row items-center justify-center">
-                  <Tag>
-                    {FormatCurrencyUtil(record?.user?.positive_balance)}
-                  </Tag>
-                  {record.payment_method === "Saldo a favor" &&
-                  (record.status === "Parcial" ||
-                    record.status === "Pendiente" ||
-                    record.status === "Creado") ? (
-                    <Popconfirm
-                      title="Estas seguro de aplicar un pago con saldo a favor?"
-                      okText="Si"
-                      cancelText="No"
-                      wrapClassName="mi-popconfirm-especifico"
-                      onConfirm={() => edit(record, "balance_amount")}
-                    >
-                      <Button
-                        hidden={
-                          record.payment_method !== "Saldo a favor" ||
-                          record.status === "Pagado" ||
-                          record.status === "Cancelado"
-                        }
-                        type="primary"
-                        className="flex flex-row items-center justify-center"
-                        size="small"
-                      >
-                        <DollarCircleFilled twoToneColor={"green"} />
-                      </Button>
-                    </Popconfirm>
-                  ) : null}
-                </div>
-              </Col>
-            </Row>
-          </Space>
         ) : (
-          <Tooltip
-            title={`Haz clic para agregar saldo a favor al tutor: ${
-              record?.user?.tutors_name_one || record?.user?.tutors_name_two
-            }`}
-          >
-            <Tag
-              color={"warning"}
-              style={{ cursor: "pointer" }}
-              onClick={async () => {
-                await TagCopyLink(
-                  record,
-                  record?.user?.tutors_name_one,
-                  "Dato",
-                );
-                NavigateToUtil(navigate, "/wallet");
-              }}
-            >
-              Sin saldo a favor
-            </Tag>
-          </Tooltip>
+          <>
+            {mutateSubtractAmountReceiptWithBalancePending &&
+            editingKeyBalanceAmount === record?._id ? (
+              <SyncOutlined spin twoToneColor={"#1d4ed8"} />
+            ) : !record?.user?.positive_balance > 0 ? (
+              <Tooltip
+                title={`Haz clic para agregar saldo a favor al tutor: ${
+                  record?.user?.tutors_name_one || record?.user?.tutors_name_two
+                }`}
+              >
+                <Tag
+                  color={"warning"}
+                  style={{ cursor: "pointer" }}
+                  onClick={async () => {
+                    await TagCopyLink(
+                      record,
+                      record?.user?.tutors_name_one,
+                      "Dato",
+                    );
+                    NavigateToUtil(navigate, "/wallet");
+                  }}
+                >
+                  Sin saldo a favor
+                </Tag>
+              </Tooltip>
+            ) : (
+              <Space>
+                <Row
+                  gutter={[16, 16]}
+                  wrap={true}
+                  align={"middle"}
+                  justify={"center"}
+                >
+                  <Col
+                    className="gutter-row"
+                    xs={8}
+                    sm={8}
+                    md={8}
+                    lg={8}
+                    xl={8}
+                  >
+                    <div className="flex flex-row items-center justify-center">
+                      <Tag>
+                        {FormatCurrencyUtil(record?.user?.positive_balance)}
+                      </Tag>
+                      {record.payment_method === "Saldo a favor" &&
+                      (record.status === "Parcial" ||
+                        record.status === "Pendiente" ||
+                        record.status === "Creado") ? (
+                        <Popconfirm
+                          title="Estas seguro de aplicar un pago con saldo a favor?"
+                          okText="Si"
+                          cancelText="No"
+                          wrapClassName="mi-popconfirm-especifico"
+                          onConfirm={() => edit(record, "balance_amount")}
+                        >
+                          <Button
+                            hidden={
+                              record.payment_method !== "Saldo a favor" ||
+                              record.status === "Pagado" ||
+                              record.status === "Cancelado"
+                            }
+                            type="primary"
+                            className="flex flex-row items-center justify-center"
+                            size="small"
+                          >
+                            <DollarCircleFilled twoToneColor={"green"} />
+                          </Button>
+                        </Popconfirm>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
+              </Space>
+            )}
+          </>
         );
       },
     },
@@ -553,7 +612,11 @@ export const PaymentColumns = ({
           <span>
             <Input
               value={editingDiscountCode}
-              style={{ height: 30 }}
+              style={{
+                height: 25,
+                borderRadius: "5px",
+                borderColor: "#1d4ed8",
+              }}
               onChange={(value) => setEditingDiscountCode(value?.target?.value)}
             />
             <Space.Compact className={"mt-2"}>
@@ -878,7 +941,6 @@ export const PaymentColumns = ({
               wrap={true}
               align={"middle"}
               justify={"center"}
-              className={"mb-6"}
             >
               <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
                 <Tooltip title={"Pago Reveretido"}>
@@ -988,7 +1050,6 @@ export const PaymentColumns = ({
               wrap={true}
               align={"middle"}
               justify={"center"}
-              className={"mb-6"}
             >
               <Col className="gutter-row" xs={8} sm={8} md={8} lg={8} xl={8}>
                 <div className="flex flex-row items-center justify-center">

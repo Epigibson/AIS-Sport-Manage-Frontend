@@ -17,7 +17,7 @@ import {
 } from "../../api/PaymentService.jsx";
 import { toastNotify } from "../../utils/ToastNotify.jsx";
 
-export const useCreatePayment = (onSuccessCallback) => {
+export const useCreatePayment = (onSuccessCallback, clearFields) => {
   const {
     mutate: mutateCreate,
     isSuccess,
@@ -44,7 +44,8 @@ export const useCreatePayment = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto
     },
   });
@@ -86,17 +87,21 @@ export const usePayReceipt = (onSuccessCallback) => {
   return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useSubtractAmountReceiptWithBalance = (onSuccessCallback) => {
+export const useSubtractAmountReceiptWithBalance = (
+  onSuccessCallback,
+  clearFields,
+) => {
   const {
     mutate: mutateSubtractAmountReceiptWithBalance,
     isSuccess,
     isError,
     error,
+    isPending: mutateSubtractAmountReceiptWithBalancePending,
     reset,
   } = useMutation({
     mutationFn: subtractAmountReceiptWithBalance,
     onSuccess: async () => {
-      onSuccessCallback();
+      await onSuccessCallback();
       toastNotify({
         type: "success",
         message: "Exito!.",
@@ -115,7 +120,8 @@ export const useSubtractAmountReceiptWithBalance = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto
     },
   });
@@ -125,6 +131,7 @@ export const useSubtractAmountReceiptWithBalance = (onSuccessCallback) => {
     isError,
     error,
     reset,
+    mutateSubtractAmountReceiptWithBalancePending,
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
@@ -195,13 +202,14 @@ export const useRevertReceipt = (onSuccessCallback) => {
   return { mutateRevertReceipt, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useUpdatePaymentMethod = (onSuccessCallback) => {
+export const useUpdatePaymentMethod = (onSuccessCallback, clearFields) => {
   const {
     mutate: mutateUpdatePaymentMethod,
     isSuccess,
     isError,
     error,
     reset,
+    isPending: updatePaymentMethodPending,
   } = useMutation({
     mutationFn: updatePaymentMethod,
     onSuccess: async () => {
@@ -222,14 +230,25 @@ export const useUpdatePaymentMethod = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset();
     },
   });
-  return { mutateUpdatePaymentMethod, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
+  return {
+    mutateUpdatePaymentMethod,
+    isSuccess,
+    isError,
+    error,
+    reset,
+    updatePaymentMethodPending,
+  }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryExtension = (onSuccessCallback) => {
+export const useEditPaymentHistoryExtension = (
+  onSuccessCallback,
+  clearFields,
+) => {
   const {
     mutate: mutateEditHistoryPaymentExtension,
     isSuccess,
@@ -256,7 +275,8 @@ export const useEditPaymentHistoryExtension = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset();
     },
   });
@@ -269,7 +289,7 @@ export const useEditPaymentHistoryExtension = (onSuccessCallback) => {
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
+export const useEditPaymentHistoryAmount = (onSuccessCallback, clearFields) => {
   const {
     mutate: mutateEditHistoryPaymentAmount,
     isSuccess,
@@ -296,7 +316,8 @@ export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset();
     },
   });
@@ -309,7 +330,10 @@ export const useEditPaymentHistoryAmount = (onSuccessCallback) => {
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryLimitDate = (onSuccessCallback) => {
+export const useEditPaymentHistoryLimitDate = (
+  onSuccessCallback,
+  clearFields,
+) => {
   const {
     mutate: mutateEditHistoryPaymentLimitDate,
     isSuccess,
@@ -336,7 +360,8 @@ export const useEditPaymentHistoryLimitDate = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields;
       reset();
     },
   });
@@ -349,7 +374,10 @@ export const useEditPaymentHistoryLimitDate = (onSuccessCallback) => {
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useEditPaymentHistoryPeriodMonth = (onSuccessCallback) => {
+export const useEditPaymentHistoryPeriodMonth = (
+  onSuccessCallback,
+  clearFields,
+) => {
   const {
     mutate: mutateEditHistoryPaymentPeriodMonth,
     isSuccess,
@@ -377,7 +405,8 @@ export const useEditPaymentHistoryPeriodMonth = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset();
     },
   });
@@ -390,7 +419,10 @@ export const useEditPaymentHistoryPeriodMonth = (onSuccessCallback) => {
   }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const useAddPaymentHistoryDiscountCode = (onSuccessCallback) => {
+export const useAddPaymentHistoryDiscountCode = (
+  onSuccessCallback,
+  clearFields,
+) => {
   const {
     mutate: mutateAddHistoryPaymentDiscountCode,
     isSuccess,
@@ -418,7 +450,8 @@ export const useAddPaymentHistoryDiscountCode = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset();
     },
   });

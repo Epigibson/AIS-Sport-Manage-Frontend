@@ -1,18 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllCouches, getAllUsers } from "../api/UserService.jsx";
+import { getAllCouches } from "../api/UserService.jsx";
 import { getAllGroups } from "../api/GroupService.jsx";
 import { getAllPackages } from "../api/ProductService.jsx";
 import { getAllCategories } from "../api/CategoryService.jsx";
 import { getAllAthletes } from "../api/AtheleService.jsx";
 import { getAllSalesProducts } from "../api/ProductsService.jsx";
 import { useMemo } from "react";
+import { useUsers } from "../hooks/UserContext/useUsers.jsx";
 
 export const useFetchData = () => {
   const couchesQuery = useQuery({
     queryKey: ["couches"],
     queryFn: getAllCouches,
   });
-  const usersQuery = useQuery({ queryKey: ["users"], queryFn: getAllUsers });
+  const { users } = useUsers();
+  const usersQuery = users;
   const groupsQuery = useQuery({ queryKey: ["groups"], queryFn: getAllGroups });
   const packagesQuery = useQuery({
     queryKey: ["packages"],
@@ -34,7 +36,7 @@ export const useFetchData = () => {
   const data = useMemo(
     () => ({
       couches: couchesQuery.data || [],
-      users: usersQuery.data || [],
+      users: usersQuery || [],
       groups: groupsQuery.data || [],
       packages: packagesQuery.data || [],
       categories: categoriesQuery.data || [],
