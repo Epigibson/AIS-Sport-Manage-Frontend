@@ -13,6 +13,11 @@ export const AthletesPaymentsReportCalculateTotals = (data) => {
     cancelled_by_month: {},
     created_by_month: {},
     total_by_month: {},
+    pending_by_month_count: {},
+    paid_by_month_count: {},
+    cancelled_by_month_count: {},
+    created_by_month_count: {},
+    total_by_month_count: {},
   };
 
   data?.forEach((athlete) => {
@@ -52,24 +57,40 @@ export const AthletesPaymentsReportCalculateTotals = (data) => {
           totals.created_by_month[period] = 0;
         if (!totals.total_by_month[period]) totals.total_by_month[period] = 0;
 
+        if (!totals.pending_by_month_count[period])
+          totals.pending_by_month_count[period] = 0;
+        if (!totals.paid_by_month_count[period])
+          totals.paid_by_month_count[period] = 0;
+        if (!totals.cancelled_by_month_count[period])
+          totals.cancelled_by_month_count[period] = 0;
+        if (!totals.created_by_month_count[period])
+          totals.created_by_month_count[period] = 0;
+        if (!totals.total_by_month_count[period])
+          totals.total_by_month_count[period] = 0;
+
         switch (payment.status) {
           case "Pendiente":
             totals.pending_by_month[period] += payment.amount;
+            totals.pending_by_month_count[period] += 1;
             break;
           case "Pagado":
             totals.paid_by_month[period] += payment.amount;
+            totals.paid_by_month_count[period] += 1;
             break;
           case "Cancelado":
             totals.cancelled_by_month[period] += payment.amount;
+            totals.cancelled_by_month_count[period] += 1;
             break;
           case "Creado":
             totals.pending_by_month[period] += payment.amount;
+            totals.pending_by_month_count[period] += 1;
             break;
           default:
             break;
         }
         totals.total_by_month[period] +=
           payment.status !== "Cancelado" ? payment.amount : 0;
+        totals.total_by_month_count[period] += 1;
       });
     });
   });
