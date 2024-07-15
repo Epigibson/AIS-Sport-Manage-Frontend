@@ -11,7 +11,7 @@ const getLastValueFromObject = (obj) => {
   return obj[lastKey] || 0;
 };
 
-export const statisticCardsData = (data, fontSize) => [
+export const statisticCardsData = (data, coachesCount, fontSize) => [
   {
     backgroundClass: "bg-gradient-to-r from-cyan-50 to-blue-200",
     statistics: [
@@ -27,9 +27,9 @@ export const statisticCardsData = (data, fontSize) => [
     backgroundClass: "bg-gradient-to-r from-cyan-50 to-blue-200",
     statistics: [
       {
-        title: "Coaches Nuevos",
-        value: data?.couch_count,
-        prefix: <TeamOutlined />,
+        title: "Inscripciones Nuevas",
+        value: getLastValueFromObject(data?.athletes_created_by_month),
+        prefix: <FileTextOutlined />,
         fontSize: fontSize, // Asegúrate de que esto se maneje adecuadamente en tu estructura de datos o en el componente padre
       },
     ],
@@ -38,9 +38,9 @@ export const statisticCardsData = (data, fontSize) => [
     backgroundClass: "bg-gradient-to-r from-cyan-50 to-blue-200",
     statistics: [
       {
-        title: "Inscripciones Nuevas",
-        value: getLastValueFromObject(data?.athletes_created_by_month),
-        prefix: <FileTextOutlined />,
+        title: "Coaches Activos",
+        value: coachesCount,
+        prefix: <TeamOutlined />,
         fontSize: fontSize, // Asegúrate de que esto se maneje adecuadamente en tu estructura de datos o en el componente padre
       },
     ],
@@ -89,7 +89,7 @@ export const statisticCardsData = (data, fontSize) => [
     backgroundClass: "bg-gradient-to-r from-indigo-50 to-purple-200",
     statistics: [
       {
-        title: "Recibos Vencidos y Cancelados",
+        title: "Recibos Cancelados",
         value: `Elementos: ${data?.cancelled_by_month_count.currentMonth ? data?.cancelled_by_month_count.currentMonth : 0}`,
         fontSize: fontSize, // Asegúrate de que esto se maneje adecuadamente en tu estructura de datos o en el componente padre
       },
@@ -111,7 +111,12 @@ export const statisticCardsData = (data, fontSize) => [
     backgroundClass: "bg-gradient-to-r from-red-100 to-orange-200",
     statistics: [
       {
-        title: "Monto Total",
+        title: (
+          <>
+            <div>Monto Total</div>
+            <div>(Recibos Pagados + Recibos Pendientes)</div>
+          </>
+        ),
         value: `$${parseFloat(
           data?.total_by_month?.currentMonth,
         ).toLocaleString("es-MX", {

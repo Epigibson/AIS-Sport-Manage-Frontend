@@ -4,13 +4,15 @@ import { StatisticCard } from "../../components/StatisticCardComponent.jsx";
 import { useResponsiveFontSize } from "../../hooks/ResponsiveFontSize/ResponsiveFontSizeHook.jsx";
 import { LoaderIconUtils } from "../../utils/LoaderIconUtils.jsx";
 import { getAllAthletesEnriched } from "../../api/AtheleService.jsx";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CategorizePayments } from "../reports/athletePayments/CategorizePayments.jsx";
 import { AthletesPaymentsReportCalculateTotals } from "../reports/athletePayments/AthletesPaymentsReportCalculateTotals.jsx";
 import { statisticCardsData } from "./StaticCardsData.jsx";
+import { getAllCouches } from "../../api/UserService.jsx";
 
 export const ResumePaymentsLogic = () => {
   const fontSize = useResponsiveFontSize();
+  const [coachesCount, setCoachesCount] = useState(0);
   const {
     data: athletesEnriched,
     isLoading,
@@ -22,6 +24,16 @@ export const ResumePaymentsLogic = () => {
     staleTime: 5 * 60 * 1000, // Datos son considerados frescos por 5 minutos
     cacheTime: 30 * 60 * 1000, // Datos permanecen en caché por 30 minutos
   });
+  const { data: coaches } = useQuery({
+    queryKey: ["coaches"],
+    queryFn: getAllCouches,
+  });
+
+  useEffect(() => {
+    console.log("coaches", coaches);
+    const activeCoaches = coaches?.filter((coach) => coach.status);
+    setCoachesCount(activeCoaches.length);
+  }, [coaches]);
 
   // Categorize payments
   const athletesEnrichedWithCategorizedPayments = useMemo(() => {
@@ -40,11 +52,12 @@ export const ResumePaymentsLogic = () => {
   );
 
   const statisticCardsDataUsed = useMemo(
-    () => statisticCardsData(totals, fontSize),
-    [totals, fontSize],
+    () => statisticCardsData(totals, coachesCount, fontSize),
+    [totals, coachesCount, fontSize],
   );
 
   console.log("estadisticas", totals);
+  console.log("coachesCount", coachesCount);
 
   if (isError) {
     return <div>Error: {error.message}</div>;
