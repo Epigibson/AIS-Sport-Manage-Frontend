@@ -31,7 +31,7 @@ export const ResumePaymentsLogic = () => {
 
   useEffect(() => {
     const activeCoaches = coaches?.filter((coach) => coach.status);
-    setCoachesCount(activeCoaches.length);
+    setCoachesCount(activeCoaches?.length);
   }, [coaches]);
 
   // Categorize payments
