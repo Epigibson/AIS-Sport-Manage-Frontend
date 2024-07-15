@@ -30,7 +30,6 @@ export const ResumePaymentsLogic = () => {
   });
 
   useEffect(() => {
-    console.log("coaches", coaches);
     const activeCoaches = coaches?.filter((coach) => coach.status);
     setCoachesCount(activeCoaches.length);
   }, [coaches]);
@@ -55,9 +54,6 @@ export const ResumePaymentsLogic = () => {
     () => statisticCardsData(totals, coachesCount, fontSize),
     [totals, coachesCount, fontSize],
   );
-
-  console.log("estadisticas", totals);
-  console.log("coachesCount", coachesCount);
 
   if (isError) {
     return <div>Error: {error.message}</div>;

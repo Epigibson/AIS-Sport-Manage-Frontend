@@ -118,16 +118,8 @@ export const PaymentLogic = () => {
     keepPreviousData: true, // Mantener datos anteriores mientras se cargan nuevos
   });
 
-  const { users, isLoadingUsers, isErrorUsers, refetchUsers } = useUsers();
+  const { users, isLoadingUsers, refetchUsers } = useUsers();
   const usersData = users;
-  // const {
-  //   data: usersData,
-  //   isLoading: isUsersLoading,
-  //   refetch: refetchUsers,
-  // } = useQuery({
-  //   queryKey: ["allUsers"],
-  //   queryFn: getAllUsers,
-  // });
 
   const {
     data: athletesData,
@@ -281,7 +273,10 @@ export const PaymentLogic = () => {
 
   const { mutateUpdatePaymentMethod, updatePaymentMethodPending } =
     useUpdatePaymentMethod(handleSearch, cancel);
-  const { mutateUpdate } = usePayReceipt(handleSearch);
+  const { mutateUpdate, mutateUpdatePending } = usePayReceipt(
+    handleSearch,
+    cancel,
+  );
   const {
     mutateSubtractAmountReceiptWithBalance,
     mutateSubtractAmountReceiptWithBalancePending,
@@ -308,14 +303,14 @@ export const PaymentLogic = () => {
   const { mutateAddHistoryPaymentDiscountCode } =
     useAddPaymentHistoryDiscountCode(handleSearch, cancel);
 
-  const showCreateModal = () => {
+  const showCreateModal = useCallback(() => {
     setIsCreateModalVisible(true);
-  };
+  }, []);
 
-  const showReceipts = (record) => {
+  const showReceipts = useCallback((record) => {
     setSelectedReceipt([record.receipt]);
     setIsModalVisible(true);
-  };
+  }, []);
 
   const showExtensionModal = useCallback(
     async (record) => {
@@ -328,37 +323,37 @@ export const PaymentLogic = () => {
     [form],
   );
 
-  const handleCloseCancelModal = () => {
+  const handleCloseCancelModal = useCallback(() => {
     setIsCancelModalVisible(false);
-  };
+  }, []);
 
-  const handleCloseExtensionModal = () => {
+  const handleCloseExtensionModal = useCallback(() => {
     setIsExtensionModalVisible(false);
-  };
+  }, []);
 
-  const handleCloseCreateModal = () => {
+  const handleCloseCreateModal = useCallback(() => {
     setIsCreateModalVisible(false);
     formCreate.resetFields();
-  };
+  }, [formCreate]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setIsModalVisible(false);
-  };
+  }, []);
 
-  const handleCreatePayment = async () => {
+  const handleCreatePayment = useCallback(async () => {
     const values = await formCreate.validateFields();
     await mutateCreate(values);
     formCreate.resetFields();
     setIsCreateModalVisible(false);
-  };
+  }, [formCreate, mutateCreate]);
 
-  const handleEditExtension = async () => {
+  const handleEditExtension = useCallback(async () => {
     const values = await form.validateFields();
     values.history_payment_id = selectedPayment.history_payment_id;
     await mutateEditHistoryPaymentExtension(values);
     form.resetFields();
     setIsExtensionModalVisible(false);
-  };
+  }, [form, mutateEditHistoryPaymentExtension, selectedPayment]);
 
   const handlePayReceipt = useCallback(
     async (record, type) => {
@@ -382,19 +377,25 @@ export const PaymentLogic = () => {
     ],
   );
 
-  const handleCancelReceipt = async (record) => {
+  const handleCancelReceipt = useCallback(async (record) => {
     setSelectedReceipt(record);
     setIsCancelModalVisible(true);
-  };
+  }, []);
 
-  const submitCancelReceipt = async () => {
+  const submitCancelReceipt = useCallback(async () => {
     const values = await formCancel.validateFields();
     values.receipt_id = selectedReceipt.receipt_id;
     await mutateUpdateCancelReceipt(values);
     await handleSearch();
     await refetch();
     setIsCancelModalVisible(false);
-  };
+  }, [
+    formCancel,
+    handleSearch,
+    mutateUpdateCancelReceipt,
+    refetch,
+    selectedReceipt,
+  ]);
 
   const handleRevertReceipt = useCallback(
     async (record) => {
@@ -416,7 +417,7 @@ export const PaymentLogic = () => {
 
   const filterOption = (input, option) => option?.search?.includes(input);
 
-  const handleDateChange = (dates) => {
+  const handleDateChange = useCallback((dates) => {
     if (dates) {
       const formattedDates = dates?.map((date) =>
         date.format("YYYY-MM-DD HH:mm"),
@@ -425,7 +426,7 @@ export const PaymentLogic = () => {
     } else {
       setDateRange([]);
     }
-  };
+  }, []);
 
   const handleUserChange = (value, option) => {
     setUserFilter(option.key);
@@ -451,7 +452,7 @@ export const PaymentLogic = () => {
     setMembershipFilter(value);
   };
 
-  const edit = (record, type, paymentMethod) => {
+  const edit = useCallback((record, type, paymentMethod) => {
     if (type === "payment_method") {
       setEditingKeyPaymentMethod(record?._id);
       setEditingPaymentMethod(record?.payment_method);
@@ -477,7 +478,7 @@ export const PaymentLogic = () => {
       setEditingBalancePayment(record?.amount_balance_updated);
       setEditingPaymentMethod(paymentMethod);
     }
-  };
+  }, []);
 
   const handleSave = useCallback(
     async (record, field, paymentMethod) => {
@@ -628,16 +629,19 @@ export const PaymentLogic = () => {
         mutateSubtractAmountReceiptWithBalancePending:
           mutateSubtractAmountReceiptWithBalancePending,
         updatePaymentMethodPending: updatePaymentMethodPending,
+        mutateUpdatePending: mutateUpdatePending,
       }),
     [
-      updatePaymentMethodPending,
+      showReceipts,
       showExtensionModal,
       handlePayReceipt,
+      handleCancelReceipt,
       handleRevertReceipt,
+      edit,
       cancel,
       handleSave,
       handleDeleteReceipt,
-      userLogged?.email,
+      userLogged,
       navigate,
       editingKeyPaymentMethod,
       editingKeyBalanceAmount,
@@ -654,14 +658,15 @@ export const PaymentLogic = () => {
       editingPeriodMonth,
       editingDiscountCode,
       mutateSubtractAmountReceiptWithBalancePending,
+      updatePaymentMethodPending,
     ],
   );
 
-  const handleTableChange = (pagination, filters, sorter) => {
+  const handleTableChange = useCallback((pagination, filters, sorter) => {
     console.log("Table change:", pagination, filters, sorter);
     setPage(pagination.current);
     setPageSize(pagination.pageSize);
-  };
+  }, []);
 
   if (isLoading || isLoadingUsers || isAthletesLoading || isReceiptsLoading)
     return <LoaderIconUtils isLoading={true} />;

@@ -52,13 +52,14 @@ export const useCreatePayment = (onSuccessCallback, clearFields) => {
   return { mutateCreate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
 };
 
-export const usePayReceipt = (onSuccessCallback) => {
+export const usePayReceipt = (onSuccessCallback, clearFields) => {
   const {
     mutate: mutateUpdate,
     isSuccess,
     isError,
     error,
     reset,
+    isPending: mutateUpdatePending,
   } = useMutation({
     mutationFn: payReceipt,
     onSuccess: async () => {
@@ -80,11 +81,19 @@ export const usePayReceipt = (onSuccessCallback) => {
         description: errorMessage,
       });
     },
-    onSettled: () => {
+    onSettled: async () => {
+      await clearFields();
       reset(); // Resetear el estado de la mutación después de ejecutarla y dejarla en su estado inicial. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto es útil cuando se ejecuta una mutación que requiere de confirmación de usuario. El estado de la mutación se mantendrá en "pending" mientras el usuario confirma la acción. Después de confirmar la acción, el estado de la mutación pasará a "settled" y se puede utilizar el método "reset" para resetear el estado de la mutación. Esto
     },
   });
-  return { mutateUpdate, isSuccess, isError, error, reset }; // Asegúrate de devolver estos valores desde tu hook
+  return {
+    mutateUpdate,
+    mutateUpdatePending,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  }; // Asegúrate de devolver estos valores desde tu hook
 };
 
 export const useSubtractAmountReceiptWithBalance = (
