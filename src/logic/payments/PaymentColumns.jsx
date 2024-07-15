@@ -334,41 +334,43 @@ export const PaymentColumns = ({
       width: 200,
       render: (_, record) =>
         editingKeyPaymentMethod === record?._id ? (
-          <span
-            hidden={
-              updatePaymentMethodPending &&
-              editingKeyPaymentMethod === record?._id
-            }
-          >
-            <Select
-              value={editingPaymentMethod}
-              size={"small"}
-              style={{ width: "100%" }}
-              onChange={(value) => setEditingPaymentMethod(value)}
-            >
-              <Select.Option value="Transferencia">Transferencia</Select.Option>
-              <Select.Option value="Efectivo">Efectivo</Select.Option>
-              {record?.user?.positive_balance &&
-              record?.user?.positive_balance > 0 ? (
-                <Select.Option value="Saldo a favor">
-                  Saldo a favor
-                </Select.Option>
-              ) : null}
-            </Select>
-
-            <Space.Compact className={"mt-2"}>
-              <Button
-                onClick={() => handleSave(record, "payment_method")}
-                size="small"
-                style={{ marginRight: 8 }}
+          updatePaymentMethodPending &&
+          editingKeyPaymentMethod === record?._id ? (
+            <SyncOutlined twoToneColor={"#1d4ed8"} spin />
+          ) : (
+            <span>
+              <Select
+                value={editingPaymentMethod}
+                size={"small"}
+                style={{ width: "100%" }}
+                onChange={(value) => setEditingPaymentMethod(value)}
               >
-                Guardar
-              </Button>
-              <Button onClick={cancel} danger size="small">
-                Cancelar
-              </Button>
-            </Space.Compact>
-          </span>
+                <Select.Option value="Transferencia">
+                  Transferencia
+                </Select.Option>
+                <Select.Option value="Efectivo">Efectivo</Select.Option>
+                {record?.user?.positive_balance &&
+                record?.user?.positive_balance > 0 ? (
+                  <Select.Option value="Saldo a favor">
+                    Saldo a favor
+                  </Select.Option>
+                ) : null}
+              </Select>
+
+              <Space.Compact className={"mt-2"}>
+                <Button
+                  onClick={() => handleSave(record, "payment_method")}
+                  size="small"
+                  style={{ marginRight: 8 }}
+                >
+                  Guardar
+                </Button>
+                <Button onClick={cancel} danger size="small">
+                  Cancelar
+                </Button>
+              </Space.Compact>
+            </span>
+          )
         ) : (
           <div>
             <>
@@ -437,7 +439,9 @@ export const PaymentColumns = ({
                           title={
                             record.payment_method === "Saldo a favor" &&
                             record?.user?.positive_balance
-                              ? `Saldo a favor: ${FormatCurrencyUtil(record?.user?.positive_balance)}`
+                              ? `Saldo a favor: ${FormatCurrencyUtil(
+                                  record?.user?.positive_balance,
+                                )}`
                               : null
                           }
                           color={
