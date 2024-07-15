@@ -18,12 +18,31 @@ export const AthletesPaymentsReportCalculateTotals = (data) => {
     cancelled_by_month_count: {},
     created_by_month_count: {},
     total_by_month_count: {},
+    athletes_created_by_month: {},
+    active_athletes_by_month: {},
+    inactive_athletes_by_month: {},
   };
 
   data?.forEach((athlete) => {
     athlete.status === true
       ? (totals.active_athletes += 1)
       : (totals.inactive_athletes += 1);
+
+    const creationMonth = athlete?.start_date?.slice(0, 7); // Asumiendo que la fecha es en formato YYYY-MM-DD
+
+    if (!totals.athletes_created_by_month[creationMonth])
+      totals.athletes_created_by_month[creationMonth] = 0;
+    if (!totals.active_athletes_by_month[creationMonth])
+      totals.active_athletes_by_month[creationMonth] = 0;
+    if (!totals.inactive_athletes_by_month[creationMonth])
+      totals.inactive_athletes_by_month[creationMonth] = 0;
+
+    totals.athletes_created_by_month[creationMonth] += 1;
+    if (athlete.status === true) {
+      totals.active_athletes_by_month[creationMonth] += 1;
+    } else {
+      totals.inactive_athletes_by_month[creationMonth] += 1;
+    }
     athlete?.payments.forEach((payment) => {
       switch (payment.status) {
         case "Pendiente":

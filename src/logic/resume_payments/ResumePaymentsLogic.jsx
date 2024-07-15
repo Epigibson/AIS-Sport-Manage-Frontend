@@ -16,10 +16,11 @@ export const ResumePaymentsLogic = () => {
     isLoading,
     isError,
     error,
-    refetch,
   } = useQuery({
     queryKey: ["athletesEnriched"],
     queryFn: getAllAthletesEnriched,
+    staleTime: 5 * 60 * 1000, // Datos son considerados frescos por 5 minutos
+    cacheTime: 30 * 60 * 1000, // Datos permanecen en caché por 30 minutos
   });
 
   // Categorize payments
@@ -30,19 +31,20 @@ export const ResumePaymentsLogic = () => {
     }));
   }, [athletesEnriched]);
 
-  const statisticCardsDataUsed = statisticCardsData(
-    AthletesPaymentsReportCalculateTotals(
-      athletesEnrichedWithCategorizedPayments,
-    ),
-    fontSize,
+  const totals = useMemo(
+    () =>
+      AthletesPaymentsReportCalculateTotals(
+        athletesEnrichedWithCategorizedPayments,
+      ),
+    [athletesEnrichedWithCategorizedPayments],
   );
 
-  console.log(
-    "estadisticas",
-    AthletesPaymentsReportCalculateTotals(
-      athletesEnrichedWithCategorizedPayments,
-    ),
+  const statisticCardsDataUsed = useMemo(
+    () => statisticCardsData(totals, fontSize),
+    [totals, fontSize],
   );
+
+  console.log("estadisticas", totals);
 
   if (isError) {
     return <div>Error: {error.message}</div>;
@@ -63,7 +65,6 @@ export const ResumePaymentsLogic = () => {
           </Col>
         ))}
       </Row>
-      {/* Puedes tener múltiples filas o incluso dinamizar las filas si es necesario */}
     </div>
   );
 };

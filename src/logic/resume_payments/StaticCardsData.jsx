@@ -4,13 +4,20 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
+const getLastValueFromObject = (obj) => {
+  if (!obj) return 0;
+  const keys = Object.keys(obj).sort();
+  const lastKey = keys[keys.length - 1];
+  return obj[lastKey] || 0;
+};
+
 export const statisticCardsData = (data, fontSize) => [
   {
     backgroundClass: "bg-gradient-to-r from-cyan-50 to-blue-200",
     statistics: [
       {
         title: "Usuarios Nuevos",
-        value: data?.athlete_count,
+        value: getLastValueFromObject(data?.athletes_created_by_month),
         prefix: <UserOutlined />,
         fontSize: fontSize, // Asegúrate de que esto se maneje adecuadamente en tu estructura de datos o en el componente padre
       },
@@ -32,7 +39,7 @@ export const statisticCardsData = (data, fontSize) => [
     statistics: [
       {
         title: "Inscripciones Nuevas",
-        value: data?.inscription_count,
+        value: getLastValueFromObject(data?.athletes_created_by_month),
         prefix: <FileTextOutlined />,
         fontSize: fontSize, // Asegúrate de que esto se maneje adecuadamente en tu estructura de datos o en el componente padre
       },
