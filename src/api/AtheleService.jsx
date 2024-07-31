@@ -16,6 +16,7 @@ export const getAllAthletesEnriched = async ({
   end_date,
   receipt_status,
   receipt_package,
+  payment_method,
 }) => {
   try {
     // Construir los parámetros de la consulta
@@ -33,6 +34,9 @@ export const getAllAthletesEnriched = async ({
     }
     if (receipt_package) {
       queryParams.append("receipt_package", receipt_package);
+    }
+    if (payment_method) {
+      queryParams.append("payment_method", payment_method);
     }
 
     const response = await apiClient.get(`/athletes/enriched/?${queryParams}`);

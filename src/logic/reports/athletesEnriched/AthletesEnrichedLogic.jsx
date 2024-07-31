@@ -21,11 +21,13 @@ export const AthletesEnrichedLogic = () => {
   const [endDate, setEndDate] = useState(null);
   const [receiptStatus, setReceiptStatus] = useState(null);
   const [receiptPackage, setReceiptPackage] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState(null);
   const [filters, setFilters] = useState({
     startDate: null,
     endDate: null,
     receiptStatus: null,
     receiptPackage: null,
+    paymentMethod: null,
   });
 
   const {
@@ -46,6 +48,7 @@ export const AthletesEnrichedLogic = () => {
         end_date: filters.endDate,
         receipt_status: filters.receiptStatus,
         receipt_package: filters.receiptPackage,
+        payment_method: filters.paymentMethod,
       }),
     onSuccess: stopLoading,
     onError: stopLoading,
@@ -90,6 +93,10 @@ export const AthletesEnrichedLogic = () => {
     setReceiptPackage(value);
   }, []);
 
+  const onPaymentMethodChange = useCallback((value) => {
+    setPaymentMethod(value);
+  }, []);
+
   const applyFilters = useCallback(() => {
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -97,19 +104,22 @@ export const AthletesEnrichedLogic = () => {
       endDate,
       receiptStatus,
       receiptPackage,
+      paymentMethod,
     }));
-  }, [startDate, endDate, receiptStatus, receiptPackage]);
+  }, [startDate, endDate, receiptStatus, receiptPackage, paymentMethod]);
 
   const clearFilters = useCallback(() => {
     setStartDate(null);
     setEndDate(null);
     setReceiptStatus(null);
     setReceiptPackage(null);
+    setPaymentMethod(null);
     setFilters({
       startDate: null,
       endDate: null,
       receiptStatus: null,
       receiptPackage: null,
+      paymentMethod: null,
     });
   }, []);
 
@@ -176,6 +186,17 @@ export const AthletesEnrichedLogic = () => {
                   {packageItem.product_name}
                 </Select.Option>
               ))}
+            </Select>
+            <Select
+              className={"w-36"}
+              onChange={onPaymentMethodChange}
+              placeholder="Metodo de pago"
+              value={paymentMethod}
+              allowClear
+            >
+              <Select.Option value="Efectivo">Efectivo</Select.Option>
+              <Select.Option value="Transferencia">Transferencia</Select.Option>
+              <Select.Option value="Tarjeta">Tarjeta</Select.Option>
             </Select>
             <Button
               type="primary"
