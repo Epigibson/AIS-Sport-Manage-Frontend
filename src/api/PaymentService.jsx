@@ -26,6 +26,9 @@ export const getAllHistoryPayments = async (options = {}) => {
     if (options.payment_method) {
       queryParams.append("payment_method", options.payment_method);
     }
+    if (options.membership) {
+      queryParams.append("membership", options.membership);
+    }
     queryParams.append("page", options.page);
     queryParams.append("page_size", options.page_size);
 

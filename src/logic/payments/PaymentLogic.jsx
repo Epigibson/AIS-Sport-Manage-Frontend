@@ -80,6 +80,7 @@ export const PaymentLogic = () => {
       status_pay: appliedFilters.statusPayFilter || undefined,
       payment_type: appliedFilters.paymentTypeFilter || undefined,
       payment_method: appliedFilters.paymentMethodFilter || undefined,
+      membership: appliedFilters.membershipFilter || undefined,
       init_date: appliedFilters.dateRange
         ? appliedFilters.dateRange[0]
         : undefined,
@@ -104,6 +105,7 @@ export const PaymentLogic = () => {
       appliedFilters.statusPayFilter || "",
       appliedFilters.paymentTypeFilter || "",
       appliedFilters.paymentMethodFilter || "",
+      appliedFilters.membershipFilter || "",
       appliedFilters.dateRange?.length > 0
         ? appliedFilters.dateRange[0]
         : undefined,
@@ -152,6 +154,7 @@ export const PaymentLogic = () => {
       athleteFilter,
       statusPayFilter,
       paymentTypeFilter,
+      membershipFilter,
       paymentMethodFilter,
       dateRange,
     });
@@ -165,6 +168,7 @@ export const PaymentLogic = () => {
     athleteFilter,
     statusPayFilter,
     paymentTypeFilter,
+    membershipFilter,
     paymentMethodFilter,
     dateRange,
     refetch,
@@ -231,7 +235,7 @@ export const PaymentLogic = () => {
       return [];
     }
 
-    let filteredData = historyPaymentData?.results?.map((historyPayment) => {
+    return historyPaymentData?.results?.map((historyPayment) => {
       const user = usersData?.find(
         (user) => user?._id === historyPayment?.user,
       );
@@ -250,20 +254,7 @@ export const PaymentLogic = () => {
         updated_at: receipt?.updated_at,
       };
     });
-    if (membershipFilter) {
-      filteredData = filteredData.filter(
-        (payment) => payment.receipt?.receipt_package === membershipFilter,
-      );
-    }
-
-    return filteredData;
-  }, [
-    historyPaymentData,
-    usersData,
-    athletesData,
-    receiptsData,
-    membershipFilter,
-  ]);
+  }, [historyPaymentData, usersData, athletesData, receiptsData]);
 
   useEffect(() => {
     if (historyPaymentData && firstCharge <= 0) {
@@ -449,6 +440,7 @@ export const PaymentLogic = () => {
   };
 
   const handleChangeMembership = (value) => {
+    console.log("Valor si hay membresia final", value);
     setMembershipFilter(value);
   };
 
@@ -659,6 +651,7 @@ export const PaymentLogic = () => {
       editingDiscountCode,
       mutateSubtractAmountReceiptWithBalancePending,
       updatePaymentMethodPending,
+      mutateUpdatePending,
     ],
   );
 
@@ -693,12 +686,12 @@ export const PaymentLogic = () => {
             filterOption={filterOption}
             handleUserChange={handleUserChange}
             handleAthleteChange={handleAthleteChange}
+            handleChangeReceiptPackageName={handleChangeMembership}
             dateRange={dateRange}
             handleDateChange={handleDateChange}
             handleResetFilters={handleResetFilters}
             isLoading={isLoading}
             showCreateModal={showCreateModal}
-            handleChangeReceiptPackageName={handleChangeMembership}
             receiptPackageNames={membershipData}
           />
         </Col>
