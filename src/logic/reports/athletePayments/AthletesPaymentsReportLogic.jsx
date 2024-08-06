@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllAthletesEnriched } from "../../../api/AtheleService.jsx";
+import { getAllAthletesEnrichedSecondary } from "../../../api/AtheleService.jsx";
 import { LoaderIconUtils } from "../../../utils/LoaderIconUtils.jsx";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
@@ -31,9 +31,12 @@ export const AthletesPaymentsReportLogic = () => {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["athletesEnriched", { startDate, endDate }],
+    queryKey: ["athletesEnrichedSecondary", { startDate, endDate }],
     queryFn: () =>
-      getAllAthletesEnriched({ start_date: startDate, end_date: endDate }),
+      getAllAthletesEnrichedSecondary({
+        start_date: startDate,
+        end_date: endDate,
+      }),
     onSuccess: () => {
       stopLoading();
     },
