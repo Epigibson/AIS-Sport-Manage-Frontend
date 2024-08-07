@@ -406,7 +406,8 @@ export const PaymentLogic = () => {
     [handleSearch, mutateDeleteHistoryPayment, refetch],
   );
 
-  const filterOption = (input, option) => option?.search?.includes(input);
+  const filterOption = (input, option) =>
+    option?.search?.toLowerCase().includes(input.toLowerCase());
 
   const handleDateChange = useCallback((dates) => {
     if (dates) {
